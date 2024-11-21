@@ -1,0 +1,430 @@
+openapi: '3.0.3'
+info:
+  title: Noto Api
+  version: '1.0'
+servers:
+  - url: https://localhost:5173/api/v1
+paths:
+  /auth/sign-up:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              fullname: John Doe
+              email: johndoe@gmail.com
+              password:
+                value: '[HASHED]'
+                salt: '[RANDOM 16 BIT]'
+              encryption_key:
+                master: '[ENCRYPTED]'
+                recover:
+                  - '1:[ENCRYPTED]'
+                  - '2:[ENCRYPTED]'
+                  - '3:[ENCRYPTED]'
+                  - '4:[ENCRYPTED]'
+                  - '5:[ENCRYPTED]'
+                  - '6:[ENCRYPTED]'
+                  - '7:[ENCRYPTED]'
+                  - '8:[ENCRYPTED]'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: CREATED
+
+  /auth/sign-in:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              email: johndoe@gmail.com
+              password: '[ENCRYPTED]'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: token=[JWT TOKEN]
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                payload:
+                  user:
+                    id: '123'
+                    image_url: '/to/image/path.jpg'
+                    fullname: John Doe
+                    email: johndoe@gmail.com
+                    encryption_key: '[ENCRYPTED]'
+
+  /auth/password-salt:
+    get:
+      parameters:
+        - in: query
+          required: true
+          name: email
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                payload:
+                  salt: '[RANDOM 16 BIT]'
+
+  /auth/send-recover:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: johndoe@gmail.com
+      responses:
+        '200':
+          description: Sending email to user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Email sended
+
+  /user/resk:
+    get:
+      parameters:
+        - in: query
+          required: true
+          name: recovery-token
+          description: Send token that achived from email
+          schema:
+            type: string
+        - in: query
+          required: true
+          name: key-order
+          description: Recovery encryption key order
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                payload:
+                  recover: '[ENCRYPTED]'
+                  changes_token: '[TOKEN]'
+
+  /users/{user_id}/security:
+    put:
+      parameters:
+        - in: path
+          required: true
+          name: user_id
+          schema:
+            type: string
+        - in: query
+          required: true
+          name: changes-token
+          description: Token that achived belong with RESK
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              password:
+                value: '[HASHED]'
+                salt: '[RANDOM 16 BIT]'
+              encryption_key:
+                recover:
+                  - '1:[ENCRYPTED]'
+                  - '2:[ENCRYPTED]'
+                  - '3:[ENCRYPTED]'
+                  - '4:[ENCRYPTED]'
+                  - '5:[ENCRYPTED]'
+                  - '6:[ENCRYPTED]'
+                  - '7:[ENCRYPTED]'
+                  - '8:[ENCRYPTED]'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                
+  /notes:
+    get:
+      parameters:
+        - in: query
+          required: true
+          name: search
+          description: search shape is array of encrypted string and convert to JSON format
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                payload:
+                  notes:
+                    - id: '123'
+                      label:
+                        - Label 1
+                        - Label 2
+                      content: '[ENCRYPTED]'
+                      createdAt: 2023-10-27T07:00:00.000Z
+                      updatedAt: 2023-10-27T07:00:00.000Z
+
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+            example:
+              index:
+                - '[ENCRYPTED]'
+                - '[ENCRYPTED]'
+              label:
+                - Label 1
+                - Label 2
+              content: '[ENCRYPTED]'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Created
+                payload:
+                  note:
+                    id: '123'
+                    label:
+                      - Label 1
+                      - Label 2
+                    content: '[ENCRYPTED]'
+                    createdAt: 2023-10-27T07:00:00.000Z
+                    updatedAt: 2023-10-27T07:00:00.000Z
+
+  /notes/{note_id}:
+    get:
+      parameters:
+        - in: path
+          required: true
+          name: note_id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                payload:
+                  note:
+                    id: '123'
+                    label:
+                      - Label 1
+                      - Label 2
+                    content: '[ENCRYPTED]'
+                    createdAt: 2023-10-27T07:00:00.000Z
+                    updatedAt: 2023-10-27T07:00:00.000Z
+
+    patch:
+      parameters:
+        - in: path
+          required: true
+          name: note_id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+            example:
+              index:
+                - '[ENCRYPTED]'
+                - '[ENCRYPTED]'
+              label:
+                - Label 1
+                - Label 2
+              content: '[ENCRYPTED]'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                payload:
+                  note:
+                    id: '123'
+                    label:
+                      - Label 1
+                      - Label 2
+                    content: '[ENCRYPTED]'
+                    createdAt: 2023-10-27T07:00:00.000Z
+                    updatedAt: 2023-10-27T07:00:00.000Z
+
+    delete:
+      parameters:
+        - in: path
+          required: true
+          name: note_id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: DELETED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Deleted
+
+components:
+  schemas:
+    Responses:
+      type: object
+      anyOf:
+        - properties:
+            success:
+              type: boolean
+            message:
+              type: string
+        - properties:
+            payload:
+              type: object
+              anyOf:
+                - properties:
+                    note:
+                      $ref: '#/components/schemas/Note'
+                - properties:
+                    user:
+                      $ref: '#/components/schemas/User'
+                - properties:
+                    notes:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Note'
+
+    Note:
+      type: object
+      required:
+        - label
+        - content
+      properties:
+        label:
+          type: array
+          items:
+            type: string
+        index:
+          type: array
+          items:
+            type: string
+        content:
+          type: string
+      anyOf:
+        - properties:
+            id:
+              type: string
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+
+    User:
+      type: object
+      properties:
+        image_url:
+          type: string
+        fullname:
+          type: string
+        email:
+          type: string
+      anyOf:
+        - properties:
+            id:
+              type: string
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+        - properties:
+            encryption_key:
+              type: object
+              properties:
+                recover-token:
+                  type: string
+                master:
+                  type: string
+                recover:
+                  type: array
+                  items:
+                    type: string
+        - properties:
+            password:
+              type: object
+              properties:
+                value:
+                  type: string
+                salt:
+                  type: string
