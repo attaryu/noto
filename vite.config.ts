@@ -14,7 +14,7 @@ export default defineConfig({
 
 			pwaAssets: {
 				disabled: false,
-				config: true
+				config: true,
 			},
 
 			manifest: {
@@ -22,24 +22,44 @@ export default defineConfig({
 				short_name: 'Notō',
 				description:
 					"Web-based note-taking application with security in the hands of the user. Even the server doesn't know anything about the user's notes.",
-				theme_color: '#ffffff'
+				theme_color: '#ffffff',
+				display: 'standalone',
+				start_url: '/',
+				prefer_related_applications: true,
+				orientation: 'portrait-primary',
+				screenshots: [
+					{
+						src: 'slide-1.png',
+						sizes: '842x494',
+						type: 'image/png',
+						form_factor: 'wide'
+					},
+					{
+						src: 'slide-1.png',
+						sizes: '842x494',
+						type: 'image/png',
+					},
+				],
 			},
 
 			injectManifest: {
-				globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webmanifest}', 'prerendered/**/*.html']
+				globPatterns: [
+					'client/**/*.{js,css,ico,png,svg,webp,webmanifest}',
+					'prerendered/**/*.html',
+				],
 			},
 
 			devOptions: {
-				enabled: true,
+				enabled: false,
 				suppressWarnings: true,
 				navigateFallback: '/',
 				navigateFallbackAllowlist: [/^\/$/],
-				type: 'module'
-			}
-		})
+				type: 'module',
+			},
+		}),
 	],
 
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+		include: ['src/**/*.{test,spec}.{js,ts}'],
+	},
 });

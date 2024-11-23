@@ -4,8 +4,19 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				'tertiary-1': '#FFDDA4',
+				'tertiary-2': '#EFF8B1',
+			},
+		},
+		fontFamily: {
+			light: ['"NeueMontrealLight"', 'sans-serif'],
+			regular: ['"NeueMontrealRegular"', 'sans-serif'],
+			medium: ['"NeueMontrealMedium"', 'sans-serif'],
+			bold: ['"NeueMontrealBold"', 'sans-serif'],
+		},
 	},
 
-	plugins: []
+	plugins: [],
 } satisfies Config;

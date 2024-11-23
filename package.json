@@ -42,5 +42,11 @@
   "overrides": {
     "sharp": "0.32.6",
     "sharp-ico": "0.1.5"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-svelte": "^0.460.1",
+    "tailwind-merge": "^2.5.4"
   }
 }
