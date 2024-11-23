@@ -29,7 +29,7 @@
 		<div class="flex h-full flex-col items-center justify-center">
 			<Text tag="h1" class="text-center">Welcome note taker!</Text>
 
-			<Text class="mt-2 text-center">
+			<Text class="mt-4 text-center">
 				Register and access notes from anywhere! Or skip it and save the notes in local storage.
 			</Text>
 

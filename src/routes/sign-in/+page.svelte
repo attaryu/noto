@@ -29,7 +29,7 @@
 		<div class="flex h-full flex-col items-center justify-center">
 			<Text tag="h1" class="text-center">Welcome back!</Text>
 
-			<Text class="mt-2 text-center">I'm glad you're back! It's your time to note everything</Text>
+			<Text class="mt-4 text-center">I'm glad you're back! It's your time to note everything</Text>
 
 			<div class="mt-8 space-y-4">
 				<Input type="email" placeholder="Email" name="email" class="w-full" />

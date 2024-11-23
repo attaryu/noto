@@ -7,13 +7,13 @@
 	import mergeClass from '$lib/utils/merge';
 
 	type Props = {
-		class: string;
+		class?: string;
 		children: Snippet<[]>;
 	} & VariantProps<typeof textCVA>;
 
 	const { children, tag = 'p', class: className }: Props = $props();
 
-	const textCVA = cva('', {
+	const textCVA = cva('leading-relaxed', {
 		variants: {
 			tag: {
 				h1: 'font-medium text-4xl text-neutral-900',
