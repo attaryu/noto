@@ -20,6 +20,7 @@
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@types/lodash": "^4.17.13",
     "@vite-pwa/assets-generator": "^0.2.6",
     "@vite-pwa/sveltekit": "^0.6.6",
     "autoprefixer": "^10.4.20",
@@ -44,8 +45,15 @@
     "sharp-ico": "0.1.5"
   },
   "dependencies": {
+    "@tiptap/core": "^2.10.2",
+    "@tiptap/extension-placeholder": "^2.10.2",
+    "@tiptap/extension-text-align": "^2.10.3",
+    "@tiptap/extension-underline": "^2.10.3",
+    "@tiptap/pm": "^2.10.2",
+    "@tiptap/starter-kit": "^2.10.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "lodash": "^4.17.21",
     "lucide-svelte": "^0.460.1",
     "tailwind-merge": "^2.5.4"
   }

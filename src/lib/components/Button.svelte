@@ -19,8 +19,8 @@
 		{
 			variants: {
 				variant: {
-					primary: 'bg-neutral-900 text-white',
-					secondary: 'border border-neutral-900',
+					primary: 'bg-zinc-900 text-white disabled:text-zinc-500 disabled:bg-zinc-800',
+					secondary: 'bg-white border border-zinc-900 disabled:border-zinc-600 disabled:text-zinc-400',
 				},
 			},
 			defaultVariants: {

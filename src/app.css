@@ -34,6 +34,14 @@
 		font-weight: 700;
 		font-style: normal;
 	}
+
+	.tiptap p.is-editor-empty:first-child::before {
+		color: #adb5bd;
+		content: attr(data-placeholder);
+		float: left;
+		height: 0;
+		pointer-events: none;
+	}
 }
 
 @layer components {
