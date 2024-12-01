@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { VariantProps } from 'class-variance-authority';
+	import type { SvelteHTMLElements } from 'svelte/elements';
 	import type { Snippet } from 'svelte';
 
 	import { cva } from 'class-variance-authority';
@@ -8,12 +9,16 @@
 	import mergeClass from '$lib/utils/merge';
 
 	type Props = {
-		class?: string;
-		children?: Snippet<[]>;
 		as?: Snippet<[any]>;
-	} & VariantProps<typeof textCVA>;
+	} & VariantProps<typeof textCVA> &
+		(
+			| SvelteHTMLElements['h1']
+			| SvelteHTMLElements['h2']
+			| SvelteHTMLElements['h3']
+			| SvelteHTMLElements['p']
+		);
 
-	const { children, as, tag = 'p', class: className }: Props = $props();
+	const { children, as, tag = 'p', class: className, ...props }: Props = $props();
 
 	const textCVA = cva('leading-relaxed', {
 		variants: {
@@ -28,6 +33,7 @@
 	});
 
 	const modifiedProps = {
+		...props,
 		class: mergeClass(textCVA({ tag, className })),
 	};
 </script>

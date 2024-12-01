@@ -3,6 +3,10 @@
 
 	const availableLinks = [
 		{
+			title: 'Test component',
+			url: '/test-component',
+		},
+		{
 			title: 'Sign in',
 			url: '/sign-in',
 		},
@@ -13,6 +17,10 @@
 		{
 			title: 'Create note',
 			url: '/notes/create',
+		},
+		{
+			title: 'Profile',
+			url: '/profile',
 		},
 	];
 </script>
