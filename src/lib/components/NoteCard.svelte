@@ -18,6 +18,7 @@
 			updateAt: Date;
 			pin: boolean;
 			color: 'yellow' | 'green' | 'white';
+			archived: boolean;
 			note: {
 				type: string;
 				content: {
@@ -67,7 +68,10 @@
 	});
 </script>
 
-<Card color={data.color} class="{cardShadow} p-4 shadow-xl">
+<Card
+	color={data.archived ? 'white' : data.color}
+	class="{data.archived ? 'bg-zinc-100' : cardShadow} p-4 shadow-md"
+>
 	{#snippet as(props)}
 		<div {...props}>
 			<div bind:this={displayElement}></div>
@@ -77,14 +81,16 @@
 					{dayjs(date).format('MMMM D, YYYY')}
 				</time>
 
-				{#if data.pin}
-					<Button variant="primary" class="p-2">
-						<Pin size={20} />
-					</Button>
-				{:else}
-					<Button variant="secondary" class="bg-transparent p-2">
-						<PinOff size={20} />
-					</Button>
+				{#if !data.archived}
+					{#if data.pin}
+						<Button variant="primary" class="p-2">
+							<Pin size={20} />
+						</Button>
+					{:else}
+						<Button variant="secondary" class="bg-transparent p-2">
+							<PinOff size={20} />
+						</Button>
+					{/if}
 				{/if}
 
 				<Dropdown
