@@ -51,7 +51,7 @@
 				? 'shadow-tertiary-2/50'
 				: '';
 
-	const date = data.updateAt.toLocaleDateString();
+	const updateAt = data.updateAt.toLocaleDateString();
 
 	let displayElement: HTMLDivElement;
 	let editor = $state() as Readable<Editor>;
@@ -77,8 +77,8 @@
 			<div bind:this={displayElement}></div>
 
 			<div class="flex items-end gap-2">
-				<time datetime={date} class="w-full opacity-50">
-					{dayjs(date).format('MMMM D, YYYY')}
+				<time datetime={updateAt} class="w-full opacity-50">
+					{dayjs(updateAt).format('MMMM D, YYYY')}
 				</time>
 
 				{#if !data.archived}

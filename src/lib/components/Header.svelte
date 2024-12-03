@@ -25,7 +25,7 @@
 </script>
 
 <div class={mergeClass(headerCVA({ gradientColor }))}>
-	<header class={mergeClass('rounded-full', className)} {...props}>
+	<header class={mergeClass('rounded-full min-h-14', className)} {...props}>
 		{@render children?.()}
 	</header>
 </div>
