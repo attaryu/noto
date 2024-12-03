@@ -13,9 +13,9 @@
 	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
-	import Dropdown from '$lib/components/Dropdown.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import PreferenceItem from '$lib/components/Profile/PreferenceItem.svelte';
+	import Select from '$lib/components/Select.svelte';
 	import Text from '$lib/components/Text.svelte';
 
 	const user = {
@@ -25,6 +25,10 @@
 			'https://images.unsplash.com/photo-1601887389937-0b02c26b602c?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 	};
 </script>
+
+<svelte:head>
+	<title>Profile</title>
+</svelte:head>
 
 <main class="flex flex-col gap-8 px-4 pb-24 pt-56">
 	<Header class="border border-zinc-900 bg-white p-3">
@@ -75,8 +79,9 @@
 							{#snippet icon()}
 								<SunMoon />
 							{/snippet}
+
 							{#snippet rightElement()}
-								<Dropdown
+								<Select
 									items={[
 										{
 											title: 'System',
@@ -107,7 +112,7 @@
 							{/snippet}
 
 							{#snippet rightElement()}
-								<Dropdown
+								<Select
 									items={[
 										{
 											title: 'English',

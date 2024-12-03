@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, type Component } from 'svelte';
+	import { onMount, type Component, type Snippet } from 'svelte';
 	import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { pwaInfo } from 'virtual:pwa-info';
 
@@ -8,7 +8,7 @@
 	import '../app.css';
 
 	interface Props {
-		children?: import('svelte').Snippet;
+		children?: Snippet;
 	}
 
 	let { children }: Props = $props();
