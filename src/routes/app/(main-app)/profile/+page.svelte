@@ -17,6 +17,7 @@
 	import PreferenceItem from '$lib/components/Profile/PreferenceItem.svelte';
 	import Select from '$lib/components/Select.svelte';
 	import Text from '$lib/components/Text.svelte';
+	import { goto } from '$app/navigation';
 
 	const user = {
 		fullname: 'John Doe',
@@ -64,7 +65,7 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<PreferenceItem text="Backup">
+						<PreferenceItem text="Backup" action={() => goto('/app/backup')}>
 							{#snippet icon()}
 								<CloudUpload />
 							{/snippet}

@@ -2,7 +2,7 @@
 	import type { Editor } from '@tiptap/core';
 
 	import _ from 'lodash';
-	import { Check, ArrowLeft, Pencil, X } from 'lucide-svelte';
+	import { ArrowLeft, Check, Pencil, X } from 'lucide-svelte';
 
 	import Button from '../Button.svelte';
 	import Header from '../Header.svelte';
@@ -41,7 +41,7 @@
 </script>
 
 <Header class="flex items-center bg-zinc-900 p-1">
-	<Button variant="secondary">
+	<Button variant="secondary" onclick={() => history.back()}>
 		<ArrowLeft />
 	</Button>
 

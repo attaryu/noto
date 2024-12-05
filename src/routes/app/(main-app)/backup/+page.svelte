@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { ArrowLeft, ArrowRight, CloudUpload, Globe, SunMoon } from 'lucide-svelte';
+	import { ArrowLeft } from 'lucide-svelte';
 
+	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import PreferenceItem from '$lib/components/Profile/PreferenceItem.svelte';
-	import Select from '$lib/components/Select.svelte';
 	import Text from '$lib/components/Text.svelte';
-	import Button from '$lib/components/Button.svelte';
 </script>
 
 <svelte:head>
@@ -16,7 +15,7 @@
 
 <main class="flex flex-col gap-8 px-4 pb-24 pt-24">
 	<Header class="grid grid-cols-3 grid-rows-1 items-center border border-zinc-900 bg-white p-1">
-		<Button>
+		<Button onclick={() => history.back()}>
 			<ArrowLeft />
 		</Button>
 
