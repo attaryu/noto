@@ -8,7 +8,7 @@
 	import Proxy from './Proxy.svelte';
 
 	type Props = {
-		as?: Snippet;
+		as?: Snippet<[any]>;
 	} & SvelteHTMLElements['button'] &
 		VariantProps<typeof buttonCVA>;
 
@@ -20,7 +20,8 @@
 			variants: {
 				variant: {
 					primary: 'bg-zinc-900 text-white disabled:text-zinc-500 disabled:bg-zinc-800',
-					secondary: 'bg-white border border-zinc-900 disabled:border-zinc-600 disabled:text-zinc-400',
+					secondary:
+						'bg-white border border-zinc-900 disabled:border-zinc-600 disabled:text-zinc-400',
 				},
 			},
 			defaultVariants: {
@@ -31,7 +32,7 @@
 
 	const modifiedProps = {
 		...props,
-		class: mergeClass(buttonCVA({ variant, className })),
+		class: mergeClass(buttonCVA({ variant }), className),
 	};
 </script>
 

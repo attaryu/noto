@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
+	import Navigation from '$lib/components/Navigation.svelte';
+
 	interface Props {
 		children?: Snippet;
 	}
@@ -9,3 +11,5 @@
 </script>
 
 {@render children?.()}
+
+<Navigation />

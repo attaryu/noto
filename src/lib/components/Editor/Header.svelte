@@ -2,7 +2,7 @@
 	import type { Editor } from '@tiptap/core';
 
 	import _ from 'lodash';
-	import { Check, MoveLeft, Pencil, X } from 'lucide-svelte';
+	import { Check, ArrowLeft, Pencil, X } from 'lucide-svelte';
 
 	import Button from '../Button.svelte';
 	import Header from '../Header.svelte';
@@ -42,7 +42,7 @@
 
 <Header class="flex items-center bg-zinc-900 p-1">
 	<Button variant="secondary">
-		<MoveLeft />
+		<ArrowLeft />
 	</Button>
 
 	<Text tag="h3" class="ml-4 text-white">{title}</Text>
