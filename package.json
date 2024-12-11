@@ -53,9 +53,11 @@
     "@tiptap/starter-kit": "^2.10.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cookie": "^1.0.2",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "lucide-svelte": "^0.460.1",
+    "mongodb": "^6.11.0",
     "tailwind-merge": "^2.5.4"
   }
 }
