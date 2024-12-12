@@ -6,7 +6,7 @@ export interface ICreateUserDTO {
 	 * Hashed password
 	 */
 	password: {
-		key: string;
+		salt: string;
 		value: string;
 	};
 

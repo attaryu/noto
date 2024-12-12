@@ -10,7 +10,7 @@ export interface IUserOutDTO {
 	 * Hashed password
 	 */
 	password?: {
-		key: string;
+		salt: string;
 		value: string;
 	};
 
