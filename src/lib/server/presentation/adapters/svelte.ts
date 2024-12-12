@@ -1,6 +1,6 @@
-import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
-import { json, redirect, type Cookies, type RequestEvent } from '@sveltejs/kit';
 import type { IController } from '../http/controllers/Controller';
+
+import { json, redirect, type Cookies, type RequestEvent } from '@sveltejs/kit';
 
 export type SvelteHttpRequest = RequestEvent<Partial<Record<string, string>>, string | null>;
 
@@ -35,8 +35,11 @@ export function svelteAdapter(controller: IController) {
 			cookies,
 			params,
 			query: url.searchParams,
-			body: await request.json(),
 		};
+
+		if (request.bodyUsed) {
+			httpRequest.body = await request.json();
+		}
 
 		const httpResponse: IHttpResponse = {
 			setHeaders,

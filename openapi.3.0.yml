@@ -75,7 +75,26 @@ paths:
                     email: johndoe@gmail.com
                     encryption_key: '[ENCRYPTED]'
 
-  /auth/password-salt:
+  /auth/send-recover:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: johndoe@gmail.com
+      responses:
+        '200':
+          description: Sending email to user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Email sended
+
+  /user/password-salt:
     get:
       parameters:
         - in: query
@@ -95,25 +114,6 @@ paths:
                 message: Ok
                 payload:
                   salt: '[RANDOM 16 BIT]'
-
-  /auth/send-recover:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            example:
-              email: johndoe@gmail.com
-      responses:
-        '200':
-          description: Sending email to user
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Responses'
-              example:
-                success: true
-                message: Email sended
 
   /user/resk:
     get:
@@ -188,7 +188,7 @@ paths:
               example:
                 success: true
                 message: Ok
-                
+
   /notes:
     get:
       parameters:
