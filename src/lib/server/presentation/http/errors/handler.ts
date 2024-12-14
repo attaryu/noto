@@ -9,7 +9,7 @@ import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundEr
  * If you create a new error class, make sure to add it here.
  */
 export function errorHandler(error: any): IResponseDTO {	
-	console.log('error:', error);
+	// console.log('error:', error);
 	
 	// place error class here
 	const errors: { [code: string]: any[] } = {

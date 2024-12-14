@@ -4,16 +4,16 @@ export interface SessionInterface {
 	token: string;
 	userId: string;
 	expiredAt: Date;
-	createAt?: Date;
+	createdAt?: Date;
 }
 
 export class SessionEntity {
-	private _token: SessionInterface['token'];
-	private _userId: SessionInterface['userId'];
-	private _expiredAt: SessionInterface['expiredAt'];
-	private _createAt: SessionInterface['createAt'];
+	private readonly _token: SessionInterface['token'];
+	private readonly _userId: SessionInterface['userId'];
+	private readonly _expiredAt: SessionInterface['expiredAt'];
+	private readonly _createdAt: SessionInterface['createdAt'];
 
-	public static create(prop: SessionInterface) {
+	static create(prop: SessionInterface): SessionEntity {
 		if (!prop.token || typeof prop.token !== 'string') {
 			throw new SessionEntityError('token');
 		}
@@ -41,14 +41,14 @@ export class SessionEntity {
 		return this._expiredAt;
 	}
 
-	get createAt(): SessionInterface['createAt'] {
-		return this._createAt;
+	get createdAt(): SessionInterface['createdAt'] {
+		return this._createdAt;
 	}
 
 	constructor(prop: SessionInterface) {
 		this._token = prop.token;
 		this._userId = prop.userId;
 		this._expiredAt = prop.expiredAt;
-		this._createAt = prop.createAt ?? new Date();
+		this._createdAt = prop.createdAt ?? new Date();
 	}
 }

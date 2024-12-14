@@ -52,6 +52,10 @@ export function svelteAdapter(controller: IController) {
 			return redirect(statusCode, response.redirect);
 		}
 
+		if (statusCode === 204) {
+			return new Response(null, { status: statusCode });
+		}
+
 		return json(response, { status: statusCode });
 	};
 }

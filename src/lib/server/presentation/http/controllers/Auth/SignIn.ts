@@ -11,8 +11,6 @@ export class SignInController implements IController {
 	async handle(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
 		try {
 			if (!(request.body && Object.keys(request.body).length)) {
-				console.log(request.body);
-
 				return {
 					statusCode: 400,
 					success: false,

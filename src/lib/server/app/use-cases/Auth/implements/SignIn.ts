@@ -39,7 +39,12 @@ export class SignIn implements ISignIn {
 			expiredAt: token.expired,
 		});
 
-		await this.sessionRepository.create(sessionEntity);
+		await this.sessionRepository.create({
+			token: sessionEntity.token,
+			userId: sessionEntity.userId,
+			expiredAt: sessionEntity.expiredAt,
+			createdAt: sessionEntity.createdAt!,
+		});
 
 		return {
 			token: sessionEntity.token,
