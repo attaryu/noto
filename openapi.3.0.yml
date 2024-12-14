@@ -59,7 +59,7 @@ paths:
             Set-Cookie:
               schema:
                 type: string
-                example: token=[JWT TOKEN]
+                example: AUTH_TOKEN=[JWT TOKEN]
           content:
             application/json:
               schema:
@@ -76,11 +76,11 @@ paths:
                     encryption_key: '[ENCRYPTED]'
 
   /auth/sign-out:
-    put:
+    delete:
       parameters:
         - in: header
           required: true
-          name: token
+          name: AUTH_TOKEN
           schema:
             type: string
       responses:

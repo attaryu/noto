@@ -2,6 +2,7 @@ import type { ISessionRepository } from '$lib/server/app/repositories/Session';
 import type { ICreateSessionDTO } from '$lib/server/domain/dtos/Session/CreateSession';
 import type { ISessionDTO } from '$lib/server/domain/dtos/Session/Session';
 import type { SessionInterface } from '$lib/server/domain/entities/session';
+
 import { ObjectId, type Collection, type MongoClient } from 'mongodb';
 
 type Document = SessionInterface;
@@ -30,5 +31,10 @@ export class SessionRepository implements ISessionRepository {
 	async getSessionByToken(token: string): Promise<ISessionDTO | null> {
 		const result = await this.database.findOne({ token });
 		return result;
+	}
+
+	async delete(token: string): Promise<void> {
+		console.log(token);
+		await this.database.deleteOne({ token });
 	}
 }
