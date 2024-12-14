@@ -1,17 +1,26 @@
+import type { IPasswordHasher } from '$lib/server/app/providers/PasswordHasher';
 import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { ICreateUserDTO } from '$lib/server/domain/dtos/User/CreateUser';
 import type { IUserOutDTO } from '$lib/server/domain/dtos/User/UserOut';
-import type { ICreateUser } from '../CreateUser';
+import type { ISignUp } from '../SignUp';
 
 import { UserEntity } from '$lib/server/domain/entities/user';
-import { UserCircle } from 'lucide-svelte';
 import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlreadyExistError';
 
-export class CreateUser implements ICreateUser {
-	constructor(private userRepository: IUserRepository) {}
+export class SignUp implements ISignUp {
+	constructor(
+		private readonly userRepository: IUserRepository,
+		private readonly passwordHasher: IPasswordHasher,
+	) {}
 
 	async execute(data: ICreateUserDTO): Promise<IUserOutDTO> {
-		const newUser = UserEntity.create(data);
+		const newUser = UserEntity.create({
+			...data,
+			password: {
+				...data.password,
+				value: await this.passwordHasher.hash(data.password.value),
+			},
+		});
 
 		const isEmailAlreadyExist = await this.userRepository.findByEmail(newUser.email);
 
@@ -19,7 +28,13 @@ export class CreateUser implements ICreateUser {
 			throw new UserAlreadyExistError(newUser.email);
 		}
 
-		const user = await this.userRepository.create(data);
+		const user = await this.userRepository.create({
+			email: newUser.email,
+			fullname: newUser.fullname,
+			password: newUser.password!,
+			recovery: newUser.recovery!,
+			secretKey: newUser.secretKey!,
+		});
 
 		if (!user) {
 			throw Error('Something error');

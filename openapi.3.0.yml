@@ -75,6 +75,25 @@ paths:
                     email: johndoe@gmail.com
                     encryption_key: '[ENCRYPTED]'
 
+  /auth/sign-out:
+    put:
+      parameters:
+        - in: header
+          required: true
+          name: token
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+
   /auth/send-recover:
     post:
       requestBody:

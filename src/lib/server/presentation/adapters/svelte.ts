@@ -37,7 +37,7 @@ export function svelteAdapter(controller: IController) {
 			query: url.searchParams,
 		};
 
-		if (request.bodyUsed) {
+		if (request.body) {
 			httpRequest.body = await request.json();
 		}
 

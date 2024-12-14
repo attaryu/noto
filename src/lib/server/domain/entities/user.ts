@@ -57,7 +57,7 @@ export class UserEntity {
 		return this._secretKey;
 	}
 
-	get recoveryKey(): UserInterface['recovery'] | undefined {
+	get recovery(): UserInterface['recovery'] | undefined {
 		return this._recovery;
 	}
 
