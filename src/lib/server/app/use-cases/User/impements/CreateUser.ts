@@ -2,12 +2,12 @@ import type { IPasswordHasher } from '$lib/server/app/providers/PasswordHasher';
 import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { ICreateUserDTO } from '$lib/server/domain/dtos/User/CreateUser';
 import type { IUserOutDTO } from '$lib/server/domain/dtos/User/UserOut';
-import type { ISignUp } from '../SignUp';
+import type { ICreateUser } from '../CreateUser';
 
 import { UserEntity } from '$lib/server/domain/entities/user';
 import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlreadyExistError';
 
-export class SignUp implements ISignUp {
+export class CreateUser implements ICreateUser {
 	constructor(
 		private readonly userRepository: IUserRepository,
 		private readonly passwordHasher: IPasswordHasher,

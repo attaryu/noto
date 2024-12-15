@@ -5,5 +5,8 @@
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
     ["class\\s*:\\s*['\"](.*?)['\"]"]
-  ]
+  ],
+  "yaml.schemas": {
+    "https://json.schemastore.org/yamllint.json": "file:///c%3A/Users/M%20Attar/Documents/Private/code/project/noto/openapi.3.0.yml"
+  }
 }

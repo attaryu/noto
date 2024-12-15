@@ -1,4 +1,4 @@
-import type { ISignIn } from '$lib/server/app/use-cases/Auth/SignIn';
+import type { ICreateSession } from '$lib/server/app/use-cases/Session/CreateSession';
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 import type { IHttpRequest, IHttpResponse } from '$lib/server/presentation/adapters/svelte';
 import type { IController } from '../Controller';
@@ -6,7 +6,7 @@ import type { IController } from '../Controller';
 import { errorHandler } from '../../errors/handler';
 
 export class SignInController implements IController {
-	constructor(private readonly signInCase: ISignIn) {}
+	constructor(private readonly signInCase: ICreateSession) {}
 
 	async handle(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
 		try {

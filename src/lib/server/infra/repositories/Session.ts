@@ -1,5 +1,4 @@
 import type { ISessionRepository } from '$lib/server/app/repositories/Session';
-import type { ICreateSessionDTO } from '$lib/server/domain/dtos/Session/CreateSession';
 import type { ISessionDTO } from '$lib/server/domain/dtos/Session/Session';
 import type { SessionInterface } from '$lib/server/domain/entities/session';
 
@@ -16,7 +15,7 @@ export class SessionRepository implements ISessionRepository {
 		this.database = client.db('noto').collection<Document>('sessions');
 	}
 
-	async create(data: ICreateSessionDTO): Promise<ISessionDTO | null> {
+	async create(data: ISessionDTO): Promise<ISessionDTO | null> {
 		const result = await this.database.insertOne({ ...data });
 		const session = await this.getSessionById(result.insertedId.toString());
 

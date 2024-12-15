@@ -2,15 +2,15 @@ import type { IPasswordHasher } from '$lib/server/app/providers/PasswordHasher';
 import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
 import type { ISessionRepository } from '$lib/server/app/repositories/Session';
 import type { IUserRepository } from '$lib/server/app/repositories/User';
-import type { ISignInOutDTO } from '$lib/server/domain/dtos/Session/SignInOut';
-import type { ISignInDTO } from '$lib/server/domain/dtos/User/SignInUser';
-import type { ISignIn } from '../SignIn';
+import type { ICreateSessionDTO } from '$lib/server/domain/dtos/Session/CreateSession';
+import type { ISessionOutDTO } from '$lib/server/domain/dtos/Session/SessionOut';
+import type { ICreateSession } from '../CreateSession';
 
 import { SessionEntity } from '$lib/server/domain/entities/session';
 import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 
-export class SignIn implements ISignIn {
+export class CreateSession implements ICreateSession {
 	constructor(
 		private readonly userRepository: IUserRepository,
 		private readonly sessionRepository: ISessionRepository,
@@ -18,7 +18,7 @@ export class SignIn implements ISignIn {
 		private readonly passwordHasher: IPasswordHasher,
 	) {}
 
-	async execute(data: ISignInDTO): Promise<ISignInOutDTO> {
+	async execute(data: ICreateSessionDTO): Promise<ISessionOutDTO> {
 		const user = await this.userRepository.findByEmail(data.email);
 
 		if (!user) {

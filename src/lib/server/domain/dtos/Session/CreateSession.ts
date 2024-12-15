@@ -1,9 +1,11 @@
 /**
- * Interface for creating new session
+ * create session or sign in shape
  */
 export interface ICreateSessionDTO {
-	token: string;
-	userId: string;
-	expiredAt: Date;
-	createdAt?: Date;
+	email: string;
+
+	/**
+	 * hashed password from user input
+	 */
+	password: string;
 }

@@ -1,7 +1,7 @@
 import type { ISessionRepository } from '$lib/server/app/repositories/Session';
-import type { ISignOut } from '../SignOut';
+import type { IDeleteSession } from '../DeleteSesion';
 
-export class SignOut implements ISignOut {
+export class DeleteSession implements IDeleteSession {
 	constructor(private readonly sessionRepository: ISessionRepository) {}
 
 	async execute(token: string): Promise<void> {

@@ -1,7 +1,7 @@
 /**
- * Sign in output
+ * create session output to external 
  */
-export interface ISignInOutDTO {
+export interface ISessionOutDTO {
 	token: string;
 	userId: string;
 	expiredAt: Date;

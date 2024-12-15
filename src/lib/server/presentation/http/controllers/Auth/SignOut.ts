@@ -1,10 +1,10 @@
-import type { ISignOut } from '$lib/server/app/use-cases/Auth/SignOut';
+import type { IDeleteSession } from '$lib/server/app/use-cases/Session/DeleteSesion';
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 import type { IHttpRequest, IHttpResponse } from '$lib/server/presentation/adapters/svelte';
 import type { IController } from '../Controller';
 
 export class SignOutController implements IController {
-	constructor(private readonly signOutCase: ISignOut) {}
+	constructor(private readonly deleteSessionCase: IDeleteSession) {}
 
 	async handle(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
 		try {
@@ -18,11 +18,11 @@ export class SignOutController implements IController {
 				};
 			}
 
-			await this.signOutCase.execute(token);
+			await this.deleteSessionCase.execute(token);
 		} catch (error: any) {
 			// do something if needed
 		}
-    
+
 		// No matter whether the token sent is or not in the database, always return success.
 		// Unless the token is not included on the Cookie Request
 
