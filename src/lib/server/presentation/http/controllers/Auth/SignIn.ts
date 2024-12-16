@@ -8,7 +8,7 @@ import { errorHandler } from '../../errors/handler';
 export class SignInController implements IController {
 	constructor(private readonly signInCase: ICreateSession) {}
 
-	async handle(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
+	async handler(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
 		try {
 			if (!(request.body && Object.keys(request.body).length)) {
 				return {
@@ -33,9 +33,9 @@ export class SignInController implements IController {
 				success: true,
 				payload: {
 					user: {
-						id: user.id,
-						fullname: user.fullname,
-						email: user.email,
+						id: user!.id,
+						fullname: user!.fullname,
+						email: user!.email,
 					},
 				},
 			};

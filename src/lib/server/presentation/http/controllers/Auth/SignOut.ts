@@ -6,7 +6,7 @@ import type { IController } from '../Controller';
 export class SignOutController implements IController {
 	constructor(private readonly deleteSessionCase: IDeleteSession) {}
 
-	async handle(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
+	async handler(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
 		try {
 			const token = request.cookies.get('AUTH_TOKEN');
 

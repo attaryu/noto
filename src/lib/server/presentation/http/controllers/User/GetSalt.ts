@@ -7,7 +7,7 @@ import type { IController } from '../Controller';
 export class GetSaltController implements IController {
 	constructor(private readonly getSaltUseCase: IGetSalt) {}
 
-	async handle(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
+	async handler(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
 		try {
 			const email = request.query?.get('email');
 

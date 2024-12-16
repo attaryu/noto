@@ -1,7 +1,7 @@
 /**
- * create session or sign in shape
+ * create token shape
  */
-export interface ICreateSessionDTO {
+export interface ICreateTokenDTO {
 	email: string;
 
 	/**

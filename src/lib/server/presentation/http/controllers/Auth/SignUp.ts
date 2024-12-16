@@ -8,7 +8,7 @@ import { errorHandler } from '../../errors/handler';
 export class SignUpController implements IController {
 	constructor(private readonly createSignUp: ISignUp) {}
 
-	async handle(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
+	async handler(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
 		try {
 			if (!(request.body && Object.keys(request.body).length)) {
 				return {

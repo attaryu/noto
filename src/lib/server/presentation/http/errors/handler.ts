@@ -5,12 +5,12 @@ import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlread
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 
 /**
- * A place to determine the type of error and the http response.
+ * A place to determine the type of domain or app layer error, then changed it to http response.
  * If you create a new error class, make sure to add it here.
  */
-export function errorHandler(error: any): IResponseDTO {	
-	// console.log('error:', error);
-	
+export function errorHandler(error: any): IResponseDTO {
+	console.log('error:', error);
+
 	// place error class here
 	const errors: { [code: string]: any[] } = {
 		400: [PasswordIncorrectError],

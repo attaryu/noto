@@ -5,13 +5,13 @@ import { SignInController } from '$lib/server/presentation/http/controllers/Auth
 import { client } from '../../databases/mongodb/connection';
 import { PasswordHasher } from '../../providers/PasswordHasher';
 import { TokenManager } from '../../providers/TokenManager';
-import { SessionRepository } from '../../repositories/Session';
+import { TokenRepository } from '../../repositories/Token';
 import { UserRepository } from '../../repositories/User';
 
 export function signInComposer(): IController {
 	const useCase = new CreateSession(
 		new UserRepository(client),
-		new SessionRepository(client),
+		new TokenRepository(client),
 		new TokenManager(),
 		new PasswordHasher(),
 	);

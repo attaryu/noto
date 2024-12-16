@@ -1,6 +1,6 @@
-import type { ICreateSessionDTO } from '$lib/server/domain/dtos/Session/CreateSession';
-import type { ISessionOutDTO } from '$lib/server/domain/dtos/Session/SessionOut';
+import type { ICreateTokenDTO } from '$lib/server/domain/dtos/Token/CreateToken';
+import type { ITokenOutDTO } from '$lib/server/domain/dtos/Token/TokenOut';
 
 export interface ICreateSession {
-	execute(data: ICreateSessionDTO): Promise<ISessionOutDTO>;
+	execute(data: ICreateTokenDTO): Promise<ITokenOutDTO>;
 }

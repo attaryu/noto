@@ -1,24 +1,24 @@
 import type { IPasswordHasher } from '$lib/server/app/providers/PasswordHasher';
 import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
-import type { ISessionRepository } from '$lib/server/app/repositories/Session';
+import type { ITokenRepository } from '$lib/server/app/repositories/Token';
 import type { IUserRepository } from '$lib/server/app/repositories/User';
-import type { ICreateSessionDTO } from '$lib/server/domain/dtos/Session/CreateSession';
-import type { ISessionOutDTO } from '$lib/server/domain/dtos/Session/SessionOut';
+import type { ICreateTokenDTO } from '$lib/server/domain/dtos/Token/CreateToken';
+import type { ITokenOutDTO } from '$lib/server/domain/dtos/Token/TokenOut';
 import type { ICreateSession } from '../CreateSession';
 
-import { SessionEntity } from '$lib/server/domain/entities/session';
+import { TokenEntity } from '$lib/server/domain/entities/token';
 import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 
 export class CreateSession implements ICreateSession {
 	constructor(
 		private readonly userRepository: IUserRepository,
-		private readonly sessionRepository: ISessionRepository,
+		private readonly tokenRepository: ITokenRepository,
 		private readonly tokenManager: ITokenManager,
 		private readonly passwordHasher: IPasswordHasher,
 	) {}
 
-	async execute(data: ICreateSessionDTO): Promise<ISessionOutDTO> {
+	async execute(data: ICreateTokenDTO): Promise<ITokenOutDTO> {
 		const user = await this.userRepository.findByEmail(data.email);
 
 		if (!user) {
@@ -33,23 +33,17 @@ export class CreateSession implements ICreateSession {
 
 		const token = await this.tokenManager.sign({ id: user.id, email: user.email });
 
-		const sessionEntity = SessionEntity.create({
+		const session = TokenEntity.create({
 			userId: user.id,
 			token: token.value,
 			expiredAt: token.expired,
-		});
+			purpose: 'session',
+		}).toObject();
 
-		await this.sessionRepository.create({
-			token: sessionEntity.token,
-			userId: sessionEntity.userId,
-			expiredAt: sessionEntity.expiredAt,
-			createdAt: sessionEntity.createdAt!,
-		});
+		await this.tokenRepository.create(session);
 
 		return {
-			token: sessionEntity.token,
-			userId: sessionEntity.userId,
-			expiredAt: sessionEntity.expiredAt,
+			...session,
 			user,
 		};
 	}

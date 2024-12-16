@@ -1,11 +1,11 @@
 import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
-import type { ICreateTokenPayloadDTO } from '$lib/server/domain/dtos/Session/CreateTokenPayload';
+import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
 
 import { SECRET_KEY } from '$env/static/private';
 import { SignJWT, jwtDecrypt } from 'jose';
 
 export class TokenManager implements ITokenManager {
-	async sign(payload: ICreateTokenPayloadDTO): Promise<{ value: string; expired: Date }> {
+	async sign(payload: ITokenPayloadDTO): Promise<{ value: string; expired: Date }> {
 		const expiredTime = new Date(Date.now() + 1000 * 60 * 60 * 24);
 		const jwt = await new SignJWT({ ...payload })
 			.setProtectedHeader({ alg: 'HS256' })
@@ -28,8 +28,8 @@ export class TokenManager implements ITokenManager {
 		return true;
 	}
 
-	async decrypt(token: string): Promise<ICreateTokenPayloadDTO> {
-		const { payload } = await jwtDecrypt<ICreateTokenPayloadDTO>(token, this.getKey());
+	async decrypt(token: string): Promise<ITokenPayloadDTO> {
+		const { payload } = await jwtDecrypt<ITokenPayloadDTO>(token, this.getKey());
 		return payload;
 	}
 

@@ -45,7 +45,7 @@ export function svelteAdapter(controller: IController) {
 			setHeaders,
 		};
 
-		const response = await controller.handle(httpRequest, httpResponse);
+		const response = await controller.handler(httpRequest, httpResponse);
 		const { statusCode } = response;
 
 		if (statusCode >= 300 && statusCode < 400) {
