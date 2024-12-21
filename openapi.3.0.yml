@@ -95,13 +95,15 @@ paths:
                 message: Ok
 
   /auth/recover-email:
-    get:
-      parameters:
-        - in: query
-          required: true
-          name: email
-          schema:
-            type: string
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              email: johndoe@gmail.com
       responses:
         '200':
           description: Sending email to user
@@ -114,7 +116,7 @@ paths:
                 message: Email sended
 
   /user/password-salt:
-    get:
+    post:
       parameters:
         - in: query
           required: true
@@ -163,14 +165,9 @@ paths:
                   recover: '[ENCRYPTED]'
                   changes_token: '[TOKEN]'
 
-  /users/{user_id}/security:
+  /user/security:
     put:
       parameters:
-        - in: path
-          required: true
-          name: user_id
-          schema:
-            type: string
         - in: query
           required: true
           name: changes-token

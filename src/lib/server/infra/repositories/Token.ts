@@ -17,13 +17,14 @@ export class TokenRepository implements ITokenRepository {
 
 	async create(data: ITokenDTO): Promise<ITokenDTO | null> {
 		const result = await this.database.insertOne({ ...data });
-		const session = await this.getSessionById(result.insertedId.toString());
+		const token = await this.getSessionById(result.insertedId.toString());
 
-		return session;
+		return token;
 	}
 
 	async getSessionById(id: string): Promise<ITokenDTO | null> {
 		const result = await this.database.findOne({ _id: new ObjectId(id) });
+
 		return result;
 	}
 
@@ -32,7 +33,7 @@ export class TokenRepository implements ITokenRepository {
 		return result;
 	}
 
-	async delete(token: string): Promise<void> {
-		await this.database.deleteOne({ token });
+	async delete(query: Partial<ITokenDTO>): Promise<void> {
+		await this.database.deleteOne({ ...query });
 	}
 }

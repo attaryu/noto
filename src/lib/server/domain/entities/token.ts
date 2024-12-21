@@ -1,9 +1,10 @@
+import { TokenPurposeEnum } from '../enums/TokenPurpose';
 import { TokenEntityError } from '../errors/Token/TokenEntityError';
 
 export interface TokenInterface {
 	token: string;
 	userId: string;
-	purpose: 'session' | 'reset-password';
+	purpose: TokenPurposeEnum;
 	expiredAt: Date;
 	createdAt?: Date;
 }

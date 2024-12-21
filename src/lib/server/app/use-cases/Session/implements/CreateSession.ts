@@ -9,6 +9,7 @@ import type { ICreateSession } from '../CreateSession';
 import { TokenEntity } from '$lib/server/domain/entities/token';
 import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
+import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 
 export class CreateSession implements ICreateSession {
 	constructor(
@@ -31,13 +32,17 @@ export class CreateSession implements ICreateSession {
 			throw new PasswordIncorrectError();
 		}
 
-		const token = await this.tokenManager.sign({ id: user.id, email: user.email });
+		const token = await this.tokenManager.sign({
+			id: user.id,
+			email: user.email,
+			purpose: TokenPurposeEnum.session,
+		});
 
 		const session = TokenEntity.create({
 			userId: user.id,
-			token: token.value,
 			expiredAt: token.expired,
-			purpose: 'session',
+			token: token.value,
+			purpose: token.purpose,
 		}).toObject();
 
 		await this.tokenRepository.create(session);

@@ -3,10 +3,23 @@ import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateToken
 
 import { SECRET_KEY } from '$env/static/private';
 import { SignJWT, jwtDecrypt } from 'jose';
+import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 
 export class TokenManager implements ITokenManager {
-	async sign(payload: ITokenPayloadDTO): Promise<{ value: string; expired: Date }> {
-		const expiredTime = new Date(Date.now() + 1000 * 60 * 60 * 24);
+	async sign(
+		payload: ITokenPayloadDTO,
+	): Promise<{ value: string; expired: Date; purpose: TokenPurposeEnum }> {
+		let expiredTime = Date.now();
+
+		switch (payload.purpose) {
+			case TokenPurposeEnum.resetPassword:
+			case TokenPurposeEnum.recoveryEmail:
+				expiredTime += 1000 * 60 * 60;
+				break;
+			default:
+				expiredTime += 1000 * 60 * 60 * 24;
+		}
+
 		const jwt = await new SignJWT({ ...payload })
 			.setProtectedHeader({ alg: 'HS256' })
 			.setExpirationTime(expiredTime)
@@ -14,7 +27,8 @@ export class TokenManager implements ITokenManager {
 
 		return {
 			value: jwt,
-			expired: expiredTime,
+			expired: new Date(expiredTime),
+			purpose: payload.purpose,
 		};
 	}
 

@@ -1,7 +1,8 @@
-import type { ICreateTokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
+import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
+import type { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 
 export interface ITokenManager {
-	sign(payload: ICreateTokenPayloadDTO): Promise<{ value: string; expired: Date }>;
+	sign(payload: ITokenPayloadDTO): Promise<{ value: string; expired: Date, purpose: TokenPurposeEnum }>;
 	verify(token: string): Promise<boolean>;
-	decrypt(token: string): Promise<ICreateTokenPayloadDTO>;
+	decrypt(token: string): Promise<ITokenPayloadDTO>;
 }
