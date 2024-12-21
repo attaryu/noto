@@ -8,10 +8,6 @@
 				--horizontal-padding: 32px;
 			}
 
-			.background {
-				padding: 60px;
-			}
-
 			.header {
 				padding: 16px var(--horizontal-padding);
 				border-top: var(--border);
@@ -54,7 +50,7 @@
 
 			.small div {
 				font-size: 12px !important;
-				opacity: 0.8;
+				opacity: 0.6;
 			}
 		</mj-style>
 
@@ -65,18 +61,11 @@
 	</mj-head>
 
 	<mj-body css-class="body">
-		<mj-wrapper css-class="background" background-url="https://ucarecdn.com/29e2bc2a-d05e-4c61-93f4-f2dd41bd90af/-/preview/612x829" background-size="cover">
+		<mj-wrapper css-class="background" background-url="https://ucarecdn.com/29e2bc2a-d05e-4c61-93f4-f2dd41bd90af/-/preview/612x829" background-size="cover" padding="30px">
 			<!-- header -->
 			<mj-section css-class="header">
 				<mj-column>
 					<mj-text css-class="logo">Notō</mj-text>
-				</mj-column>
-
-				<mj-column>
-					<mj-text align="right" css-class="small">
-						{{sendDate}} <br />
-						{{sendTime}}
-					</mj-text>
 				</mj-column>
 			</mj-section>
 
@@ -114,19 +103,17 @@
 					<mj-text css-class="paragraph">
 						This link is valid until <strong>{{expiredAt}}</strong>. If you did not request account recovery, you can safely ignore this email.
 					</mj-text>
-
+					
 					<mj-text css-class="paragraph" padding-top="40px">
 						Thank you, <br />The Notō Team
 					</mj-text>
+
+					<mj-text css-class="small" padding-top="16px" color="red">*dont reply this email</mj-text>
 				</mj-column>
 			</mj-section>
 
 			<!-- footer -->
 			<mj-section css-class="footer">
-				<mj-column>
-					<mj-text css-class="small">*dont reply this email</mj-text>
-				</mj-column>
-
 				<mj-column>
 					<mj-text align="right" css-class="logo">Notō</mj-text>
 				</mj-column>
