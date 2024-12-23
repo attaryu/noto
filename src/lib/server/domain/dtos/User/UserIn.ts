@@ -22,7 +22,7 @@ export interface IUserInDTO {
 	/**
 	 * Encrypted secret key by recovery keys
 	 */
-	recovery: {
+	recoveryKeys: {
 		[key: string]: string;
 	};
 

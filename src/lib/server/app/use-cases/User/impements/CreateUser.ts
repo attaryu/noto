@@ -32,7 +32,7 @@ export class CreateUser implements ICreateUser {
 			email: newUser.email,
 			fullname: newUser.fullname,
 			password: newUser.password!,
-			recovery: newUser.recovery!,
+			recoveryKeys: newUser.recoveryKeys!,
 			secretKey: newUser.secretKey!,
 		});
 

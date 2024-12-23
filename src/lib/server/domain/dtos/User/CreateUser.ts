@@ -18,7 +18,7 @@ export interface ICreateUserDTO {
 	/**
 	 * Encrypted secret key by recovery keys
 	 */
-	recovery: {
+	recoveryKeys: {
 		[key: string]: string;
 	};
 }

@@ -22,7 +22,7 @@ export interface UserInterface {
 	/**
 	 * Encrypted secret key by recovery keys
 	 */
-	recovery: {
+	recoveryKeys: {
 		[key: string]: string;
 	};
 
@@ -35,7 +35,7 @@ export class UserEntity {
 	private readonly _email: string;
 	private readonly _password: UserInterface['password'] | undefined;
 	private readonly _secretKey: string | undefined;
-	private readonly _recovery: UserInterface['recovery'] | undefined;
+	private readonly _recoveryKeys: UserInterface['recoveryKeys'] | undefined;
 
 	static create(props: ICreateUserDTO): UserEntity {
 		return new UserEntity(props);
@@ -57,12 +57,12 @@ export class UserEntity {
 		return this._secretKey;
 	}
 
-	get recovery(): UserInterface['recovery'] | undefined {
-		return this._recovery;
+	get recoveryKeys(): UserInterface['recoveryKeys'] | undefined {
+		return this._recoveryKeys;
 	}
 
 	constructor(props: IUserOutDTO) {
-		const { email, fullname, password, recovery, secretKey } = props;
+		const { email, fullname, password, recoveryKeys, secretKey } = props;
 
 		this._email = email;
 		this._fullname = fullname;
@@ -75,8 +75,8 @@ export class UserEntity {
 			this._secretKey = secretKey;
 		}
 
-		if (recovery) {
-			this._recovery = recovery;
+		if (recoveryKeys) {
+			this._recoveryKeys = recoveryKeys;
 		}
 	}
 }
