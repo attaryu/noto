@@ -1,7 +1,7 @@
 openapi: '3.0.3'
 info:
   title: Noto Api
-  version: '1.0'
+  version: '1.1'
 servers:
   - url: https://localhost:5173/api/v1
 paths:
@@ -19,27 +19,31 @@ paths:
               password:
                 value: '[HASHED]'
                 salt: '[RANDOM 16 BIT]'
-              encryption_key:
-                master: '[ENCRYPTED]'
-                recover:
-                  - '1:[ENCRYPTED]'
-                  - '2:[ENCRYPTED]'
-                  - '3:[ENCRYPTED]'
-                  - '4:[ENCRYPTED]'
-                  - '5:[ENCRYPTED]'
-                  - '6:[ENCRYPTED]'
-                  - '7:[ENCRYPTED]'
-                  - '8:[ENCRYPTED]'
+              secretKey: "[ENCRYPTED]"
+              recoveryKeys:
+                '001': '[ENCRYPTED]'
+                '002': '[ENCRYPTED]'
+                '003': '[ENCRYPTED]'
+                '004': '[ENCRYPTED]'
+                '005': '[ENCRYPTED]'
+                '006': '[ENCRYPTED]'
+                '007': '[ENCRYPTED]'
+                '008': '[ENCRYPTED]'
       responses:
-        '201':
+        201:
           description: CREATED
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Responses'
               example:
+                statusCode: 201
                 success: true
-                message: CREATED
+                payload:
+                  user:
+                    id: 1
+                    email: "johndoe@gmail.com"
+                    fullname: "John Doe"
 
   /auth/sign-in:
     post:
@@ -53,8 +57,8 @@ paths:
               email: johndoe@gmail.com
               password: '[ENCRYPTED]'
       responses:
-        '200':
-          description: OK
+        201:
+          description: CREATED
           headers:
             Set-Cookie:
               schema:
@@ -65,15 +69,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Responses'
               example:
+                statusCode: 201
                 success: true
-                message: Ok
                 payload:
                   user:
                     id: '123'
-                    image_url: '/to/image/path.jpg'
                     fullname: John Doe
                     email: johndoe@gmail.com
-                    encryption_key: '[ENCRYPTED]'
+                    secretKey: '[ENCRYPTED]'
 
   /auth/sign-out:
     delete:
@@ -84,15 +87,11 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        204:
+          description: No Content
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Responses'
-              example:
-                success: true
-                message: Ok
+              example: {}
 
   /auth/recover-email:
     post:
@@ -105,18 +104,18 @@ paths:
             example:
               email: johndoe@gmail.com
       responses:
-        '200':
+        200:
           description: Sending email to user
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Responses'
               example:
+                statusCode: 200
                 success: true
-                message: Email sended
 
-  /user/password-salt:
-    post:
+  /users/password-salt:
+    get:
       parameters:
         - in: query
           required: true
@@ -124,7 +123,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
@@ -136,7 +135,7 @@ paths:
                 payload:
                   salt: '[RANDOM 16 BIT]'
 
-  /user/resk:
+  /users/recovery-key:
     get:
       parameters:
         - in: query
@@ -152,7 +151,7 @@ paths:
           schema:
             type: number
       responses:
-        '200':
+        200:
           description: Ok
           content:
             application/json:
@@ -160,18 +159,18 @@ paths:
                 $ref: '#/components/schemas/Responses'
               example:
                 success: true
-                message: Ok
+                statusCode: 200
                 payload:
-                  recover: '[ENCRYPTED]'
-                  changes_token: '[TOKEN]'
+                  token: '[TOKEN]'
+                  recoveryKey: '[ENCRYPTED]'
 
-  /user/security:
+  /users/security:
     put:
       parameters:
         - in: query
           required: true
-          name: changes-token
-          description: Token that achived belong with RESK
+          name: reset-token
+          description: Token that achived belong with recovery key
           schema:
             type: string
       requestBody:
@@ -184,38 +183,46 @@ paths:
               password:
                 value: '[HASHED]'
                 salt: '[RANDOM 16 BIT]'
-              encryption_key:
-                recover:
-                  - '1:[ENCRYPTED]'
-                  - '2:[ENCRYPTED]'
-                  - '3:[ENCRYPTED]'
-                  - '4:[ENCRYPTED]'
-                  - '5:[ENCRYPTED]'
-                  - '6:[ENCRYPTED]'
-                  - '7:[ENCRYPTED]'
-                  - '8:[ENCRYPTED]'
+              recoveryKeys:
+                '001': '[ENCRYPTED]'
+                '002': '[ENCRYPTED]'
+                '003': '[ENCRYPTED]'
+                '004': '[ENCRYPTED]'
+                '005': '[ENCRYPTED]'
+                '006': '[ENCRYPTED]'
+                '007': '[ENCRYPTED]'
+                '008': '[ENCRYPTED]'
       responses:
-        '200':
-          description: OK
+        201:
+          description: CREATED
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Responses'
               example:
                 success: true
-                message: Ok
+                statusCode: 201
+                user:
+                  id: 1
+                  email: "johndoe@gmail.com"
+                  fullname: "John Doe"
 
   /notes:
     get:
       parameters:
-        - in: query
+        - in: cookie
           required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+        - in: query
+          required: false
           name: search
           description: search shape is array of encrypted string and convert to JSON format
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
@@ -223,7 +230,7 @@ paths:
                 $ref: '#/components/schemas/Responses'
               example:
                 success: true
-                message: Ok
+                statusCode: 200
                 payload:
                   notes:
                     - id: '123'
@@ -235,6 +242,12 @@ paths:
                       updatedAt: 2023-10-27T07:00:00.000Z
 
     post:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -250,7 +263,7 @@ paths:
                 - Label 2
               content: '[ENCRYPTED]'
       responses:
-        '201':
+        201:
           description: CREATED
           content:
             application/json:
@@ -258,7 +271,7 @@ paths:
                 $ref: '#/components/schemas/Responses'
               example:
                 success: true
-                message: Created
+                statusCode: 201
                 payload:
                   note:
                     id: '123'
@@ -269,16 +282,38 @@ paths:
                     createdAt: 2023-10-27T07:00:00.000Z
                     updatedAt: 2023-10-27T07:00:00.000Z
 
+    delete:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nodeIds:
+                - '19'
+                - '89'
+                - '51'
+      responses:
+        204:
+          description: No Content
+          content:
+            application/json:
+              example: {}
+
   /notes/{note_id}:
     get:
       parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
         - in: path
           required: true
           name: note_id
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
@@ -286,7 +321,7 @@ paths:
                 $ref: '#/components/schemas/Responses'
               example:
                 success: true
-                message: Ok
+                statusCode: 200
                 payload:
                   note:
                     id: '123'
@@ -299,6 +334,11 @@ paths:
 
     patch:
       parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
         - in: path
           required: true
           name: note_id
@@ -319,7 +359,7 @@ paths:
                 - Label 2
               content: '[ENCRYPTED]'
       responses:
-        '200':
+        200:
           description: OK
           content:
             application/json:
@@ -327,7 +367,7 @@ paths:
                 $ref: '#/components/schemas/Responses'
               example:
                 success: true
-                message: Ok
+                statusCode: 200
                 payload:
                   note:
                     id: '123'
@@ -340,21 +380,22 @@ paths:
 
     delete:
       parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
         - in: path
           required: true
           name: note_id
           schema:
             type: string
       responses:
-        '204':
-          description: DELETED
+        204:
+          description: No content
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Responses'
-              example:
-                success: true
-                message: Deleted
+              example: {}
 
 components:
   schemas:
@@ -364,23 +405,10 @@ components:
         - properties:
             success:
               type: boolean
-            message:
-              type: string
+            statusCode:
+              type: number
         - properties:
-            payload:
-              type: object
-              anyOf:
-                - properties:
-                    note:
-                      $ref: '#/components/schemas/Note'
-                - properties:
-                    user:
-                      $ref: '#/components/schemas/User'
-                - properties:
-                    notes:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/Note'
+            payload: {}
 
     Note:
       type: object
@@ -410,37 +438,25 @@ components:
     User:
       type: object
       properties:
-        image_url:
+        id:
           type: string
         fullname:
           type: string
         email:
           type: string
-      anyOf:
-        - properties:
-            id:
+        secretKey:
+          type: string
+        recoveryKeys:
+          type: object
+          properties:
+        password:
+          type: object
+          properties:
+            value:
               type: string
-            createdAt:
+            salt:
               type: string
-            updatedAt:
-              type: string
-        - properties:
-            encryption_key:
-              type: object
-              properties:
-                recover-token:
-                  type: string
-                master:
-                  type: string
-                recover:
-                  type: array
-                  items:
-                    type: string
-        - properties:
-            password:
-              type: object
-              properties:
-                value:
-                  type: string
-                salt:
-                  type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
