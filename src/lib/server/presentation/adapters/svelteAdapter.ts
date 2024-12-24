@@ -1,6 +1,8 @@
 import type { IController } from '../http/controllers/Controller';
 
 import { json, redirect, type Cookies, type RequestEvent } from '@sveltejs/kit';
+import { errorHandler } from '../http/errors/errorHandler';
+import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 
 export type SvelteHttpRequest = RequestEvent<Partial<Record<string, string>>, string | null>;
 
@@ -45,7 +47,14 @@ export function svelteAdapter(controller: IController) {
 			setHeaders,
 		};
 
-		const response = await controller.handler(httpRequest, httpResponse);
+		let response: IResponseDTO;
+
+		try {
+			response = await controller.handler(httpRequest, httpResponse);
+		} catch (error) {
+			response = errorHandler(error);
+		}
+
 		const { statusCode } = response;
 
 		if (statusCode >= 300 && statusCode < 400) {

@@ -1,6 +1,6 @@
 import type { IDeleteSession } from '$lib/server/app/use-cases/Session/DeleteSesion';
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
-import type { IHttpRequest, IHttpResponse } from '$lib/server/presentation/adapters/svelte';
+import type { IHttpRequest, IHttpResponse } from '$lib/server/presentation/adapters/svelteAdapter';
 import type { IController } from '../Controller';
 
 export class SignOutController implements IController {
