@@ -1,6 +1,10 @@
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 
+import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
+import { TokenNotFoundError } from '$lib/server/domain/errors/Token/TokenNotFoundError';
+import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
 import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
+import { RecoveryKeyNotFoundError } from '$lib/server/domain/errors/User/RecoverKeyNotFoundError';
 import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlreadyExistError';
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 
@@ -11,10 +15,11 @@ import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundEr
 export function errorHandler(error: any): IResponseDTO {
 	console.error('error:', error);
 
-	// place error class here
+	// ? place error class here
 	const errors: { [code: string]: any[] } = {
-		400: [PasswordIncorrectError],
-		404: [UserNotFoundError],
+		400: [PasswordIncorrectError, TokenPurposeError],
+		401: [TokenInvalidError],
+		404: [UserNotFoundError, TokenNotFoundError, RecoveryKeyNotFoundError],
 		409: [UserAlreadyExistError],
 	};
 

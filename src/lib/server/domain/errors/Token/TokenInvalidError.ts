@@ -1,6 +1,6 @@
 export class TokenInvalidError extends Error {
 	constructor() {
-		super('Token tidak valid!');
+		super('Invalid token, request cannot be processed!');
 		this.name = 'TokenInvalidError';
 	}
 }
