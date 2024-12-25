@@ -1,11 +1,12 @@
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 
 import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
-import { TokenNotFoundError } from '$lib/server/domain/errors/Token/TokenNotFoundError';
+import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
 import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
 import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
 import { RecoveryKeyNotFoundError } from '$lib/server/domain/errors/User/RecoverKeyNotFoundError';
 import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlreadyExistError';
+import { UserEntityError } from '$lib/server/domain/errors/User/UserEntityError';
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 
 /**
@@ -13,11 +14,13 @@ import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundEr
  * If you create a new error class, make sure to add it here.
  */
 export function errorHandler(error: any): IResponseDTO {
+	console.error(error);
+
 	// ? place error class here
 	const errors: { [code: string]: any[] } = {
-		400: [PasswordIncorrectError, TokenPurposeError],
+		400: [PasswordIncorrectError, TokenPurposeError, UserEntityError],
 		401: [TokenInvalidError],
-		404: [UserNotFoundError, TokenNotFoundError, RecoveryKeyNotFoundError],
+		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError],
 		409: [UserAlreadyExistError],
 	};
 

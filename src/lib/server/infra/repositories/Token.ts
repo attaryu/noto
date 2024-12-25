@@ -34,6 +34,6 @@ export class TokenRepository implements ITokenRepository {
 	}
 
 	async delete(query: Partial<ITokenDTO>): Promise<void> {
-		await this.database.deleteOne({ ...query });
+		await this.database.deleteMany({ ...query });
 	}
 }

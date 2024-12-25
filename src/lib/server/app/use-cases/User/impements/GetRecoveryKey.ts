@@ -3,12 +3,12 @@ import type { ITokenRepository } from '$lib/server/app/repositories/Token';
 import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { IGetRecoveryKey, IGetRecoveryKeyDTO } from '../GetRecoveryKey';
 
+import { TokenEntity } from '$lib/server/domain/entities/token';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
-import { TokenNotFoundError } from '$lib/server/domain/errors/Token/TokenNotFoundError';
+import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
 import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
 import { RecoveryKeyNotFoundError } from '$lib/server/domain/errors/User/RecoverKeyNotFoundError';
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
-import { TokenEntity } from '$lib/server/domain/entities/token';
 
 export class GetRecoveryKey implements IGetRecoveryKey {
 	constructor(
@@ -27,7 +27,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 		const emailRecoveryToken = await this.tokenRepository.getSessionByToken(token);
 
 		if (!emailRecoveryToken) {
-			throw new TokenNotFoundError();
+			throw new TokenNotRegisteredError();
 		}
 
 		const existingUser = await this.userRepository.findById(payload.id);
@@ -57,7 +57,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 
 		// delete email recovery token
 		await this.tokenRepository.delete({ token: emailRecoveryToken.token });
-		
+
 		// delete old reset password token if exist
 		await this.tokenRepository.delete({
 			userId: existingUser.id,

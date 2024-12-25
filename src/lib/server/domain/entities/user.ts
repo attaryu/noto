@@ -1,5 +1,7 @@
 import type { ICreateUserDTO } from '../dtos/User/CreateUser';
+import type { IUpdateUserDTO } from '../dtos/User/UpdateUser';
 import type { IUserOutDTO } from '../dtos/User/UserOut';
+import { UserEntityError } from '../errors/User/UserEntityError';
 
 export interface UserInterface {
 	id?: string;
@@ -31,8 +33,8 @@ export interface UserInterface {
 }
 
 export class UserEntity {
-	private readonly _fullname: string;
-	private readonly _email: string;
+	private readonly _fullname: string | undefined;
+	private readonly _email: string | undefined;
 	private readonly _password: UserInterface['password'] | undefined;
 	private readonly _secretKey: string | undefined;
 	private readonly _recoveryKeys: UserInterface['recoveryKeys'] | undefined;
@@ -41,11 +43,56 @@ export class UserEntity {
 		return new UserEntity(props);
 	}
 
-	get fullname(): string {
+	// ? use static updates method for a while
+	static update(props: IUpdateUserDTO): IUpdateUserDTO {
+		const { email, fullname, password, recoveryKeys, secretKey } = props;
+
+		if (email === undefined || !email || typeof email !== 'string') {
+			throw new UserEntityError('email');
+		}
+
+		if (fullname === undefined || !fullname || typeof fullname !== 'string') {
+			throw new UserEntityError('fullname');
+		}
+
+		if (secretKey === undefined || !secretKey || typeof secretKey !== 'string') {
+			throw new UserEntityError('secretKey');
+		}
+
+		if (password !== undefined) {
+			const { salt, value } = password;
+
+			if (
+				!salt ||
+				!value ||
+				typeof password !== 'object' ||
+				typeof salt !== 'string' ||
+				typeof value !== 'string'
+			) {
+				throw new UserEntityError('password');
+			}
+		}
+
+		if (recoveryKeys !== undefined) {
+			if (typeof recoveryKeys !== 'object') {
+				throw new UserEntityError('recoveryKeys');
+			}
+
+			for (const key in recoveryKeys) {
+				if (!recoveryKeys[key] || typeof recoveryKeys[key] !== 'string') {
+					throw new UserEntityError('recoveryKeys');
+				}
+			}
+		}
+
+		return props;
+	}
+
+	get fullname(): string | undefined {
 		return this._fullname;
 	}
 
-	get email(): string {
+	get email(): string | undefined {
 		return this._email;
 	}
 
@@ -61,11 +108,16 @@ export class UserEntity {
 		return this._recoveryKeys;
 	}
 
-	constructor(props: IUserOutDTO) {
+	constructor(props: IUserOutDTO | IUpdateUserDTO) {
 		const { email, fullname, password, recoveryKeys, secretKey } = props;
 
-		this._email = email;
-		this._fullname = fullname;
+		if (email) {
+			this._email = email;
+		}
+
+		if (fullname) {
+			this._fullname = fullname;
+		}
 
 		if (password) {
 			this._password = password;

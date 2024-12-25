@@ -22,15 +22,15 @@ export class CreateUser implements ICreateUser {
 			},
 		});
 
-		const isEmailAlreadyExist = await this.userRepository.findByEmail(newUser.email);
+		const isEmailAlreadyExist = await this.userRepository.findByEmail(newUser.email!);
 
 		if (isEmailAlreadyExist) {
-			throw new UserAlreadyExistError(newUser.email);
+			throw new UserAlreadyExistError(newUser.email!);
 		}
 
 		const user = await this.userRepository.create({
-			email: newUser.email,
-			fullname: newUser.fullname,
+			email: newUser.email!,
+			fullname: newUser.fullname!,
 			password: newUser.password!,
 			recoveryKeys: newUser.recoveryKeys!,
 			secretKey: newUser.secretKey!,

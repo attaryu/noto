@@ -1,5 +1,6 @@
 import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { ICreateUserDTO } from '$lib/server/domain/dtos/User/CreateUser';
+import type { IUpdateUserDTO } from '$lib/server/domain/dtos/User/UpdateUser';
 import type { IUserInDTO } from '$lib/server/domain/dtos/User/UserIn';
 import type { UserInterface } from '$lib/server/domain/entities/user';
 
@@ -54,5 +55,12 @@ export class UserRepository implements IUserRepository {
 		}
 
 		return null;
+	}
+
+	async update(id: string, data: IUpdateUserDTO): Promise<IUserInDTO | null> {
+		await this.database.updateOne({ _id: new ObjectId(id) }, { $set: data });
+		const updatedUser = await this.findById(id);
+
+		return updatedUser;
 	}
 }
