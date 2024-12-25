@@ -68,7 +68,10 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 		await this.tokenRepository.create(tokenEntity);
 
 		return {
-			token: resetPasswordToken.value,
+			token: {
+				value: resetPasswordToken.value,
+				expiredAt: resetPasswordToken.expired,
+			},
 			recoveryKey,
 		};
 	}

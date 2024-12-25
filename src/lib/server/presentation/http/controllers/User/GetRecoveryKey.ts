@@ -19,13 +19,21 @@ export class GetRecoveryKeyController implements IController {
 			};
 		}
 
-		const result = await this.getRecoveryKeyCase.execute(recoveryToken, keyOrder);
+		const data = await this.getRecoveryKeyCase.execute(recoveryToken, keyOrder);
+
+		request.cookies.set('RESET_TOKEN', data.token.value, {
+			path: '/',
+			expires: data.token.expiredAt,
+			httpOnly: true,
+			secure: true,
+			sameSite: true,
+		});
 
 		return {
 			statusCode: 200,
 			success: true,
 			payload: {
-				...result,
+				recoveryKey: data.recoveryKey,
 			},
 		};
 	}
