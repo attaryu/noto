@@ -47,45 +47,55 @@ export class UserEntity {
 	static update(props: IUpdateUserDTO): IUpdateUserDTO {
 		const { email, fullname, password, recoveryKeys, secretKey } = props;
 
-		if (email === undefined || !email || typeof email !== 'string') {
+		if (email !== undefined && (!email || typeof email !== 'string')) {
 			throw new UserEntityError('email');
 		}
 
-		if (fullname === undefined || !fullname || typeof fullname !== 'string') {
+		if (fullname !== undefined && (!fullname || typeof fullname !== 'string')) {
 			throw new UserEntityError('fullname');
 		}
 
-		if (secretKey === undefined || !secretKey || typeof secretKey !== 'string') {
+		if (secretKey !== undefined && (!secretKey || typeof secretKey !== 'string')) {
 			throw new UserEntityError('secretKey');
 		}
 
 		if (password !== undefined) {
-			const { salt, value } = password;
-
-			if (
-				!salt ||
-				!value ||
-				typeof password !== 'object' ||
-				typeof salt !== 'string' ||
-				typeof value !== 'string'
-			) {
-				throw new UserEntityError('password');
-			}
+			UserEntity.validatePassword(password);
 		}
 
 		if (recoveryKeys !== undefined) {
-			if (typeof recoveryKeys !== 'object') {
-				throw new UserEntityError('recoveryKeys');
-			}
-
-			for (const key in recoveryKeys) {
-				if (!recoveryKeys[key] || typeof recoveryKeys[key] !== 'string') {
-					throw new UserEntityError('recoveryKeys');
-				}
-			}
+			UserEntity.validateRecoveryKeys(recoveryKeys);
 		}
 
 		return props;
+	}
+
+	static validatePassword(password: UserInterface['password']): void {
+		if (typeof password !== 'object') {
+			throw new UserEntityError('password');
+		}
+		
+		const { salt, value } = password;
+
+		if (salt !== undefined && (!salt || typeof salt !== 'string')) {
+			throw new UserEntityError('recoveryKeys');
+		}
+
+		if (value !== undefined && (!value || typeof value !== 'string')) {
+			throw new UserEntityError('recoveryKeys');
+		}
+	}
+
+	static validateRecoveryKeys(recoveryKeys: UserInterface['recoveryKeys']): void {
+		if (typeof recoveryKeys !== 'object') {
+			throw new UserEntityError('recoveryKeys');
+		}
+		
+		for (const key in recoveryKeys) {
+			if (!recoveryKeys[key] || typeof recoveryKeys[key] !== 'string') {
+				throw new UserEntityError('recoveryKeys');
+			}
+		}
 	}
 
 	get fullname(): string | undefined {
