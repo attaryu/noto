@@ -1,7 +1,7 @@
 openapi: '3.0.3'
 info:
   title: Noto Api
-  version: '1.1'
+  version: '1.1.2'
 servers:
   - url: https://localhost:5173/api/v1
 paths:
@@ -153,6 +153,11 @@ paths:
       responses:
         200:
           description: Ok
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: RESET_TOKEN=[JWT TOKEN]
           content:
             application/json:
               schema:
@@ -161,15 +166,14 @@ paths:
                 success: true
                 statusCode: 200
                 payload:
-                  token: '[TOKEN]'
                   recoveryKey: '[ENCRYPTED]'
 
   /users/security:
     put:
       parameters:
-        - in: query
+        - in: header
           required: true
-          name: reset-token
+          name: RESET_TOKEN
           description: Token that achived belong with recovery key
           schema:
             type: string
