@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { signUpComposer } from '$lib/server/infra/services/Auth/SignUp';
-import { svelteAdapter } from '$lib/server/presentation/adapters/svelteAdapter';
+import { svelteHttpAdapter } from '$lib/server/presentation/adapters/svelte/httpAdapter';
 
-export const POST: RequestHandler = svelteAdapter(signUpComposer());
+export const POST: RequestHandler = svelteHttpAdapter(signUpComposer());

@@ -1,12 +1,12 @@
 import type { IGetSalt } from '$lib/server/app/use-cases/User/GetSalt';
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
-import type { IHttpRequest, IHttpResponse } from '$lib/server/presentation/adapters/svelteAdapter';
+import type { IHttpRequest } from '$lib/server/presentation/helpers/HttpRequest';
 import type { IController } from '../Controller';
 
 export class GetSaltController implements IController {
 	constructor(private readonly getSaltUseCase: IGetSalt) {}
 
-	async handler(request: IHttpRequest, response: IHttpResponse): Promise<IResponseDTO> {
+	async handler(request: IHttpRequest): Promise<IResponseDTO> {
 		const email = request.query?.get('email');
 
 		if (!email) {

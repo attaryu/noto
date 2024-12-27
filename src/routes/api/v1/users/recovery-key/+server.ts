@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { getRecoveryKeyComposer } from '$lib/server/infra/services/User/GetRecoveryKey';
-import { svelteAdapter } from '$lib/server/presentation/adapters/svelteAdapter';
+import { svelteHttpAdapter } from '$lib/server/presentation/adapters/svelte/httpAdapter';
 
-export const GET: RequestHandler = svelteAdapter(getRecoveryKeyComposer());
+export const GET: RequestHandler = svelteHttpAdapter(getRecoveryKeyComposer());

@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { signOutComposer } from '$lib/server/infra/services/Auth/SignOut';
-import { svelteAdapter } from '$lib/server/presentation/adapters/svelteAdapter';
+import { svelteHttpAdapter } from '$lib/server/presentation/adapters/svelte/httpAdapter';
 
-export const DELETE: RequestHandler = svelteAdapter(signOutComposer());
+export const DELETE: RequestHandler = svelteHttpAdapter(signOutComposer());

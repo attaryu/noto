@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { securityResetComposer } from '$lib/server/infra/services/User/SecurityReset';
-import { svelteAdapter } from '$lib/server/presentation/adapters/svelteAdapter';
+import { svelteHttpAdapter } from '$lib/server/presentation/adapters/svelte/httpAdapter';
 
-export const PUT: RequestHandler = svelteAdapter(securityResetComposer());
+export const PUT: RequestHandler = svelteHttpAdapter(securityResetComposer());

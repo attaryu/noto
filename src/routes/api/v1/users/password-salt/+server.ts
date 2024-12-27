@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { getSaltComposer } from '$lib/server/infra/services/User/GetSalt';
-import { svelteAdapter } from '$lib/server/presentation/adapters/svelteAdapter';
+import { svelteHttpAdapter } from '$lib/server/presentation/adapters/svelte/httpAdapter';
 
-export const GET: RequestHandler = svelteAdapter(getSaltComposer());
+export const GET: RequestHandler = svelteHttpAdapter(getSaltComposer());
