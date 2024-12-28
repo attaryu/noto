@@ -18,19 +18,19 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 	) {}
 
 	async execute(token: string, keyOrder: string): Promise<IGetRecoveryKeyDTO> {
-		const payload = await this.tokenManager.verify(token);
+		const tokenPayload = await this.tokenManager.verify(token);
 
-		if (payload.purpose !== TokenPurposeEnum.recoveryEmail) {
+		if (tokenPayload.purpose !== TokenPurposeEnum.recoveryEmail) {
 			throw new TokenPurposeError();
 		}
 
-		const emailRecoveryToken = await this.tokenRepository.getSessionByToken(token);
+		const existingToken = await this.tokenRepository.getSessionByToken(token);
 
-		if (!emailRecoveryToken) {
+		if (!existingToken) {
 			throw new TokenNotRegisteredError();
 		}
 
-		const existingUser = await this.userRepository.findById(payload.id);
+		const existingUser = await this.userRepository.findById(tokenPayload.id);
 
 		if (!existingUser) {
 			throw new UserNotFoundError();
@@ -56,7 +56,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 		}).toObject();
 
 		// delete email recovery token
-		await this.tokenRepository.delete({ token: emailRecoveryToken.token });
+		await this.tokenRepository.delete({ token: existingToken.token });
 
 		// delete old reset password token if exist
 		await this.tokenRepository.delete({

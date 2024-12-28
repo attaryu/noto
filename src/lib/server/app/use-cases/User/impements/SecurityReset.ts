@@ -9,6 +9,8 @@ import type { ISecurityReset } from '../SecurityReset';
 import { UserEntity } from '$lib/server/domain/entities/user';
 import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
 import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
+import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
+import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
 
 export class SecurityReset implements ISecurityReset {
 	constructor(
@@ -20,6 +22,11 @@ export class SecurityReset implements ISecurityReset {
 
 	async execute(token: string, security: IUpdateUserDTO): Promise<IUserOutDTO> {
 		const tokenPayload = await this.tokenManager.verify(token);
+
+		if (tokenPayload.purpose !== TokenPurposeEnum.resetPassword) {
+			throw new TokenPurposeError();
+		}
+
 		const existingToken = await this.tokenRepository.getSessionByToken(token);
 
 		if (!existingToken) {
