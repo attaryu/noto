@@ -6,5 +6,4 @@ export interface ITokenManager {
 		payload: ITokenPayloadDTO,
 	): Promise<{ value: string; expired: Date; purpose: TokenPurposeEnum }>;
 	verify(token: string): Promise<ITokenPayloadDTO>;
-	decrypt(token: string): Promise<ITokenPayloadDTO>;
 }

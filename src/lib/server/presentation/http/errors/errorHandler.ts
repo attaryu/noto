@@ -1,5 +1,6 @@
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 
+import { NoteEntityError } from '$lib/server/domain/errors/Note/NoteEntityError';
 import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
 import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
 import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
@@ -18,7 +19,7 @@ export function errorHandler(error: any): IResponseDTO {
 
 	// ? place error class here
 	const errors: { [code: string]: any[] } = {
-		400: [PasswordIncorrectError, TokenPurposeError, UserEntityError],
+		400: [PasswordIncorrectError, TokenPurposeError, UserEntityError, NoteEntityError],
 		401: [TokenInvalidError],
 		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError],
 		409: [UserAlreadyExistError],

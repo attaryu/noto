@@ -2,9 +2,9 @@ import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
 import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
 
 import { SECRET_KEY } from '$env/static/private';
-import { SignJWT, jwtDecrypt, jwtVerify } from 'jose';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
+import { SignJWT, jwtVerify } from 'jose';
 
 export class TokenManager implements ITokenManager {
 	async sign(
@@ -40,11 +40,6 @@ export class TokenManager implements ITokenManager {
 		} catch {
 			throw new TokenInvalidError();
 		}
-	}
-
-	async decrypt(token: string): Promise<ITokenPayloadDTO> {
-		const { payload } = await jwtDecrypt<ITokenPayloadDTO>(token, this.getKey());
-		return payload;
 	}
 
 	private getKey() {
