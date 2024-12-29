@@ -10,8 +10,6 @@ import { json, redirect } from '@sveltejs/kit';
 export function svelteMiddlewareAdapter(middleware: IMiddleware): Handle {
 	return async ({ event, resolve }) => {
 		const httpRequest: IHttpRequest = await createHttpRequest(event);
-
-		
 		const response: IHttpResponse = {
 			json,
 			redirect,
