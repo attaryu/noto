@@ -1,6 +1,6 @@
 import type { IGetSalt } from '$lib/server/app/use-cases/User/GetSalt';
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
-import type { IHttpRequest } from '$lib/server/presentation/helpers/HttpRequest';
+import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
 import type { IController } from '../Controller';
 
 export class GetSaltController implements IController {

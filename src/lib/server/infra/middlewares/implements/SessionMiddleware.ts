@@ -1,5 +1,5 @@
-import type { IHttpRequest } from '$lib/server/presentation/helpers/HttpRequest';
-import type { IHttpResponse } from '$lib/server/presentation/helpers/HttpResponse';
+import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
+import type { IHttpResponse } from '$lib/server/presentation/helpers/interfaces/HttpResponse';
 import type { IMiddleware } from '../Middleware';
 
 import { API_VERSION } from '$env/static/private';
@@ -12,7 +12,7 @@ export class SessionMiddleware implements IMiddleware {
 		response: IHttpResponse,
 		next: () => Promise<Response>,
 	): Promise<Response> {
-		const { pathname } = request.url!;
+		const { pathname } = request.url;
 		const basePathname = `/api/v${API_VERSION}`;
 
 		if (
@@ -21,7 +21,7 @@ export class SessionMiddleware implements IMiddleware {
 			pathname === `${basePathname}/auth/sign-out`
 		) {
 			try {
-				const token = request.cookies!.get('AUTH_TOKEN');
+				const token = request.cookies.get('AUTH_TOKEN');
 
 				if (!token) {
 					return response.json(

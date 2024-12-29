@@ -1,6 +1,6 @@
 import type { IDeleteSession } from '$lib/server/app/use-cases/Session/DeleteSesion';
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
-import type { IHttpRequest } from '$lib/server/presentation/helpers/HttpRequest';
+import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
 import type { IController } from '../Controller';
 
 export class SignOutController implements IController {
@@ -8,7 +8,7 @@ export class SignOutController implements IController {
 
 	async handler(request: IHttpRequest): Promise<IResponseDTO> {
 		try {
-			const token = request.cookies!.get('AUTH_TOKEN');
+			const token = request.cookies.get('AUTH_TOKEN');
 
 			if (!token) {
 				return {
@@ -26,7 +26,7 @@ export class SignOutController implements IController {
 		// No matter whether the token sent is or not in the database, always return success.
 		// Unless the token is not included on the Cookie Request
 
-		request.cookies!.delete('AUTH_TOKEN', { path: '/' });
+		request.cookies.delete('AUTH_TOKEN', { path: '/' });
 
 		return {
 			statusCode: 204,
