@@ -1,5 +1,12 @@
 export interface IResponseDTO {
+	/**
+	 * Indicate that response is success or failed
+	 */
 	success: boolean;
+
+	/**
+	 * HTTP code
+	 */
 	statusCode: number;
 
 	/**
@@ -16,4 +23,9 @@ export interface IResponseDTO {
 	 * URL to redirect when the response leads to other sources
 	 */
 	redirect?: any;
+
+	/**
+	 * Paginations metadata
+	 */
+	pagination?: IPagination;
 }

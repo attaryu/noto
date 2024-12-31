@@ -33,6 +33,8 @@ export class CreateNote implements ICreateNote {
 			content: note.content,
 			indexedWords: note.indexedWords,
 			labels: note.labels,
+			archived: note.archived,
+			pinned: note.pinned,
 			createdAt: note.createdAt,
 		};
 	}

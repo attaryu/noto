@@ -9,6 +9,7 @@ export async function createHttpRequest(event: LibraryHttpRequest): Promise<IHtt
 		url: event.url,
 		method: event.request.method as any,
 		headers: Object.fromEntries(event.request.headers.entries()),
+		locals: event.locals,
 	};
 
 	if (event.request.body) {

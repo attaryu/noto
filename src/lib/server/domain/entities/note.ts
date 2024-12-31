@@ -9,6 +9,8 @@ export interface NoteInterface {
 	labels: string[];
 	indexedWords: string[];
 	content: string;
+	archived: boolean;
+	pinned: boolean;
 }
 
 export class NoteEntity {
@@ -17,6 +19,8 @@ export class NoteEntity {
 	private readonly _labels: string[];
 	private readonly _indexedWords: string[];
 	private readonly _content: string;
+	private readonly _archived: boolean;
+	private readonly _pinned: boolean;
 
 	constructor(props: NoteInterface) {
 		this._id = props.id;
@@ -24,6 +28,8 @@ export class NoteEntity {
 		this._indexedWords = props.indexedWords;
 		this._labels = props.labels;
 		this._content = props.content;
+		this._archived = props.archived;
+		this._pinned = props.pinned;
 	}
 
 	static create(props: ICreateNoteDTO): NoteEntity {
@@ -42,7 +48,7 @@ export class NoteEntity {
 			itemType: 'string',
 		});
 
-		return new NoteEntity(props);
+		return new NoteEntity({ ...props, archived: false, pinned: false });
 	}
 
 	get id() {
@@ -63,5 +69,13 @@ export class NoteEntity {
 
 	get content() {
 		return this._content;
+	}
+
+	get archived() {
+		return this._archived;
+	}
+
+	get pinned() {
+		return this._pinned;
 	}
 }

@@ -34,7 +34,7 @@ export class SessionMiddleware implements IMiddleware {
 					);
 				}
 
-				await new TokenManager().verify(token);
+				request.locals!.tokenPayload = await new TokenManager().verify(token);
 			} catch (error) {
 				const result = errorHandler(error);
 				return response.json(result, { status: result.statusCode });

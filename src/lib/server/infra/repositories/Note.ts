@@ -1,7 +1,12 @@
-import type { INoteRepository } from '$lib/server/app/repositories/Note';
+import type { Collection, Filter, MongoClient } from 'mongodb';
+
+import type {
+	INoteFilter,
+	INoteOutPagination,
+	INoteRepository,
+} from '$lib/server/app/repositories/Note';
 import type { ICreateNoteDTO } from '$lib/server/domain/dtos/Note/CreateNote';
 import type { INoteInDTO } from '$lib/server/domain/dtos/Note/NoteIn';
-import type { Collection, MongoClient } from 'mongodb';
 
 import { ObjectId } from 'mongodb';
 
@@ -21,6 +26,8 @@ export class NoteRepository implements INoteRepository {
 
 		const result = await this.database.insertOne({
 			...data,
+			pinned: false,
+			archived: false,
 			createdAt: now,
 			updatedAt: now,
 			deletedAt: null,
@@ -35,12 +42,52 @@ export class NoteRepository implements INoteRepository {
 		const data = await this.database.findOne({ _id: new ObjectId(id) });
 
 		if (data) {
+			const { _id, ...restData } = data;
+
 			return {
-				id: data._id.toString(),
-				...data,
+				id,
+				...restData,
 			};
 		}
 
 		return null;
+	}
+
+	async findByFilter(userId: string, filter: INoteFilter): Promise<INoteOutPagination> {
+		const { offset = 0, archived = false, label, search } = filter;
+		const query: Filter<Document> = {
+			userId,
+			archived,
+			...(label && { labels: { $in: [label] } }),
+			...(search && { indexedWords: { $in: search } }),
+		};
+
+		const limit = 10;
+		const total = await this.database.countDocuments(query);
+
+		if (offset === total) {
+			return {
+				data: [],
+				metadata: { limit, offset, total },
+			};
+		}
+
+		const notes = await this.database
+			.find(query)
+			.sort({ updatedAt: -1, _id: -1 })
+			.skip(offset)
+			.limit(limit)
+			.toArray();
+
+		return {
+			metadata: {
+				offset: offset + notes.length,
+				total,
+				limit,
+			},
+
+			// ? transforming objectId _id to string id
+			data: notes.map(({ _id, ...note }) => ({ id: _id.toString(), ...note })),
+		};
 	}
 }
