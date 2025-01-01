@@ -1,9 +1,12 @@
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 
-import { NoteEntityError } from '$lib/server/domain/errors/Note/NoteEntityError';
+import { NoteError } from '$lib/server/domain/errors/Note';
+// ? token entity error
 import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
 import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
 import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
+
+// ? user entity error
 import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
 import { RecoveryKeyNotFoundError } from '$lib/server/domain/errors/User/RecoverKeyNotFoundError';
 import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlreadyExistError';
@@ -19,15 +22,22 @@ export function errorHandler(error: any): IResponseDTO {
 
 	// ? place error class here
 	const errors: { [code: string]: any[] } = {
-		400: [PasswordIncorrectError, TokenPurposeError, UserEntityError, NoteEntityError],
-		401: [TokenInvalidError],
-		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError],
+		400: [
+			PasswordIncorrectError,
+			TokenPurposeError,
+			UserEntityError,
+			NoteError.Entity,
+			NoteError.Pin,
+			NoteError.Content,
+		],
+		401: [TokenInvalidError, NoteError.UnauthorizedOwner],
+		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError, NoteError.NotFound],
 		409: [UserAlreadyExistError],
 	};
 
-	// iteration each http code
+	// ? iteration each http code
 	for (const errorCode in errors) {
-		// iteration each error class
+		// ? iteration each error class
 		for (const errorInstance of errors[errorCode]) {
 			if (error instanceof errorInstance) {
 				return {

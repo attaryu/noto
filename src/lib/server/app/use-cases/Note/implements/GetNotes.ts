@@ -1,12 +1,10 @@
-import type { INoteRepository } from '$lib/server/app/repositories/Note';
-import type { INoteOutDTO } from '$lib/server/domain/dtos/Note/NoteOut';
-import type { IWithMetadata } from '$lib/server/domain/dtos/Pagination';
+import type { INoteOutPagination, INoteRepository } from '$lib/server/app/repositories/Note';
 import type { IGetNotes, IGetNotesFilter } from '../GetNotes';
 
 export class GetNotes implements IGetNotes {
 	constructor(private readonly noteRepository: INoteRepository) {}
 
-	async execute(userId: string, query: IGetNotesFilter): Promise<IWithMetadata<INoteOutDTO[]>> {
+	async execute(userId: string, query: IGetNotesFilter): Promise<INoteOutPagination> {
 		const notes = await this.noteRepository.findByFilter(userId, query);
 
 		return {

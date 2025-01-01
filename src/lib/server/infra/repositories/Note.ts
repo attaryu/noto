@@ -9,6 +9,7 @@ import type { ICreateNoteDTO } from '$lib/server/domain/dtos/Note/CreateNote';
 import type { INoteInDTO } from '$lib/server/domain/dtos/Note/NoteIn';
 
 import { ObjectId } from 'mongodb';
+import type { IUpdateNoteDTO } from '$lib/server/domain/dtos/Note/UpdateNote';
 
 export type Document = Omit<INoteInDTO, 'id'>;
 
@@ -89,5 +90,16 @@ export class NoteRepository implements INoteRepository {
 			// ? transforming objectId _id to string id
 			data: notes.map(({ _id, ...note }) => ({ id: _id.toString(), ...note })),
 		};
+	}
+
+	async update(id: string, data: IUpdateNoteDTO): Promise<INoteInDTO> {
+		await this.database.updateOne(
+			{ _id: new ObjectId(id) },
+			{ $set: { ...data, updatedAt: new Date() } },
+		);
+
+		const note = await this.findById(id);
+
+		return note!;
 	}
 }
