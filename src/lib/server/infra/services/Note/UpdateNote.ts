@@ -1,5 +1,3 @@
-// TODO: make UpdateNote composer
-
 import type { IController } from '$lib/server/presentation/http/controllers/Controller';
 
 import { UpdateNote } from '$lib/server/app/use-cases/Note/implements/UpdateNote';

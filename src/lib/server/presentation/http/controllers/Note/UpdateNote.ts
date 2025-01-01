@@ -1,5 +1,3 @@
-// TODO: make UpdateNoteController
-
 import type { IUpdateNote } from '$lib/server/app/use-cases/Note/UpdateNote';
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
