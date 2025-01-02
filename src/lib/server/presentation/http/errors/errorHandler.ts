@@ -32,6 +32,7 @@ export function errorHandler(error: any): IResponseDTO {
 			NoteError.Pin,
 			NoteError.Content,
 			MongoDBError.InvalidId,
+			NoteError.AmountExceeded,
 		],
 		401: [TokenInvalidError, NoteError.UnauthorizedOwner],
 		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError, NoteError.NotFound],

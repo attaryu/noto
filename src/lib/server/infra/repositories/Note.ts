@@ -1,10 +1,6 @@
-import type { Collection, Filter, MongoClient } from 'mongodb';
+import type { Collection, MongoClient } from 'mongodb';
 
-import type {
-	INoteFilter,
-	INoteOutPagination,
-	INoteRepository,
-} from '$lib/server/app/repositories/Note';
+import type { INoteFilter, INoteRepository } from '$lib/server/app/repositories/Note';
 import type { ICreateNoteDTO } from '$lib/server/domain/dtos/Note/CreateNote';
 import type { INoteInDTO } from '$lib/server/domain/dtos/Note/NoteIn';
 import type { IUpdateNoteDTO } from '$lib/server/domain/dtos/Note/UpdateNote';
@@ -54,42 +50,34 @@ export class NoteRepository implements INoteRepository {
 		return null;
 	}
 
-	async findByFilter(userId: string, filter: INoteFilter): Promise<INoteOutPagination> {
-		const { offset = 0, archived = false, label, search } = filter;
-		const query: Filter<Document> = {
-			userId,
-			archived,
-			...(label && { labels: { $in: [label] } }),
-			...(search && { indexedWords: { $in: search } }),
-		};
-
-		const limit = 10;
-		const total = await this.database.countDocuments(query);
-
-		if (offset === total) {
-			return {
-				data: [],
-				metadata: { limit, offset, total },
-			};
-		}
+	async findManyByFilter(filter: INoteFilter): Promise<INoteInDTO[]> {
+		const { offset = 0, archived = false, limit = 100, label, search, userId } = filter;
 
 		const notes = await this.database
-			.find(query)
+			.find({
+				userId,
+				archived,
+				...(label && { labels: { $in: [label] } }),
+				...(search && { indexedWords: { $in: search } }),
+			})
 			.sort({ updatedAt: -1, _id: -1 })
 			.skip(offset)
 			.limit(limit)
 			.toArray();
 
-		return {
-			metadata: {
-				offset: offset + notes.length,
-				total,
-				limit,
-			},
+		// ? transforming _id [objectId] to id [string]
+		return notes.map(({ _id, ...note }) => ({ id: _id.toString(), ...note }));
+	}
 
-			// ? transforming objectId _id to string id
-			data: notes.map(({ _id, ...note }) => ({ id: _id.toString(), ...note })),
-		};
+	async count(filter: INoteFilter): Promise<number> {
+		const { archived = false, label, search, userId } = filter;
+
+		return await this.database.countDocuments({
+			userId,
+			archived,
+			...(label && { labels: { $in: [label] } }),
+			...(search && { indexedWords: { $in: search } }),
+		});
 	}
 
 	async update(id: string, data: IUpdateNoteDTO): Promise<INoteInDTO> {

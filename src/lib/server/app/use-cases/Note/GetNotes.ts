@@ -1,9 +1,18 @@
-import type { IWithMetadata } from '$lib/server/domain/dtos/Pagination';
+import type { IPagination } from '$lib/server/domain/dtos/Pagination';
 import type { INoteOutDTO } from '../../../domain/dtos/Note/NoteOut';
-import type { INoteFilter } from '../../repositories/Note';
 
-export type IGetNotesFilter = Omit<INoteFilter, 'archived'>;
+export interface IGetNotesFilter {
+	offset?: number;
+	label?: string;
+	search?: string[];
+	archived?: boolean;
+}
+
+export interface INoteOutPagination {
+	data: INoteOutDTO[];
+	metadata: IPagination;
+}
 
 export interface IGetNotes {
-	execute(userId: string, query: IGetNotesFilter): Promise<IWithMetadata<INoteOutDTO[]>>;
+	execute(userId: string, query: IGetNotesFilter): Promise<INoteOutPagination>;
 }

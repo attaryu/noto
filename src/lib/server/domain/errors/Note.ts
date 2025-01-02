@@ -34,4 +34,11 @@ export namespace NoteError {
 			this.name = 'PinNoteError';
 		}
 	}
+
+	export class AmountExceeded extends Error {
+		constructor() {
+			super('The requested offset equals or exceeds the original amount.');
+			this.name = 'NoteAmountExceededError';
+		}
+	}
 }
