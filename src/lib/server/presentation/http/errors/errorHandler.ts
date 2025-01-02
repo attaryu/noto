@@ -1,6 +1,8 @@
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 
 import { NoteError } from '$lib/server/domain/errors/Note';
+import { MongoDBError } from '$lib/server/infra/errors/MongoDB';
+
 // ? token entity error
 import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
 import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
@@ -29,6 +31,7 @@ export function errorHandler(error: any): IResponseDTO {
 			NoteError.Entity,
 			NoteError.Pin,
 			NoteError.Content,
+			MongoDBError.InvalidId,
 		],
 		401: [TokenInvalidError, NoteError.UnauthorizedOwner],
 		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError, NoteError.NotFound],

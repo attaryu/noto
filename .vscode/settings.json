@@ -12,5 +12,29 @@
   "todo-tree.tree.scanMode": "workspace",
   "todo-tree.tree.showBadges": true,
   "todo-tree.tree.disableCompactFolders": false,
-  "todo-tree.tree.showCountsInTree": true
+  "todo-tree.tree.showCountsInTree": true,
+  "todo-tree.highlights.customHighlight": {
+    "BUG": {
+      "icon": "bug"
+    },
+    "HACK": {
+      "icon": "tools"
+    },
+    "FIXME": {
+      "icon": "flame"
+    },
+    "XXX": {
+      "icon": "x"
+    },
+    "[ ]": {
+      "icon": "issue-draft"
+    },
+    "[x]": {
+      "icon": "issue-closed"
+    },
+    "TODO[]": {
+      "background": "#000",
+      "iconColour": "#fff"
+    }
+  }
 }

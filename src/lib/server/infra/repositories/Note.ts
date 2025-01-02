@@ -7,9 +7,9 @@ import type {
 } from '$lib/server/app/repositories/Note';
 import type { ICreateNoteDTO } from '$lib/server/domain/dtos/Note/CreateNote';
 import type { INoteInDTO } from '$lib/server/domain/dtos/Note/NoteIn';
-
-import { ObjectId } from 'mongodb';
 import type { IUpdateNoteDTO } from '$lib/server/domain/dtos/Note/UpdateNote';
+
+import { objectId } from '../helper/objectId';
 
 export type Document = Omit<INoteInDTO, 'id'>;
 
@@ -40,7 +40,7 @@ export class NoteRepository implements INoteRepository {
 	}
 
 	async findById(id: string): Promise<INoteInDTO | null> {
-		const data = await this.database.findOne({ _id: new ObjectId(id) });
+		const data = await this.database.findOne({ _id: objectId(id) });
 
 		if (data) {
 			const { _id, ...restData } = data;
@@ -94,7 +94,7 @@ export class NoteRepository implements INoteRepository {
 
 	async update(id: string, data: IUpdateNoteDTO): Promise<INoteInDTO> {
 		await this.database.updateOne(
-			{ _id: new ObjectId(id) },
+			{ _id: objectId(id) },
 			{ $set: { ...data, updatedAt: new Date() } },
 		);
 

@@ -15,8 +15,8 @@ export namespace NoteError {
 	}
 
 	export class NotFound extends Error {
-		constructor(id: string) {
-			super(`Note with id ${id} is not found`);
+		constructor() {
+			super('The requested note not found.');
 			this.name = 'NoteNotFoundError';
 		}
 	}
