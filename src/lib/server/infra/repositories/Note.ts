@@ -51,12 +51,13 @@ export class NoteRepository implements INoteRepository {
 	}
 
 	async findManyByFilter(filter: INoteFilter): Promise<INoteInDTO[]> {
-		const { offset = 0, archived = false, limit = 100, label, search, userId } = filter;
+		const { offset = 0, archived = false, limit = 100, noteId, label, search, userId } = filter;
 
 		const notes = await this.database
 			.find({
 				userId,
 				archived,
+				...(noteId && { _id: { $in: noteId.map((id) => objectId(id)) } }),
 				...(label && { labels: { $in: [label] } }),
 				...(search && { indexedWords: { $in: search } }),
 			})
@@ -70,11 +71,12 @@ export class NoteRepository implements INoteRepository {
 	}
 
 	async count(filter: INoteFilter): Promise<number> {
-		const { archived = false, label, search, userId } = filter;
+		const { archived = false, label, search, userId, noteId } = filter;
 
 		return await this.database.countDocuments({
 			userId,
 			archived,
+			...(noteId && { _id: { $in: noteId.map((id) => objectId(id)) } }),
 			...(label && { labels: { $in: [label] } }),
 			...(search && { indexedWords: { $in: search } }),
 		});
@@ -91,7 +93,16 @@ export class NoteRepository implements INoteRepository {
 		return note!;
 	}
 
-	async deleteMany(noteId: string[], userId: string): Promise<void> {
+	async softDeletes(noteId: string[], userId: string): Promise<void> {
+		const now = new Date();
+
+		await this.database.updateMany(
+			{ _id: { $in: noteId.map((id) => objectId(id)) }, userId },
+			{ $set: { deletedAt: now } },
+		);
+	}
+
+	async hardDeletes(noteId: string[], userId: string): Promise<void> {
 		this.database.deleteMany({
 			_id: { $in: noteId.map((id) => objectId(id)) },
 			userId,

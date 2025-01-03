@@ -9,6 +9,7 @@ export interface INoteFilter {
 	archived?: boolean;
 	userId?: string;
 	limit?: number;
+	noteId?: string[];
 }
 
 export interface INoteRepository {
@@ -17,5 +18,6 @@ export interface INoteRepository {
 	findById(id: string): Promise<INoteInDTO | null>;
 	findManyByFilter(filter: INoteFilter): Promise<INoteInDTO[]>;
 	count(filter: INoteFilter): Promise<number>;
-	deleteMany(noteId: string[], userId: string): Promise<void>;
+	softDeletes(noteId: string[], userId: string): Promise<void>;
+	hardDeletes(noteId: string[], userId: string): Promise<void>;
 }

@@ -41,4 +41,11 @@ export namespace NoteError {
 			this.name = 'NoteAmountExceededError';
 		}
 	}
+
+	export class AlreadyDeleted extends Error {
+		constructor(noteId: string) {
+			super(`Note with id ${noteId} already deleted.`);
+			this.name = 'NoteAlreadyDeletedError';
+		}
+	}
 }
