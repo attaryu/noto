@@ -8,13 +8,19 @@ export class GetNotes implements IGetNotes {
 
 	async execute(userId: string, query: IGetNotesFilter): Promise<INoteOutPagination> {
 		const limit = 10;
-		const count = await this.noteRepository.count({ ...query, userId });
+		
+		const count = await this.noteRepository.count({ ...query, userId, archived: false });
 
 		if (query.offset && query.offset >= count) {
 			throw new NoteError.AmountExceeded();
 		}
 
-		const notes = await this.noteRepository.findManyByFilter({ ...query, userId, limit });
+		const notes = await this.noteRepository.findManyByFilter({
+			...query,
+			userId,
+			limit,
+			archived: false,
+		});
 
 		return {
 			data: notes.map(({ deletedAt, createdAt, userId, ...note }) => note),

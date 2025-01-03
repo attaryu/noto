@@ -21,8 +21,8 @@ export class DeleteNotes implements IDeleteNotes {
 				throw new NoteError.UnauthorizedOwner();
 			}
 
-			if (note.isDeleted()) {
-				throw new NoteError.AlreadyDeleted(note.id!);
+			if (note.isDeleted) {
+				throw new NoteError.AlreadyDeleted(note.id);
 			}
 		}
 

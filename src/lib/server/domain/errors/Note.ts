@@ -43,8 +43,13 @@ export namespace NoteError {
 	}
 
 	export class AlreadyDeleted extends Error {
-		constructor(noteId: string) {
-			super(`Note with id ${noteId} already deleted.`);
+		constructor(noteId?: string) {
+			if (noteId) {
+				super(`Note with id ${noteId} have been deleted.`);
+			} else {
+				super('The requested note have been deleted');
+			}
+
 			this.name = 'NoteAlreadyDeletedError';
 		}
 	}

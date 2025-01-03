@@ -10,6 +10,7 @@ export interface INoteFilter {
 	userId?: string;
 	limit?: number;
 	noteId?: string[];
+	deleted?: boolean;
 }
 
 export interface INoteRepository {

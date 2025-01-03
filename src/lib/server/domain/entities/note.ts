@@ -117,7 +117,7 @@ export class NoteEntity {
 		return this._userId === userId;
 	}
 
-	public isDeleted() {
+	get isDeleted() {
 		return this._deletedAt !== null;
 	}
 
