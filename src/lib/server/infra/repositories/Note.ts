@@ -90,4 +90,11 @@ export class NoteRepository implements INoteRepository {
 
 		return note!;
 	}
+
+	async deleteMany(noteId: string[], userId: string): Promise<void> {
+		this.database.deleteMany({
+			_id: { $in: noteId.map((id) => objectId(id)) },
+			userId,
+		});
+	}
 }
