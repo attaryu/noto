@@ -1,11 +1,13 @@
+import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
 import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
 import type { IHttpResponse } from '$lib/server/presentation/helpers/interfaces/HttpResponse';
 import type { IMiddleware } from '../Middleware';
 
 import { API_VERSION } from '$env/static/private';
-import { TokenManager } from '../../providers/TokenManager';
 
 export class SessionMiddleware implements IMiddleware {
+	constructor(private readonly tokenManager: ITokenManager) {}
+
 	async handle(
 		request: IHttpRequest,
 		response: IHttpResponse,
@@ -32,7 +34,7 @@ export class SessionMiddleware implements IMiddleware {
 				);
 			}
 
-			request.locals!.tokenPayload = await new TokenManager().verify(token);
+			request.locals!.tokenPayload = await this.tokenManager.verify(token);
 		}
 
 		return next();

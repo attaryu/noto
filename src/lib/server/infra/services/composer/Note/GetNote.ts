@@ -2,8 +2,8 @@ import type { IController } from '$lib/server/presentation/http/controllers/Cont
 
 import { GetNote } from '$lib/server/app/use-cases/Note/implements/GetNote';
 import { GetNoteController } from '$lib/server/presentation/http/controllers/Note/GetNote';
-import { client } from '../../databases/mongodb/connection';
-import { NoteRepository } from '../../repositories/Note';
+import { client } from '../../../databases/mongodb/connection';
+import { NoteRepository } from '../../../repositories/Note';
 
 export function getNoteComposer(): IController {
 	const useCase = new GetNote(new NoteRepository(client));

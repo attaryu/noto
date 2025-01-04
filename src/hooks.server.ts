@@ -1,11 +1,11 @@
-import type { Handle } from '@sveltejs/kit';
+import { bodyRequestMiddlewareComposer } from '$lib/server/infra/services/composer/Middleware/BodyRequestMiddleware';
+import { sessionMiddlewareComposer } from '$lib/server/infra/services/composer/Middleware/SessionMiddleware';
+import { tokenCheckMiddlewareComposer } from '$lib/server/infra/services/composer/Middleware/TokenCheckMiddleware';
 
-import { SessionMiddleware } from '$lib/server/infra/middlewares/implements/SessionMiddleware';
-import { svelteMiddlewareAdapter } from '$lib/server/presentation/adapters/svelte/middlewareAdapter';
-import { BodyRequestMiddleware } from '$lib/server/infra/middlewares/implements/BodyRequestMiddleware';
-import { sequence } from '@sveltejs/kit/hooks';
+import { sequenceProxy } from '$lib/utils/sequence';
 
-const sessionMiddleware: Handle = svelteMiddlewareAdapter(new SessionMiddleware());
-const bodyRequestMiddleware: Handle = svelteMiddlewareAdapter(new BodyRequestMiddleware());
-
-export const handle = sequence(bodyRequestMiddleware, sessionMiddleware);
+export const handle = sequenceProxy(
+	bodyRequestMiddlewareComposer,
+	tokenCheckMiddlewareComposer,
+	sessionMiddlewareComposer,
+);
