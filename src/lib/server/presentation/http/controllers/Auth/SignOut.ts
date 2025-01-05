@@ -9,16 +9,7 @@ export class SignOutController implements IController {
 	async handler(request: IHttpRequest): Promise<IResponseDTO> {
 		try {
 			const token = request.cookies.get('AUTH_TOKEN');
-
-			if (!token) {
-				return {
-					statusCode: 400,
-					success: false,
-					error: { message: 'Token should be included in the cookie' },
-				};
-			}
-
-			await this.deleteSessionCase.execute(token);
+			await this.deleteSessionCase.execute(token!);
 		} catch (error: any) {
 			// do something if needed
 		}
