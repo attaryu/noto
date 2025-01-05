@@ -1,10 +1,12 @@
+import type { Collection, MongoClient } from 'mongodb';
+
 import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { ICreateUserDTO } from '$lib/server/domain/dtos/User/CreateUser';
 import type { IUpdateUserDTO } from '$lib/server/domain/dtos/User/UpdateUser';
 import type { IUserInDTO } from '$lib/server/domain/dtos/User/UserIn';
 import type { UserInterface } from '$lib/server/domain/entities/user';
 
-import { ObjectId, type Collection, type MongoClient } from 'mongodb';
+import { objectId } from '../helper/objectId';
 
 type Document = Omit<UserInterface, 'id'>;
 
@@ -32,7 +34,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async findById(id: string): Promise<IUserInDTO | null> {
-		const data = await this.database.findOne({ _id: new ObjectId(id) });
+		const data = await this.database.findOne({ _id: objectId(id) });
 
 		if (data) {
 			return {
@@ -58,7 +60,7 @@ export class UserRepository implements IUserRepository {
 	}
 
 	async update(id: string, data: IUpdateUserDTO): Promise<IUserInDTO | null> {
-		await this.database.updateOne({ _id: new ObjectId(id) }, { $set: data });
+		await this.database.updateOne({ _id: objectId(id) }, { $set: data });
 		const updatedUser = await this.findById(id);
 
 		return updatedUser;

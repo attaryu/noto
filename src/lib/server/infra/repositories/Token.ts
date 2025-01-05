@@ -1,8 +1,10 @@
+import type { Collection, MongoClient } from 'mongodb';
+
 import type { ITokenRepository } from '$lib/server/app/repositories/Token';
 import type { ITokenDTO } from '$lib/server/domain/dtos/Token/Token';
 import type { TokenInterface } from '$lib/server/domain/entities/token';
 
-import { ObjectId, type Collection, type MongoClient } from 'mongodb';
+import { objectId } from '../helper/objectId';
 
 type Document = TokenInterface;
 
@@ -23,7 +25,7 @@ export class TokenRepository implements ITokenRepository {
 	}
 
 	async getSessionById(id: string): Promise<ITokenDTO | null> {
-		const result = await this.database.findOne({ _id: new ObjectId(id) });
+		const result = await this.database.findOne({ _id: objectId(id) });
 
 		return result;
 	}
