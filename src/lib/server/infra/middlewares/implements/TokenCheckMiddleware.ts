@@ -3,7 +3,7 @@ import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/H
 import type { IHttpResponse } from '$lib/server/presentation/helpers/interfaces/HttpResponse';
 import type { IMiddleware } from '../Middleware';
 
-import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
+import { TokenError } from '$lib/server/domain/errors/Token';
 
 export class TokenCheckMiddleware implements IMiddleware {
 	constructor(private readonly tokenRepository: ITokenRepository) {}
@@ -19,7 +19,7 @@ export class TokenCheckMiddleware implements IMiddleware {
 			const existingToken = await this.tokenRepository.getSessionByToken(token);
 
 			if (!existingToken) {
-				throw new TokenNotRegisteredError();
+				throw new TokenError.NotRegistered();
 			}
 		}
 

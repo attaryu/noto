@@ -5,7 +5,7 @@ import type { IUserOutDTO } from '$lib/server/domain/dtos/User/UserOut';
 import type { ICreateUser } from '../CreateUser';
 
 import { UserEntity } from '$lib/server/domain/entities/user';
-import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlreadyExistError';
+import { UserError } from '$lib/server/domain/errors/User';
 
 export class CreateUser implements ICreateUser {
 	constructor(
@@ -25,7 +25,7 @@ export class CreateUser implements ICreateUser {
 		const isEmailAlreadyExist = await this.userRepository.findByEmail(newUser.email!);
 
 		if (isEmailAlreadyExist) {
-			throw new UserAlreadyExistError(newUser.email!);
+			throw new UserError.AlreadyExist();
 		}
 
 		const user = await this.userRepository.create({

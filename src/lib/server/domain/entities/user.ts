@@ -1,7 +1,8 @@
 import type { ICreateUserDTO } from '../dtos/User/CreateUser';
 import type { IUpdateUserDTO } from '../dtos/User/UpdateUser';
 import type { IUserOutDTO } from '../dtos/User/UserOut';
-import { UserEntityError } from '../errors/User/UserEntityError';
+
+import { UserError } from '../errors/User';
 
 export interface UserInterface {
 	id?: string;
@@ -48,15 +49,15 @@ export class UserEntity {
 		const { email, fullname, password, recoveryKeys, secretKey } = props;
 
 		if (email !== undefined && (!email || typeof email !== 'string')) {
-			throw new UserEntityError('email');
+			throw new UserError.Entity('email');
 		}
 
 		if (fullname !== undefined && (!fullname || typeof fullname !== 'string')) {
-			throw new UserEntityError('fullname');
+			throw new UserError.Entity('fullname');
 		}
 
 		if (secretKey !== undefined && (!secretKey || typeof secretKey !== 'string')) {
-			throw new UserEntityError('secretKey');
+			throw new UserError.Entity('secretKey');
 		}
 
 		if (password !== undefined) {
@@ -72,28 +73,28 @@ export class UserEntity {
 
 	static validatePassword(password: UserInterface['password']): void {
 		if (typeof password !== 'object') {
-			throw new UserEntityError('password');
+			throw new UserError.Entity('password');
 		}
-		
+
 		const { salt, value } = password;
 
 		if (salt !== undefined && (!salt || typeof salt !== 'string')) {
-			throw new UserEntityError('recoveryKeys');
+			throw new UserError.Entity('recoveryKeys');
 		}
 
 		if (value !== undefined && (!value || typeof value !== 'string')) {
-			throw new UserEntityError('recoveryKeys');
+			throw new UserError.Entity('recoveryKeys');
 		}
 	}
 
 	static validateRecoveryKeys(recoveryKeys: UserInterface['recoveryKeys']): void {
 		if (typeof recoveryKeys !== 'object') {
-			throw new UserEntityError('recoveryKeys');
+			throw new UserError.Entity('recoveryKeys');
 		}
-		
+
 		for (const key in recoveryKeys) {
 			if (!recoveryKeys[key] || typeof recoveryKeys[key] !== 'string') {
-				throw new UserEntityError('recoveryKeys');
+				throw new UserError.Entity('recoveryKeys');
 			}
 		}
 	}

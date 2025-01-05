@@ -1,6 +1,7 @@
 import type { IUserRepository } from '$lib/server/app/repositories/User';
-import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 import type { IGetSalt } from '../GetSalt';
+
+import { UserError } from '$lib/server/domain/errors/User';
 
 export class GetSalt implements IGetSalt {
 	constructor(private readonly userRepository: IUserRepository) {}
@@ -9,7 +10,7 @@ export class GetSalt implements IGetSalt {
 		const user = await this.userRepository.findByEmail(email);
 
 		if (!user) {
-			throw new UserNotFoundError('email', email);
+			throw new UserError.NotFound('email', email);
 		}
 
 		return user.password.salt;

@@ -5,7 +5,7 @@ import type { INoteOutDTO } from '$lib/server/domain/dtos/Note/NoteOut';
 import type { ICreateNote } from '../CreateNote';
 
 import { NoteEntity } from '$lib/server/domain/entities/note';
-import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
+import { UserError } from '$lib/server/domain/errors/User';
 
 export class CreateNote implements ICreateNote {
 	constructor(
@@ -18,7 +18,7 @@ export class CreateNote implements ICreateNote {
 		const existingUser = await this.userRepository.findById(noteEntity.userId);
 
 		if (!existingUser) {
-			throw new UserNotFoundError('id', noteEntity.userId);
+			throw new UserError.NotFound('id', noteEntity.userId);
 		}
 
 		const note = await this.noteRepository.create({

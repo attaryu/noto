@@ -1,20 +1,9 @@
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 
 import { NoteError } from '$lib/server/domain/errors/Note';
+import { TokenError } from '$lib/server/domain/errors/Token';
+import { UserError } from '$lib/server/domain/errors/User';
 import { MongoDBError } from '$lib/server/infra/errors/MongoDB';
-
-// ? token entity error
-import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
-import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
-import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
-import { TokenNotIncludedError } from '$lib/server/domain/errors/Token/TokenNotIncludedError';
-
-// ? user entity error
-import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
-import { RecoveryKeyNotFoundError } from '$lib/server/domain/errors/User/RecoverKeyNotFoundError';
-import { UserAlreadyExistError } from '$lib/server/domain/errors/User/UserAlreadyExistError';
-import { UserEntityError } from '$lib/server/domain/errors/User/UserEntityError';
-import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 
 /**
  * A place to determine the type of domain or app layer error, then changed it to http response.
@@ -26,20 +15,25 @@ export function errorHandler(error: any): IResponseDTO {
 	// ? place error class here
 	const errors: { [code: string]: any[] } = {
 		400: [
-			PasswordIncorrectError,
-			TokenPurposeError,
-			UserEntityError,
+			UserError.PasswordIncorrect,
+			TokenError.Purpose,
+			UserError.Entity,
 			NoteError.Entity,
 			NoteError.Pin,
 			NoteError.Content,
 			MongoDBError.InvalidId,
 			NoteError.AmountExceeded,
 			NoteError.AlreadyDeleted,
-			TokenNotIncludedError,
+			TokenError.NotIncluded,
 		],
-		401: [TokenInvalidError, NoteError.UnauthorizedOwner],
-		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError, NoteError.NotFound],
-		409: [UserAlreadyExistError],
+		401: [TokenError.Invalid, NoteError.UnauthorizedOwner],
+		404: [
+			UserError.NotFound,
+			TokenError.NotRegistered,
+			UserError.RecoveryKeyNotFound,
+			NoteError.NotFound,
+		],
+		409: [UserError.AlreadyExist],
 	};
 
 	// ? iteration each http code

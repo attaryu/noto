@@ -5,10 +5,8 @@ import type { IGetRecoveryKey, IGetRecoveryKeyDTO } from '../GetRecoveryKey';
 
 import { TokenEntity } from '$lib/server/domain/entities/token';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
-import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
-import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
-import { RecoveryKeyNotFoundError } from '$lib/server/domain/errors/User/RecoverKeyNotFoundError';
-import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
+import { TokenError } from '$lib/server/domain/errors/Token';
+import { UserError } from '$lib/server/domain/errors/User';
 
 export class GetRecoveryKey implements IGetRecoveryKey {
 	constructor(
@@ -21,25 +19,25 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 		const tokenPayload = await this.tokenManager.verify(token);
 
 		if (tokenPayload.purpose !== TokenPurposeEnum.recoveryEmail) {
-			throw new TokenPurposeError();
+			throw new TokenError.Purpose();
 		}
 
 		const existingToken = await this.tokenRepository.getSessionByToken(token);
 
 		if (!existingToken) {
-			throw new TokenNotRegisteredError();
+			throw new TokenError.NotRegistered();
 		}
 
 		const existingUser = await this.userRepository.findById(tokenPayload.id);
 
 		if (!existingUser) {
-			throw new UserNotFoundError();
+			throw new UserError.NotFound();
 		}
 
 		const recoveryKey = existingUser.recoveryKeys[keyOrder];
 
 		if (!recoveryKey) {
-			throw new RecoveryKeyNotFoundError(keyOrder);
+			throw new UserError.RecoveryKeyNotFound();
 		}
 
 		const resetPasswordToken = await this.tokenManager.sign({

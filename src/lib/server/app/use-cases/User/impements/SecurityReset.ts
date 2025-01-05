@@ -7,10 +7,9 @@ import type { IUserOutDTO } from '$lib/server/domain/dtos/User/UserOut';
 import type { ISecurityReset } from '../SecurityReset';
 
 import { UserEntity } from '$lib/server/domain/entities/user';
-import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
-import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
-import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
+import { TokenError } from '$lib/server/domain/errors/Token';
+import { UserError } from '$lib/server/domain/errors/User';
 
 export class SecurityReset implements ISecurityReset {
 	constructor(
@@ -24,19 +23,19 @@ export class SecurityReset implements ISecurityReset {
 		const tokenPayload = await this.tokenManager.verify(token);
 
 		if (tokenPayload.purpose !== TokenPurposeEnum.resetPassword) {
-			throw new TokenPurposeError();
+			throw new TokenError.Purpose();
 		}
 
 		const existingToken = await this.tokenRepository.getSessionByToken(token);
 
 		if (!existingToken) {
-			throw new TokenNotRegisteredError();
+			throw new TokenError.NotRegistered();
 		}
 
 		const existingUser = await this.userRepository.findById(tokenPayload.id);
 
 		if (!existingUser) {
-			throw new UserNotFoundError();
+			throw new UserError.NotFound();
 		}
 
 		const userEntity = UserEntity.update(security);

@@ -1,13 +1,13 @@
+import type { IEmailSender } from '$lib/server/app/providers/EmailSender';
+import type { IEmailTemplate } from '$lib/server/app/providers/EmailTemplate';
 import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
 import type { ITokenRepository } from '$lib/server/app/repositories/Token';
 import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { IRequestAccountRecovery } from '../RequestAccountRecovery';
-import type { IEmailSender } from '$lib/server/app/providers/EmailSender';
-import type { IEmailTemplate } from '$lib/server/app/providers/EmailTemplate';
 
-import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 import { TokenEntity } from '$lib/server/domain/entities/token';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
+import { UserError } from '$lib/server/domain/errors/User';
 
 export class RequestAccountRecovery implements IRequestAccountRecovery {
 	constructor(
@@ -22,7 +22,7 @@ export class RequestAccountRecovery implements IRequestAccountRecovery {
 		const user = await this.userRepository.findByEmail(email);
 
 		if (!user) {
-			throw new UserNotFoundError('email', email);
+			throw new UserError.NotFound('email', email);
 		}
 
 		// ? delete invalid email recovery tokens if exist

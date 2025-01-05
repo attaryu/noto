@@ -1,10 +1,11 @@
 import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
 import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
 
+import { SignJWT, jwtVerify } from 'jose';
+
 import { SECRET_KEY } from '$env/static/private';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
-import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
-import { SignJWT, jwtVerify } from 'jose';
+import { TokenError } from '$lib/server/domain/errors/Token';
 
 export class TokenManager implements ITokenManager {
 	async sign(
@@ -38,7 +39,7 @@ export class TokenManager implements ITokenManager {
 			const { payload } = await jwtVerify<ITokenPayloadDTO>(token, this.getKey());
 			return payload;
 		} catch {
-			throw new TokenInvalidError();
+			throw new TokenError.Invalid();
 		}
 	}
 

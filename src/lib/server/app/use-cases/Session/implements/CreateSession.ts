@@ -7,9 +7,8 @@ import type { ITokenOutDTO } from '$lib/server/domain/dtos/Token/TokenOut';
 import type { ICreateSession } from '../CreateSession';
 
 import { TokenEntity } from '$lib/server/domain/entities/token';
-import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
-import { UserNotFoundError } from '$lib/server/domain/errors/User/UserNotFoundError';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
+import { UserError } from '$lib/server/domain/errors/User';
 
 export class CreateSession implements ICreateSession {
 	constructor(
@@ -23,13 +22,13 @@ export class CreateSession implements ICreateSession {
 		const user = await this.userRepository.findByEmail(data.email);
 
 		if (!user) {
-			throw new UserNotFoundError('email', data.email);
+			throw new UserError.NotFound('email', data.email);
 		}
 
 		const isPasswordCorrect = await this.passwordHasher.compare(data.password, user.password.value);
 
 		if (!isPasswordCorrect) {
-			throw new PasswordIncorrectError();
+			throw new UserError.PasswordIncorrect();
 		}
 
 		const token = await this.tokenManager.sign({

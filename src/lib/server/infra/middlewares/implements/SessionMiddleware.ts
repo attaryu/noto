@@ -5,8 +5,7 @@ import type { IMiddleware } from '../Middleware';
 
 import { API_VERSION } from '$env/static/private';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
-import { TokenNotIncludedError } from '$lib/server/domain/errors/Token/TokenNotIncludedError';
-import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
+import { TokenError } from '$lib/server/domain/errors/Token';
 
 export class SessionMiddleware implements IMiddleware {
 	constructor(private readonly tokenManager: ITokenManager) {}
@@ -27,13 +26,13 @@ export class SessionMiddleware implements IMiddleware {
 			const token = request.cookies.get('AUTH_TOKEN');
 
 			if (!token) {
-				throw new TokenNotIncludedError();
+				throw new TokenError.NotIncluded();
 			}
 
 			request.locals!.tokenPayload = await this.tokenManager.verify(token);
 
 			if (request.locals!.tokenPayload.purpose !== TokenPurposeEnum.session) {
-				throw new TokenPurposeError();
+				throw new TokenError.Purpose();
 			}
 		}
 

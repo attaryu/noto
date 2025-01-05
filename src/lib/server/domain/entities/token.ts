@@ -1,5 +1,5 @@
 import { TokenPurposeEnum } from '../enums/TokenPurpose';
-import { TokenEntityError } from '../errors/Token/TokenEntityError';
+import { TokenError } from '../errors/Token';
 
 export interface TokenInterface {
 	token: string;
@@ -18,15 +18,15 @@ export class TokenEntity {
 
 	static create(prop: TokenInterface): TokenEntity {
 		if (!prop.token || typeof prop.token !== 'string') {
-			throw new TokenEntityError('token');
+			throw new TokenError.Entity('token');
 		}
 
 		if (!prop.userId || typeof prop.userId !== 'string') {
-			throw new TokenEntityError('userId');
+			throw new TokenError.Entity('userId');
 		}
 
 		if (!prop.expiredAt || !(prop.expiredAt instanceof Date)) {
-			throw new TokenEntityError('expiredAt');
+			throw new TokenError.Entity('expiredAt');
 		}
 
 		return new TokenEntity(prop);
