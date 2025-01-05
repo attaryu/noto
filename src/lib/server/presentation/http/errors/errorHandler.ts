@@ -7,6 +7,7 @@ import { MongoDBError } from '$lib/server/infra/errors/MongoDB';
 import { TokenInvalidError } from '$lib/server/domain/errors/Token/TokenInvalidError';
 import { TokenNotRegisteredError } from '$lib/server/domain/errors/Token/TokenNotRegisteredError';
 import { TokenPurposeError } from '$lib/server/domain/errors/Token/TokenPurposeError';
+import { TokenNotIncludedError } from '$lib/server/domain/errors/Token/TokenNotIncludedError';
 
 // ? user entity error
 import { PasswordIncorrectError } from '$lib/server/domain/errors/User/PasswordIncorrectError';
@@ -34,6 +35,7 @@ export function errorHandler(error: any): IResponseDTO {
 			MongoDBError.InvalidId,
 			NoteError.AmountExceeded,
 			NoteError.AlreadyDeleted,
+			TokenNotIncludedError,
 		],
 		401: [TokenInvalidError, NoteError.UnauthorizedOwner],
 		404: [UserNotFoundError, TokenNotRegisteredError, RecoveryKeyNotFoundError, NoteError.NotFound],
