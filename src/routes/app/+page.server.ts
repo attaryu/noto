@@ -1,7 +1,7 @@
-import type { PageServerLoad } from './$types.js'
+import type { PageServerLoad } from './$types.js';
 
-import { redirect } from '@sveltejs/kit'
+import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
-  return redirect(307, '/app/notes');
-}
+	return redirect(307, '/app/notes');
+};

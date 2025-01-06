@@ -24,7 +24,7 @@ export default defineConfig({
 					"Web-based note-taking application with security in the hands of the user. Even the server doesn't know anything about the user's notes.",
 				theme_color: '#ffffff',
 				display: 'standalone',
-				start_url: '/',
+				start_url: '/app',
 				prefer_related_applications: true,
 				orientation: 'portrait-primary',
 				screenshots: [
@@ -50,7 +50,8 @@ export default defineConfig({
 			},
 
 			devOptions: {
-				enabled: false,
+				// ? pwa development flag
+				enabled: true,
 				suppressWarnings: true,
 				navigateFallback: '/',
 				navigateFallbackAllowlist: [/^\/$/],
