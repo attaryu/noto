@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Mail from 'lucide-svelte/icons/mail';
-	import MoveRight from 'lucide-svelte/icons/move-right';
+	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 
-	import Input from '$lib/components/Input.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
+	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
 
 	const formId = 'sign-up';
@@ -15,43 +15,41 @@
 </svelte:head>
 
 <main class="flex h-screen flex-col p-4">
-	<header class="flex justify-end">
-		<Button variant="secondary" class="py-2">
+	<header class="flex h-12 items-center">
+		<Button variant="secondary" class="ml-auto py-2">
 			{#snippet as(props?: any)}
 				<a href="/app" {...props}>
-					Skip <MoveRight />
+					Skip <ArrowRight />
 				</a>
 			{/snippet}
 		</Button>
 	</header>
 
-	<form action="" method="post" id={formId} class="flex h-full flex-col">
-		<div class="flex h-full flex-col items-center justify-center">
-			<Text tag="h1" class="text-center">Welcome note taker!</Text>
+	<div class="mt-20 flex flex-col items-center">
+		<Text tag="h1" class="text-center">Welcome note taker!</Text>
 
-			<Text class="mt-4 text-center">
-				Register and access notes from anywhere! Or skip it and save the notes in local storage.
-			</Text>
+		<Text class="mt-4 text-center">
+			Register and access notes from anywhere! Or skip it and save the notes in local storage.
+		</Text>
 
-			<div class="mt-8 space-y-4">
-				<Input type="fullname" placeholder="Fullname" name="fullname" class="w-full" />
-				<Input type="email" placeholder="Email" name="email" class="w-full" />
-				<Input type="password" placeholder="Password" name="password" class="w-full" />
-				<Input
-					type="password"
-					placeholder="Confirm Password"
-					name="confirm-password"
-					class="w-full"
-				/>
-			</div>
+		<form action="" method="post" id={formId} class="mt-8 space-y-2">
+			<Input type="fullname" placeholder="Fullname" name="fullname" class="w-full" />
+			<Input type="email" placeholder="Email" name="email" class="w-full" />
+			<Input type="password" placeholder="Password" name="password" class="w-full" />
+			<Input
+				type="password"
+				placeholder="Confirm Password"
+				name="confirm-password"
+				class="w-full"
+			/>
+		</form>
 
-			<Text tag="small" class="mt-8 text-center">
-				Already have an account? <a href="/app/sign-in" class="text-sky-500">Sign in now!</a>
-			</Text>
-		</div>
-	</form>
+		<Text tag="small" class="mt-8">
+			Already have an account? <a href="/app/sign-in" class="text-sky-500">Sign in now!</a>
+		</Text>
+	</div>
 
-	<Button form={formId} type="submit" class="w-full">
+	<Button form={formId} type="submit" class="mt-auto w-full">
 		<Mail /> Sign Up
 	</Button>
 </main>
