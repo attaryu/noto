@@ -35,6 +35,10 @@
 		</form>
 
 		<Text tag="small" class="mt-8">
+			Forgot your password? <a href="/app/recovery-account/step-1" class="text-sky-500">Recover here</a>
+		</Text>
+
+		<Text tag="small" class="mt-4">
 			Don't have an account? <a href="/app/sign-up" class="text-sky-500">Sign up now!</a>
 		</Text>
 	</div>
