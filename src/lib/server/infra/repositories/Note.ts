@@ -64,10 +64,8 @@ export class NoteRepository implements INoteRepository {
 	}
 
 	async findManyByFilter(filter: INoteFilter): Promise<INoteInDTO[]> {
-		console.log('this.transformFilter(filter):', this.transformFilter(filter));
-
 		const cursor = this.database
-			.find(this.transformFilter(filter))
+			.find(this.transformFilter(filter), { ignoreUndefined: true })
 			.sort({ updatedAt: -1, _id: -1 })
 			.skip(filter.offset ?? 0);
 
@@ -101,7 +99,7 @@ export class NoteRepository implements INoteRepository {
 
 		await this.database.updateMany(
 			{ _id: { $in: noteId.map((id) => objectId(id)) }, userId },
-			{ $set: { deletedAt: now } },
+			{ $set: { deletedAt: now, labels: [] } },
 		);
 	}
 

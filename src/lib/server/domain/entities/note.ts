@@ -97,7 +97,6 @@ export class NoteEntity {
 		if (props.labels !== undefined) {
 			validateArray(props.labels, {
 				itemType: 'string',
-				itemRequired: true,
 				errorInstance: new NoteError.Entity('labels'),
 			});
 

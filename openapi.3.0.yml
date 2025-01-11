@@ -19,7 +19,7 @@ paths:
               password:
                 value: '[HASHED]'
                 salt: '[RANDOM 16 BIT]'
-              secretKey: "[ENCRYPTED]"
+              secretKey: '[ENCRYPTED]'
               recoveryKeys:
                 '001': '[ENCRYPTED]'
                 '002': '[ENCRYPTED]'
@@ -42,8 +42,8 @@ paths:
                 payload:
                   user:
                     id: 1
-                    email: "johndoe@gmail.com"
-                    fullname: "John Doe"
+                    email: 'johndoe@gmail.com'
+                    fullname: 'John Doe'
 
   /auth/sign-in:
     post:
@@ -208,8 +208,8 @@ paths:
                 statusCode: 201
                 user:
                   id: 1
-                  email: "johndoe@gmail.com"
-                  fullname: "John Doe"
+                  email: 'johndoe@gmail.com'
+                  fullname: 'John Doe'
 
   /notes:
     get:
@@ -413,6 +413,29 @@ paths:
             application/json:
               example: {}
 
+  /notes/labels:
+    get:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+              example:
+                success: true
+                statusCode: 200
+                payload:
+                  labels:
+                    - id: '123'
+                      label: 'label 1'
+
 components:
   schemas:
     Responses:
@@ -475,4 +498,12 @@ components:
         createdAt:
           type: string
         updatedAt:
+          type: string
+
+    Label:
+      type: object
+      properties:
+        id:
+          type: string
+        label:
           type: string
