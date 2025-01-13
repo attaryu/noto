@@ -12,7 +12,9 @@ export class SignUpController implements IController {
 		return {
 			statusCode: 200,
 			success: true,
-			payload: newUser,
+			payload: {
+				user: newUser,
+			},
 		};
 	}
 }
