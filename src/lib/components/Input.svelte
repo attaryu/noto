@@ -8,7 +8,7 @@
 		icon?: Snippet<[any]>;
 	} & SvelteHTMLElements['input'];
 
-	const { class: className, icon, onfocus, onblur, ...props }: Props = $props();
+	let { value = $bindable(), class: className, icon, onfocus, onblur, ...props }: Props = $props();
 
 	let inputRef: HTMLInputElement;
 	let isInputOnFocus: boolean = $state(false);
@@ -67,5 +67,5 @@
 <!-- ? act like independent component -->
 <!-- ! don't touch it :D -->
 {#snippet input(props: Omit<Props, 'icon'>)}
-	<input bind:this={inputRef} {...props} />
+	<input bind:this={inputRef} bind:value {...props} />
 {/snippet}
