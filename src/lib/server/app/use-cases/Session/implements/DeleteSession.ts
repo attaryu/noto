@@ -5,6 +5,6 @@ export class DeleteSession implements IDeleteSession {
 	constructor(private readonly sessionRepository: ITokenRepository) {}
 
 	async execute(token: string): Promise<void> {
-		await this.sessionRepository.delete(token);
+		await this.sessionRepository.delete({ token });
 	}
 }

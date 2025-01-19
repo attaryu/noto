@@ -1,3 +1,5 @@
+import type { IPagination } from './Pagination';
+
 export interface IResponseDTO {
 	/**
 	 * Indicate that response is success or failed

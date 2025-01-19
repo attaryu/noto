@@ -1,4 +1,4 @@
-import type { LabelInterface } from '../entities/Label';
+import type { LabelInterface } from '../entities/label';
 
 export namespace LabelError {
 	export class Property extends Error {
