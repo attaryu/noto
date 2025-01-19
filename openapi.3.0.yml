@@ -18,17 +18,43 @@ paths:
               email: johndoe@gmail.com
               password:
                 value: '[HASHED]'
-                salt: '[RANDOM 16 BIT]'
-              secretKey: '[ENCRYPTED]'
+                salt: '[RANDOM]'
+              secretKey:
+                value: '[ENCRYPTED]'
+                iv: '[RANDOM]'
               recoveryKeys:
-                '001': '[ENCRYPTED]'
-                '002': '[ENCRYPTED]'
-                '003': '[ENCRYPTED]'
-                '004': '[ENCRYPTED]'
-                '005': '[ENCRYPTED]'
-                '006': '[ENCRYPTED]'
-                '007': '[ENCRYPTED]'
-                '008': '[ENCRYPTED]'
+                - code: '001'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '002'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '003'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '004'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '005'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '006'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '007'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '008'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
       responses:
         201:
           description: CREATED
@@ -250,6 +276,7 @@ paths:
                 payload:
                   notes:
                     - id: '123'
+                      iv: '[RANDOM]'
                       label:
                         - Label 1
                         - Label 2
@@ -271,6 +298,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Note'
             example:
+              iv: '[RANDOM]'
               index:
                 - '[ENCRYPTED]'
                 - '[ENCRYPTED]'
@@ -341,6 +369,7 @@ paths:
                 payload:
                   note:
                     id: '123'
+                    iv: '[RANDOM]'
                     label:
                       - Label 1
                       - Label 2
@@ -455,6 +484,8 @@ components:
         - label
         - content
       properties:
+        iv:
+          type: string
         label:
           type: array
           items:
@@ -484,10 +515,25 @@ components:
         email:
           type: string
         secretKey:
-          type: string
-        recoveryKeys:
           type: object
           properties:
+            value:
+              type: string
+            iv:
+              type: string
+        recoveryKeys:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              value:
+                type: string
+              salt:
+                type: string
+              iv:
+                type: string
         password:
           type: object
           properties:
