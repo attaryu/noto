@@ -1,5 +1,10 @@
 export interface IGetRecoveryKeyDTO {
-	recoveryKey: string;
+	recoveryKey: {
+		code: string;
+		value: string;
+		salt: string;
+		iv: string;
+	};
 	token: {
 		value: string;
 		expiredAt: Date;

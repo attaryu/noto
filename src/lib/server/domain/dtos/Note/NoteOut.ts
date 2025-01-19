@@ -1,5 +1,6 @@
 export interface INoteOutDTO {
 	id: string;
+	iv?: string;
 	userId?: string;
 	labels: string[];
 	indexedWords: string[];

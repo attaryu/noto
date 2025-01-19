@@ -13,12 +13,21 @@ export interface ICreateUserDTO {
 	/**
 	 * Encrypted secret key by plain password
 	 */
-	secretKey: string;
+	secretKey: {
+		value: string;
+		iv: string;
+	};
 
 	/**
 	 * Encrypted secret key by recovery keys
 	 */
 	recoveryKeys: {
-		[key: string]: string;
-	};
+		/**
+		 * first 4 digits on recovery keys for easy
+		 */
+		code: string;
+		value: string;
+		salt: string;
+		iv: string;
+	}[];
 }

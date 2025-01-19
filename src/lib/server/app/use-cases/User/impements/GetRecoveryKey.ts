@@ -34,7 +34,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 			throw new UserError.NotFound();
 		}
 
-		const recoveryKey = existingUser.recoveryKeys[keyOrder];
+		const recoveryKey = existingUser.recoveryKeys.find(({ code }) => code === keyOrder);
 
 		if (!recoveryKey) {
 			throw new UserError.RecoveryKeyNotFound();

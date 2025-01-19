@@ -6,6 +6,7 @@ import { validateArray, validatePrimitive } from '../helper/validateProperty';
 
 export interface NoteInterface {
 	id?: string;
+	iv: string;
 	userId: string;
 	labels: string[];
 	indexedWords: string[];
@@ -17,6 +18,7 @@ export interface NoteInterface {
 
 export class NoteEntity {
 	private readonly _id?: string;
+	private readonly _iv: string;
 	private readonly _userId: string;
 	private _labels: string[];
 	private _indexedWords: string[];
@@ -27,6 +29,7 @@ export class NoteEntity {
 
 	constructor(props: NoteInterface) {
 		this._id = props.id;
+		this._iv = props.iv;
 		this._userId = props.userId;
 		this._indexedWords = props.indexedWords;
 		this._labels = props.labels;
@@ -37,6 +40,7 @@ export class NoteEntity {
 	}
 
 	static create(props: ICreateNoteDTO): NoteEntity {
+		validatePrimitive(props.iv, 'string', new NoteError.Entity('iv'));
 		validatePrimitive(props.content, 'string', new NoteError.Entity('content'));
 		validatePrimitive(props.userId, 'string', new NoteError.Entity('userId'));
 
@@ -122,6 +126,10 @@ export class NoteEntity {
 
 	get id() {
 		return this._id;
+	}
+
+	get iv() {
+		return this._iv;
 	}
 
 	get userId() {

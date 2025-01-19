@@ -1,5 +1,6 @@
 export interface INoteInDTO {
 	id: string;
+	iv: string;
 	userId: string;
 	labels: string[];
 	indexedWords: string[];

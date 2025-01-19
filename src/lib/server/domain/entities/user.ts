@@ -20,14 +20,23 @@ export interface UserInterface {
 	/**
 	 * Encrypted secret key by plain password
 	 */
-	secretKey: string;
+	secretKey: {
+		value: string;
+		iv: string;
+	};
 
 	/**
 	 * Encrypted secret key by recovery keys
 	 */
 	recoveryKeys: {
-		[key: string]: string;
-	};
+		/**
+		 * first 4 digits on recovery keys for easy
+		 */
+		code: string;
+		value: string;
+		salt: string;
+		iv: string;
+	}[];
 
 	createdAt: Date;
 	updateAt: Date;
@@ -37,7 +46,7 @@ export class UserEntity {
 	private readonly _fullname: string | undefined;
 	private readonly _email: string | undefined;
 	private readonly _password: UserInterface['password'] | undefined;
-	private readonly _secretKey: string | undefined;
+	private readonly _secretKey: UserInterface['secretKey'] | undefined;
 	private readonly _recoveryKeys: UserInterface['recoveryKeys'] | undefined;
 
 	static create(props: ICreateUserDTO): UserEntity {
@@ -56,7 +65,7 @@ export class UserEntity {
 			throw new UserError.Entity('fullname');
 		}
 
-		if (secretKey !== undefined && (!secretKey || typeof secretKey !== 'string')) {
+		if (secretKey !== undefined && (!secretKey || typeof secretKey !== 'object')) {
 			throw new UserError.Entity('secretKey');
 		}
 
@@ -111,7 +120,7 @@ export class UserEntity {
 		return this._password;
 	}
 
-	get secretKey(): string | undefined {
+	get secretKey(): UserInterface['secretKey'] | undefined {
 		return this._secretKey;
 	}
 

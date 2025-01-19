@@ -47,7 +47,7 @@ export class CreateNote implements ICreateNote {
 					return labelEntity.id;
 				}
 
-				const labelEntity = LabelEntity.create({ name, userId: noteEntity.userId });
+				const labelEntity = LabelEntity.create({ name, userId: newNote.userId });
 				const newLabel = await this.labelRepository.create({ name, userId: labelEntity.userId });
 
 				return newLabel.id;
@@ -57,6 +57,7 @@ export class CreateNote implements ICreateNote {
 		const noteEntity = NoteEntity.create({ ...newNote, labels: newLabelIds });
 
 		const { deletedAt, updatedAt, userId, ...note } = await this.noteRepository.create({
+			iv: noteEntity.iv,
 			content: noteEntity.content,
 			indexedWords: noteEntity.indexedWords,
 			labels: newLabelIds,
