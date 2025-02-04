@@ -20,7 +20,7 @@
 
 	const { children, as, tag = 'p', class: className, ...props }: Props = $props();
 
-	const textCVA = cva('leading-relaxed', {
+	const textCVA = cva('leading-relaxed block', {
 		variants: {
 			tag: {
 				h1: 'font-medium text-4xl text-zinc-900',

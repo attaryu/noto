@@ -11,7 +11,9 @@ declare global {
 			body: any;
 		}
 		// interface PageData {}
-		// interface PageState {}
+		interface PageState {
+			recoveryKeys: string[] | undefined;
+		}
 		// interface Platform {}
 	}
 }

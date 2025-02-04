@@ -16,7 +16,7 @@
 	const defaultClass = $derived(
 		mergeClass(
 			// ? default
-			'w-fit border border-zinc-400 transition-colors duration-300 rounded-2xl p-3 outline-none bg-white',
+			'w-fit border border-zinc-400 transition-colors duration-300 rounded-2xl p-3 outline-none bg-white invalid:border-red-300 invalid:focus:border-red-600',
 
 			// ? apply input with icon
 			icon && 'flex items-center gap-3',

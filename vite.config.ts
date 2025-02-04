@@ -11,6 +11,7 @@ export default defineConfig({
 			filename: 'service-worker.ts',
 			registerType: 'prompt',
 			injectRegister: false,
+			useCredentials: true,
 
 			pwaAssets: {
 				disabled: false,

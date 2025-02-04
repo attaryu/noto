@@ -30,10 +30,10 @@
 		},
 	);
 
-	const modifiedProps = {
+	const modifiedProps = $derived({
 		...props,
 		class: mergeClass(buttonCVA({ variant }), className),
-	};
+	});
 </script>
 
 <Proxy {as} {...modifiedProps}>

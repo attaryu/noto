@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { onMount, type Component, type Snippet } from 'svelte';
+	import type { Component, Snippet } from 'svelte';
+
+	import { browser } from '$app/environment';
+	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
+	import { onMount } from 'svelte';
 	import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { pwaInfo } from 'virtual:pwa-info';
 
@@ -16,6 +20,14 @@
 	let screenSize: null | number = $state(null);
 	let ReloadPrompt: Component | null = $state(null);
 	let webManifest = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
+
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				enabled: browser,
+			},
+		},
+	});
 
 	onMount(async () => {
 		ReloadPrompt = (await import('$lib/components/ReloadPrompt.svelte')).default;
@@ -35,18 +47,21 @@
 	{@html webManifest}
 </svelte:head>
 
-{#if screenSize}
-	{#if screenSize > 400}
-		<main class="flex h-svh items-center justify-center flex-col gap-4">
-			<Text tag="h1">Ups, something happened...</Text>
-			<Text class="text-center">
-				Sorry for the inconvenience. For now, our website only supports the mobile<br/> display. We will update in the future, so stay tune!
-			</Text>
-		</main>
-	{:else}
-		{@render children?.()}
+<QueryClientProvider client={queryClient}>
+	{#if screenSize}
+		{#if screenSize > 400}
+			<main class="flex h-svh flex-col items-center justify-center gap-4">
+				<Text tag="h1">Ups, something happened...</Text>
+				<Text class="text-center">
+					Sorry for the inconvenience. For now, our website only supports the mobile<br /> display. We
+					will update in the future, so stay tune!
+				</Text>
+			</main>
+		{:else}
+			{@render children?.()}
+		{/if}
 	{/if}
-{/if}
+</QueryClientProvider>
 
 {#if ReloadPrompt}
 	<ReloadPrompt />
