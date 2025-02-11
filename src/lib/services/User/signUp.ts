@@ -1,9 +1,12 @@
+import type { ICreateUserInputDTO } from '$lib/types/entities/User';
 import encryption from '$lib/utils/cryptography/encryption';
 import { generateRandomChar } from '$lib/utils/cryptography/generateRandomChar';
 import { hashing } from '$lib/utils/cryptography/hashing';
 import keyManagement from '$lib/utils/cryptography/keyManagement';
 
 export interface ICryptography {
+	fullname: string,
+	email: string,
 	password: {
 		value: string;
 		salt: string;
@@ -21,14 +24,14 @@ export interface ICryptography {
 	}>;
 }
 
-export async function createCryptography(password: string): Promise<ICryptography> {
+export async function signUp(user: ICreateUserInputDTO): Promise<ICryptography> {
 	// make a AES key for notes encryption
 	const secretKey = await keyManagement.generateKey();
 	const exportedSecretKey = await keyManagement.exportKey(secretKey);
 
 	// make a PBKDF2 key from password for secret key encryption
 	const salt = generateRandomChar(32);
-	const passwordKey = await keyManagement.importKeyFromString(password, salt);
+	const passwordKey = await keyManagement.importKeyFromString(user.password, salt);
 	const exportedPasswordKey = await keyManagement.exportKey(passwordKey);
 	// hash a PBKDF2 key from password
 	const hashedPasswordKey = await hashing(exportedPasswordKey);
@@ -72,6 +75,7 @@ export async function createCryptography(password: string): Promise<ICryptograph
 	);
 
 	return {
+		...user,
 		password: {
 			value: hashedPasswordKey,
 			salt,

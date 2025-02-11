@@ -2,7 +2,12 @@
 	import type { EventHandler } from 'svelte/elements';
 
 	import type { IResponseAPI } from '$lib/types/response';
-	import type { ICreateUserDTO, IUserResponse } from '$lib/types/entities/user';
+	import {
+		createUserInputDTO,
+		type ICreateUserDTO,
+		type ICreateUserInputDTO,
+		type IUser,
+	} from '$lib/types/entities/User';
 
 	import { createMutation } from '@tanstack/svelte-query';
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
@@ -14,43 +19,46 @@
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
 
-	import { createCryptography } from '$lib/services/User/createCryptography';
+	import { signUp } from '$lib/services/User/signUp';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { createValidation } from '$lib/hooks/createValidation.svelte';
 
 	const formId = 'sign-up';
 
-	const registerForm = $state({
-		fullname: '',
-		email: '',
-		password: '',
-		confirmPassword: '',
-	});
-	const isPasswordNotSame = $derived(registerForm.password !== registerForm.confirmPassword);
+	const form = createValidation<ICreateUserInputDTO>(
+		{
+			fullname: '',
+			email: '',
+			password: '',
+			repeatPassword: '',
+		},
+		createUserInputDTO,
+	);
+
+	const isPasswordNotSame = $derived(form.fields.password !== form.fields.repeatPassword);
 
 	const api = createMutation({
 		mutationFn: (payload: ICreateUserDTO) =>
-			axiosFetch.POST<IResponseAPI<IUserResponse>, ICreateUserDTO>('/auth/sign-up', payload),
+			axiosFetch.POST<IResponseAPI<IUser>, ICreateUserDTO>('/auth/sign-up', payload),
 	});
 
-	const signUpHandler: EventHandler<SubmitEvent, HTMLFormElement> = async (e) => {
-		e.preventDefault();
-
-		const { recoveryKeys, ...cryptographyKeys } = await createCryptography(registerForm.password);
+	const signUpHandler = form.submitHandler(async (fields) => {
+		const { recoveryKeys, ...processedFields } = await signUp(fields);
 
 		$api
 			.mutateAsync({
-				fullname: registerForm.fullname,
-				email: registerForm.email,
-				password: cryptographyKeys.password,
-				secretKey: cryptographyKeys.secretKey,
-				recoveryKeys: cryptographyKeys.encryptedRecoveryKeys,
+				fullname: processedFields.fullname,
+				email: processedFields.email,
+				password: processedFields.password,
+				secretKey: processedFields.secretKey,
+				recoveryKeys: processedFields.encryptedRecoveryKeys,
 			})
 			.then((response) => {
 				if (response?.success) {
 					goto('/app/recovery-key', { state: { recoveryKeys } });
 				}
 			});
-	};
+	});
 </script>
 
 <svelte:head>
@@ -75,45 +83,55 @@
 			Register and access notes from anywhere! Or skip it and save the notes in local.
 		</Text>
 
-		<form id={formId} class="mt-8 space-y-2" onsubmit={signUpHandler}>
+		<form id={formId} class="mt-8 space-y-2 w-full" onsubmit={signUpHandler}>
 			<Input
 				type="fullname"
 				placeholder="Fullname"
 				name="fullname"
-				bind:value={registerForm.fullname}
+				bind:value={form.fields.fullname}
 				class="w-full"
-				required
 			/>
+
+			{#if form.errors?.fullname}
+				<Text tag="small" class="text-center text-red-500">{form.errors.fullname}</Text>
+			{/if}
 
 			<Input
 				type="email"
 				placeholder="Email"
 				name="email"
-				bind:value={registerForm.email}
+				bind:value={form.fields.email}
 				class="w-full"
-				required
 			/>
+
+			{#if form.errors?.email}
+				<Text tag="small" class="text-center text-red-500">{form.errors.email}</Text>
+			{/if}
 
 			<Input
 				type="password"
 				placeholder="Password"
 				name="password"
-				bind:value={registerForm.password}
+				bind:value={form.fields.password}
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
-				minlength={10}
-				required
 			/>
+
+			{#if form.errors?.password}
+				<Text tag="small" class="text-center text-red-500">{form.errors.password}</Text>
+			{/if}
 
 			<Input
 				type="password"
-				placeholder="Confirm Password"
-				name="confirm-password"
-				bind:value={registerForm.confirmPassword}
+				placeholder="Repeat Password"
+				name="repeat-password"
+				bind:value={form.fields.repeatPassword}
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
-				minlength={10}
-				required
 			/>
 		</form>
+
+		{#if form.errors?.repeatPassword}
+			<Text tag="small" class="text-center text-red-500">{form.errors.repeatPassword}</Text>
+		{/if}
 
 		{#if $api.data?.error}
 			<Text tag="small" class="mt-4 text-center text-red-500">{$api.data.error.message}</Text>

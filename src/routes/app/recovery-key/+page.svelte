@@ -16,6 +16,11 @@
 		goto('/app/sign-up');
 	}
 
+	/**
+	 * download the recovery key as a file
+	 *
+	 * @see https://flexiple.com/javascript/download-flle-using-javascript/
+	 */
 	function downloadAsFile() {
 		if (recoveryKeys && !isDownloaded) {
 			const recoveryKey = recoveryKeys
