@@ -6,7 +6,7 @@ import type { ZodObject } from 'zod';
  * @param initialValue initial form fields value
  * @param validation zod object schema to validate form fields
  */
-export function createValidation<Type>(initialValue: Type, validation: ZodObject<any>) {
+export function createValidation<Type>(validation: ZodObject<any>, initialValue: Type) {
 	/**
 	 * live validation flag to validate form fields every time they change.
 	 * activate it by user submitting the form once.
@@ -14,14 +14,14 @@ export function createValidation<Type>(initialValue: Type, validation: ZodObject
 	let _liveValidationFlag = $state(false);
 
 	/**
-	 * form fields state
-	 */
-	const fields = $state<Type>(initialValue);
-
-	/**
 	 * form field errors state
 	 */
 	let _errors = $state.raw<Partial<Record<keyof Type, string | null>>>({});
+
+	/**
+	 * form fields state
+	 */
+	const fields = $state<Type>(initialValue);
 
 	/**
 	 * validate form fields every time they change
@@ -49,7 +49,7 @@ export function createValidation<Type>(initialValue: Type, validation: ZodObject
 
 		const newErrors: Partial<Record<keyof Type, string | null>> = {};
 
-		// iterate over field errors and set them to the errors state
+		// iterate over field errors and set them to the temporary errors object
 		fieldErrors.forEach(([field, messages]) => {
 			if (messages) {
 				newErrors[field as keyof Type] = messages.join(', ');
@@ -68,10 +68,10 @@ export function createValidation<Type>(initialValue: Type, validation: ZodObject
 	/**
 	 * submit handler to prevent default form submission and validate form fields
 	 *
-	 * @param fn callback function to be called when form is submitted
+	 * @param callback function to be called when form is valid
 	 */
 	const submitHandler =
-		(fn: (fields: Type) => void | Promise<void>) =>
+		(callback: (fields: Type) => void | Promise<void>) =>
 		(e: EventParameter<SubmitEvent, HTMLFormElement>) => {
 			e.preventDefault();
 			e.stopPropagation();
@@ -80,12 +80,12 @@ export function createValidation<Type>(initialValue: Type, validation: ZodObject
 				_liveValidationFlag = true;
 			}
 
-			console.log('submitted');
 			if (!validate()) {
 				return;
 			}
 
-			fn(fields);
+			// destructuring fields to remove proxy object
+			callback({ ...fields });
 		};
 
 	return {
