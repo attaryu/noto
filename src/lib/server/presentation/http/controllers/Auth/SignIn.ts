@@ -25,6 +25,7 @@ export class SignInController implements IController {
 					id: user!.id,
 					fullname: user!.fullname,
 					email: user!.email,
+					secretKey: user!.secretKey,
 				},
 			},
 		};
