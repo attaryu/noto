@@ -1,9 +1,9 @@
-import type { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 
 import { PUBLIC_API_VERSION } from '$env/static/public';
 import axios from 'axios';
 
-export const axiosFetch = new (class {
+class AxiosFetch {
 	private base = axios.create({
 		baseURL: `/api/v${PUBLIC_API_VERSION}`,
 		withCredentials: true,
@@ -14,18 +14,12 @@ export const axiosFetch = new (class {
 		pathname: string,
 		payload?: Payload,
 	) {
-		try {
-			const response = await this.base[method]<unknown, AxiosResponse<Response>, Payload>(
-				pathname,
-				payload ?? undefined,
-			);
-
-			return response.data;
-		} catch (error: unknown) {
-			const err = error as AxiosError<Response>;
-
-			return err.response?.data;
-		}
+		return this.base[method]<unknown, AxiosResponse<Response>, Payload>(
+			pathname,
+			payload ?? undefined,
+		)
+			.then((response) => Promise.resolve(response.data))
+			.catch((error) => Promise.reject(error.response?.data));
 	}
 
 	public async GET<Response>(pathname: string) {
@@ -43,4 +37,6 @@ export const axiosFetch = new (class {
 	public async DELETE<Response>(pathname: string) {
 		return this.request<Response>('delete', pathname);
 	}
-})();
+}
+
+export const axiosFetch = new AxiosFetch();
