@@ -4,6 +4,7 @@ import type { IHttpResponse } from '$lib/server/presentation/helpers/interfaces/
 import type { IMiddleware } from '../Middleware';
 
 import { TokenError } from '$lib/server/domain/errors/Token';
+import { API_VERSION } from '$env/static/private';
 
 export class TokenCheckMiddleware implements IMiddleware {
 	constructor(private readonly tokenRepository: ITokenRepository) {}
@@ -13,13 +14,22 @@ export class TokenCheckMiddleware implements IMiddleware {
 		response: IHttpResponse,
 		next: () => Promise<Response>,
 	): Promise<Response> {
-		const token = request.cookies.get('AUTH_TOKEN') ?? request.cookies.get('RESET_TOKEN');
+		const { pathname } = request.url;
+		const basePathname = `/api/v${API_VERSION}`;
 
-		if (token) {
-			const existingToken = await this.tokenRepository.getSessionByToken(token);
+		if (
+			pathname.startsWith(`${basePathname}/notes`) ||
+			pathname.startsWith(`${basePathname}/note`) ||
+			pathname === `${basePathname}/auth/sign-out`
+		) {
+			const token = request.cookies.get('AUTH_TOKEN') ?? request.cookies.get('RESET_TOKEN');
 
-			if (!existingToken) {
-				throw new TokenError.NotRegistered();
+			if (token) {
+				const existingToken = await this.tokenRepository.getSessionByToken(token);
+
+				if (!existingToken) {
+					throw new TokenError.NotRegistered();
+				}
 			}
 		}
 
