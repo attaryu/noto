@@ -1,51 +1,46 @@
 <script lang="ts">
-	import type { EventHandler } from 'svelte/elements';
+	import type { z } from 'zod';
 
-	import type { IResponseAPI } from '$lib/types/response';
-	import {
-		createUserInputDTO,
-		type ICreateUserDTO,
-		type ICreateUserInputDTO,
-		type IUser,
-	} from '$lib/types/entities/User';
+	import type { ISignupPayload, ISignupResponse } from '$lib/types/api/auth/sign-up';
 
+	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 	import Mail from 'lucide-svelte/icons/mail';
-	import { goto } from '$app/navigation';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
+	import FieldError from '$lib/components/FieldError.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
 
+	import { createValidation } from '$lib/hooks/createValidation.svelte';
 	import { signUp } from '$lib/services/User/signUp';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import { createValidation } from '$lib/hooks/createValidation.svelte';
+	import { signupUserValidator } from '$lib/validator/user';
+
+	type SignupInput = z.infer<typeof signupUserValidator>;
 
 	const formId = 'sign-up';
 
-	const form = createValidation<ICreateUserInputDTO>(
-		{
-			fullname: '',
-			email: '',
-			password: '',
-			repeatPassword: '',
-		},
-		createUserInputDTO,
-	);
+	const form = createValidation<SignupInput>(signupUserValidator, {
+		fullname: '',
+		email: '',
+		password: '',
+		repeatPassword: '',
+	});
 
 	const isPasswordNotSame = $derived(form.fields.password !== form.fields.repeatPassword);
 
-	const api = createMutation({
-		mutationFn: (payload: ICreateUserDTO) =>
-			axiosFetch.POST<IResponseAPI<IUser>, ICreateUserDTO>('/auth/sign-up', payload),
+	const signupMutation = createMutation({
+		mutationFn: (payload: ISignupPayload) =>
+			axiosFetch.POST<ISignupResponse, ISignupPayload>('/auth/sign-up', payload),
 	});
 
 	const signUpHandler = form.submitHandler(async (fields) => {
 		const { recoveryKeys, ...processedFields } = await signUp(fields);
 
-		$api
+		$signupMutation
 			.mutateAsync({
 				fullname: processedFields.fullname,
 				email: processedFields.email,
@@ -83,7 +78,7 @@
 			Register and access notes from anywhere! Or skip it and save the notes in local.
 		</Text>
 
-		<form id={formId} class="mt-8 space-y-2 w-full" onsubmit={signUpHandler}>
+		<form id={formId} class="mt-8 w-full space-y-2" onsubmit={signUpHandler}>
 			<Input
 				type="fullname"
 				placeholder="Fullname"
@@ -92,9 +87,7 @@
 				class="w-full"
 			/>
 
-			{#if form.errors?.fullname}
-				<Text tag="small" class="text-center text-red-500">{form.errors.fullname}</Text>
-			{/if}
+			<FieldError>{form.errors.fullname}</FieldError>
 
 			<Input
 				type="email"
@@ -104,9 +97,7 @@
 				class="w-full"
 			/>
 
-			{#if form.errors?.email}
-				<Text tag="small" class="text-center text-red-500">{form.errors.email}</Text>
-			{/if}
+			<FieldError>{form.errors.email}</FieldError>
 
 			<Input
 				type="password"
@@ -116,9 +107,7 @@
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
 			/>
 
-			{#if form.errors?.password}
-				<Text tag="small" class="text-center text-red-500">{form.errors.password}</Text>
-			{/if}
+			<FieldError>{form.errors.password}</FieldError>
 
 			<Input
 				type="password"
@@ -127,14 +116,14 @@
 				bind:value={form.fields.repeatPassword}
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
 			/>
+
+			<FieldError>{form.errors.repeatPassword}</FieldError>
 		</form>
 
-		{#if form.errors?.repeatPassword}
-			<Text tag="small" class="text-center text-red-500">{form.errors.repeatPassword}</Text>
-		{/if}
-
-		{#if $api.data?.error}
-			<Text tag="small" class="mt-4 text-center text-red-500">{$api.data.error.message}</Text>
+		{#if $signupMutation.data?.error}
+			<Text tag="small" class="mt-4 text-center text-red-500"
+				>{$signupMutation.data.error.message}</Text
+			>
 		{/if}
 
 		<Text tag="small" class="mt-8">
@@ -142,8 +131,8 @@
 		</Text>
 	</div>
 
-	<Button form={formId} disabled={$api.isPending} type="submit" class="mt-auto w-full">
-		{#if $api.isPending}
+	<Button form={formId} disabled={$signupMutation.isPending} type="submit" class="mt-auto w-full">
+		{#if $signupMutation.isPending}
 			Loading...
 		{:else}
 			<Mail /> Sign Up

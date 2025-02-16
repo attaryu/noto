@@ -1,23 +1,13 @@
-export interface IResponseAPI<Type> {
-	/**
-	 * Indicate that response is success or failed
-	 */
-	success: boolean;
-
-	/**
-	 * HTTP code
-	 */
+export interface IErrorResponseAPI {
+	success: false;
 	statusCode: number;
+	error: { message: string };
+}
 
-	/**
-	 * Transport the requested data if needed
-	 */
-	payload?: Type;
-
-	/**
-	 * Contains error details when it happens
-	 */
-	error?: { message: string };
+export interface IResponseAPI<Type> {
+	success: true;
+	statusCode: number;
+	payload: Type;
 
 	/**
 	 * URL to redirect when the response leads to other sources

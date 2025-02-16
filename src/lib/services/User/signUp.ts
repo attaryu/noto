@@ -1,12 +1,15 @@
-import type { ICreateUserInputDTO } from '$lib/types/entities/User';
+import type { z } from 'zod';
+
+import type { signupUserValidator } from '$lib/validator/user';
+
 import encryption from '$lib/utils/cryptography/encryption';
 import { generateRandomChar } from '$lib/utils/cryptography/generateRandomChar';
 import { hashing } from '$lib/utils/cryptography/hashing';
 import keyManagement from '$lib/utils/cryptography/keyManagement';
 
 export interface ICryptography {
-	fullname: string,
-	email: string,
+	fullname: string;
+	email: string;
 	password: {
 		value: string;
 		salt: string;
@@ -24,7 +27,7 @@ export interface ICryptography {
 	}>;
 }
 
-export async function signUp(user: ICreateUserInputDTO): Promise<ICryptography> {
+export async function signUp(user: z.infer<typeof signupUserValidator>): Promise<ICryptography> {
 	// make a AES key for notes encryption
 	const secretKey = await keyManagement.generateKey();
 	const exportedSecretKey = await keyManagement.exportKey(secretKey);

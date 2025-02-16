@@ -1,13 +1,17 @@
 <script lang="ts">
-	import Mail from 'lucide-svelte/icons/mail';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
+	import Mail from 'lucide-svelte/icons/mail';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
+	import FieldError from '$lib/components/FieldError.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
+	import { signInController } from './Controller.svelte';
 
 	const formId = 'sign-in';
+
+	const controller = signInController();
 </script>
 
 <svelte:head>
@@ -29,13 +33,32 @@
 		<Text tag="h1" class="mt-auto text-center">Welcome back!</Text>
 		<Text class="mt-4 text-center">I'm glad you're back! It's your time to note everything</Text>
 
-		<form action="" method="post" id={formId} class="mt-8 space-y-2">
-			<Input type="email" placeholder="Email" name="email" class="w-full" />
-			<Input type="password" placeholder="Password" name="password" class="w-full" />
+		<form id={formId} class="mt-8 w-full space-y-2" onsubmit={controller.submitHandler}>
+			<Input
+				type="email"
+				placeholder="Email"
+				name="email"
+				class="w-full"
+				bind:value={controller.form.fields.email}
+			/>
+
+			<FieldError>{controller.emailErrorMessage}</FieldError>
+
+			<Input
+				type="password"
+				placeholder="Password"
+				name="password"
+				class="w-full"
+				bind:value={controller.form.fields.password}
+			/>
+
+			<FieldError>{controller.form.errors?.password}</FieldError>
 		</form>
 
 		<Text tag="small" class="mt-8">
-			Forgot your password? <a href="/app/recovery-account/step-1" class="text-sky-500">Recover here</a>
+			Forgot your password? <a href="/app/recovery-account/step-1" class="text-sky-500"
+				>Recover here</a
+			>
 		</Text>
 
 		<Text tag="small" class="mt-4">
@@ -43,8 +66,17 @@
 		</Text>
 	</div>
 
-	<Button form={formId} type="submit" class="mt-auto w-full">
-		<Mail /> Sign In
+	<Button
+		form={formId}
+		type="submit"
+		class="mt-auto w-full"
+		disabled={controller.signinMutation.isPending}
+	>
+		{#if controller.signinMutation.isPending}
+			Loading...
+		{:else}
+			<Mail /> Sign In
+		{/if}
 	</Button>
 </main>
 
