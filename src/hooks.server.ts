@@ -1,3 +1,4 @@
+import { authorizationPagesMiddlewareComposer } from '$lib/server/infra/services/composer/Middleware/AuthorizationPageMiddleware';
 import { bodyRequestMiddlewareComposer } from '$lib/server/infra/services/composer/Middleware/BodyRequestMiddleware';
 import { sessionMiddlewareComposer } from '$lib/server/infra/services/composer/Middleware/SessionMiddleware';
 import { tokenCheckMiddlewareComposer } from '$lib/server/infra/services/composer/Middleware/TokenCheckMiddleware';
@@ -8,4 +9,5 @@ export const handle = sequenceProxy(
 	bodyRequestMiddlewareComposer,
 	tokenCheckMiddlewareComposer,
 	sessionMiddlewareComposer,
+	authorizationPagesMiddlewareComposer,
 );
