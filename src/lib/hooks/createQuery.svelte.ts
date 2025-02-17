@@ -2,6 +2,7 @@ import type { IErrorResponseAPI } from '$lib/types/response';
 import type { QueryObserverResult, UndefinedInitialDataOptions } from '@tanstack/svelte-query';
 
 import { createQuery as TanstackCreateQuery } from '@tanstack/svelte-query';
+import { onDestroy } from 'svelte';
 import { get } from 'svelte/store';
 
 export function createQuery<Response>(
@@ -25,15 +26,13 @@ export function createQuery<Response>(
 		get(queryStore),
 	);
 
-	$effect(() => {
-		const unsubscribe = queryStore.subscribe((state) => {
-			// update query state value
-			query = state;
-		});
+	const unsubscribe = queryStore.subscribe((state) => {
+		// update query state value
+		query = state;
+	});
 
-		return () => {
-			unsubscribe();
-		};
+	onDestroy(() => {
+		unsubscribe();
 	});
 
 	return {

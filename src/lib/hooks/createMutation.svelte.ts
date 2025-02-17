@@ -3,6 +3,7 @@ import type { CreateBaseMutationResult, CreateMutationOptions } from '@tanstack/
 import type { IErrorResponseAPI } from '$lib/types/response';
 
 import { createMutation as TanstackCreateMutation } from '@tanstack/svelte-query';
+import { onDestroy } from 'svelte';
 import { get } from 'svelte/store';
 
 export function createMutation<Response, Payload>(
@@ -23,15 +24,13 @@ export function createMutation<Response, Payload>(
 		get(mutationStore),
 	);
 
-	$effect(() => {
-		const unsubscribe = mutationStore.subscribe((state) => {
-			// update mutation state value
-			mutation = state;
-		});
+	const unsubscribe = mutationStore.subscribe((state) => {
+		// update mutation state value
+		mutation = state;
+	});
 
-		return () => {
-			unsubscribe();
-		};
+	onDestroy(() => {
+		unsubscribe();
 	});
 
 	return {
