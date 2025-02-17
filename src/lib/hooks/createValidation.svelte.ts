@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import type { ZodObject } from 'zod';
 
 /**
@@ -7,6 +8,16 @@ import type { ZodObject } from 'zod';
  * @param validation zod object schema to validate form fields
  */
 export function createValidation<Type>(validation: ZodObject<any>, initialValue: Type) {
+	/**
+	 * form validity state
+	 */
+	let _isValid = $state<boolean>(true);
+
+	/**
+	 * form fields state
+	 */
+	const fields = $state<Type>(initialValue);
+
 	/**
 	 * live validation flag to validate form fields every time they change.
 	 * activate it by user submitting the form once.
@@ -19,11 +30,6 @@ export function createValidation<Type>(validation: ZodObject<any>, initialValue:
 	let _errors = $state.raw<Partial<Record<keyof Type, string | null>>>({});
 
 	/**
-	 * form fields state
-	 */
-	const fields = $state<Type>(initialValue);
-
-	/**
 	 * validate form fields every time they change
 	 */
 	$effect(() => {
@@ -34,8 +40,6 @@ export function createValidation<Type>(validation: ZodObject<any>, initialValue:
 
 	/**
 	 * validate form fields every time they change or submitted
-	 *
-	 * @returns boolean
 	 */
 	function validate() {
 		const validationResult = validation.safeParse(fields);
@@ -56,11 +60,18 @@ export function createValidation<Type>(validation: ZodObject<any>, initialValue:
 			}
 		});
 
-		_errors = newErrors;
+		// avoid re-render if the new error is same as the old one
+		if (!_.isEqual(_errors, newErrors)) {
+			_errors = newErrors;
+		}
 
 		if (!validationResult.success) {
+			_isValid = false;
+
 			return false;
 		}
+
+		_isValid = true;
 
 		return true;
 	}
@@ -94,6 +105,13 @@ export function createValidation<Type>(validation: ZodObject<any>, initialValue:
 		 */
 		get errors() {
 			return _errors;
+		},
+
+		/**
+		 * form validity state
+		 */
+		get isValid() {
+			return _isValid;
 		},
 
 		/**
