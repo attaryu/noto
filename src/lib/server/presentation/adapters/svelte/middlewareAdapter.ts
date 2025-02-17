@@ -3,7 +3,7 @@ import type { Handle } from '@sveltejs/kit';
 import type { IHttpRequest } from '../../helpers/interfaces/HttpRequest';
 import type { IHttpResponse } from '../../helpers/interfaces/HttpResponse';
 
-import { json, redirect } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 
 import { createHttpRequest } from '../../helpers/createHttpRequest';
 import { errorHandler } from '../../http/errors/errorHandler';
@@ -13,7 +13,13 @@ export function svelteMiddlewareAdapter(middleware: IMiddleware): Handle {
 		const httpRequest: IHttpRequest = await createHttpRequest(event);
 		const httpResponse: IHttpResponse = {
 			json,
-			redirect,
+			redirect: (statusCode, location) =>
+				new Response(null, {
+					status: statusCode,
+					headers: {
+						location,
+					},
+				}),
 		};
 
 		const next = async () => await resolve(event);
