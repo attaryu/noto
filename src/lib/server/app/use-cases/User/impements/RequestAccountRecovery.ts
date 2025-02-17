@@ -22,7 +22,7 @@ export class RequestAccountRecovery implements IRequestAccountRecovery {
 		const user = await this.userRepository.findByEmail(email);
 
 		if (!user) {
-			throw new UserError.NotFound('email', email);
+			throw new UserError.NotFound();
 		}
 
 		// ? delete invalid email recovery tokens if exist

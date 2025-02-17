@@ -10,7 +10,7 @@ export class GetSalt implements IGetSalt {
 		const user = await this.userRepository.findByEmail(email);
 
 		if (!user) {
-			throw new UserError.NotFound('email', email);
+			throw new UserError.NotFound();
 		}
 
 		return user.password.salt;

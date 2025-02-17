@@ -20,7 +20,7 @@ export class CreateNote implements ICreateNote {
 		const existingUser = await this.userRepository.findById(newNote.userId);
 
 		if (!existingUser) {
-			throw new UserError.NotFound('id', newNote.userId);
+			throw new UserError.NotFound();
 		}
 
 		const labelsFromDatabase = await this.labelRepository.finds({

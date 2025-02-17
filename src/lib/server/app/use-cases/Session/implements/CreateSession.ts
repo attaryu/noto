@@ -22,7 +22,7 @@ export class CreateSession implements ICreateSession {
 		const user = await this.userRepository.findByEmail(data.email);
 
 		if (!user) {
-			throw new UserError.NotFound('email', data.email);
+			throw new UserError.NotFound();
 		}
 
 		const isPasswordCorrect = await this.passwordHasher.compare(data.password, user.password.value);
