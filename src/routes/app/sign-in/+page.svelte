@@ -39,7 +39,8 @@
 				placeholder="Email"
 				name="email"
 				class="w-full"
-				bind:value={controller.form.fields.email}
+				value={controller.form.fields.email}
+				oninput={({ currentTarget }) => (controller.form.fields.email = currentTarget.value ?? '')}
 			/>
 
 			<FieldError>{controller.emailErrorMessage}</FieldError>
@@ -70,7 +71,7 @@
 		form={formId}
 		type="submit"
 		class="mt-auto w-full"
-		disabled={controller.signinMutation.isPending}
+		disabled={controller.signinMutation.isPending || !controller.form.isValid}
 	>
 		{#if controller.signinMutation.isPending}
 			Loading...
