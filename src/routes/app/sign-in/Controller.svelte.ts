@@ -6,6 +6,7 @@ import type { IPasswordSaltResponse } from '$lib/types/api/users/password-salt';
 import { goto } from '$app/navigation';
 import _ from 'lodash';
 
+import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 import { createMutation } from '$lib/hooks/createMutation.svelte';
 import { createQuery } from '$lib/hooks/createQuery.svelte';
 import { createValidation } from '$lib/hooks/createValidation.svelte';
@@ -14,7 +15,6 @@ import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
 import encryption from '$lib/utils/cryptography/encryption';
 import { hashing } from '$lib/utils/cryptography/hashing';
 import keyManagement from '$lib/utils/cryptography/keyManagement';
-import localStorageManagement from '$lib/utils/localStorageManagement';
 import { signinUserValidator } from '$lib/validator/user';
 
 export function signInController() {
@@ -26,7 +26,7 @@ export function signInController() {
 	});
 
 	const passwordQuery = createQuery({
-		queryKey: ['users', 'password', form.fields.email],
+		queryKey: ['users', 'password'],
 		queryFn: () =>
 			axiosFetch.GET<IPasswordSaltResponse>(`/users/password-salt?email=${form.fields.email}`),
 		enabled: false,
@@ -46,10 +46,10 @@ export function signInController() {
 	let passwordCryptoKey = $state<CryptoKey | undefined>();
 
 	const signinMutation = createMutation({
-		mutationFn: (input: ISigninPayload) =>
-			axiosFetch.POST<ISigninResponse, ISigninPayload>('/auth/sign-in', input),
+		mutationFn: (payload: ISigninPayload) =>
+			axiosFetch.POST<ISigninResponse, ISigninPayload>('/auth/sign-in', payload),
 		onSuccess: async (data) => {
-			if (data?.payload) {
+			if (data) {
 				const { user } = data.payload;
 
 				if (user && passwordCryptoKey) {
@@ -59,7 +59,7 @@ export function signInController() {
 						passwordCryptoKey,
 					);
 
-					localStorageManagement.store(localStorageManagement.key.SECRET_KEY, secretKey);
+					await secretKeyManagement.storeSecretKey(secretKey);
 
 					goto('/app/notes');
 				}

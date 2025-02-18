@@ -23,6 +23,8 @@ class LocalStorage {
 				return value;
 			}
 		}
+
+		return null;
 	}
 
 	public remove(key: string) {
