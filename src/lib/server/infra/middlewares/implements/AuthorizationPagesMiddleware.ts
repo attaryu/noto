@@ -39,7 +39,6 @@ export class AuthorizationPagesMiddleware implements IMiddleware {
 				throw new TokenError.Purpose();
 			}
 		} catch {
-			console.log('pathname: ', pathname);
 			return response.redirect(302, '/app/sign-in');
 		}
 
