@@ -13,6 +13,7 @@ export function createQuery<Response>(
 		string[]
 	>,
 ) {
+	$inspect('options:', options);
 	/**
 	 * original query store from tanstack/svelte-query
 	 */
@@ -28,7 +29,7 @@ export function createQuery<Response>(
 
 	const unsubscribe = queryStore.subscribe((state) => {
 		// update query state value
-		query = state;
+		query = { ...state };
 	});
 
 	onDestroy(() => {

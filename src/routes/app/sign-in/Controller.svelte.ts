@@ -26,9 +26,11 @@ export function signInController() {
 	});
 
 	const passwordQuery = createQuery({
-		queryKey: ['users', 'password'],
+		queryKey: ['users', 'password', form.fields.email],
 		queryFn: () =>
 			axiosFetch.GET<IPasswordSaltResponse>(`/users/password-salt?email=${form.fields.email}`),
+		enabled: false,
+		retry: false,
 	});
 
 	const refetchPasswordQuery = _.debounce(() => {
