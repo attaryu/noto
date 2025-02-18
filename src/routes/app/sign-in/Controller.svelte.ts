@@ -7,14 +7,13 @@ import { goto } from '$app/navigation';
 import _ from 'lodash';
 
 import { secretKeyManagement } from '$lib/business/secretKeyManagement';
+import { userCryptography } from '$lib/business/userCrytography';
 import { createMutation } from '$lib/hooks/createMutation.svelte';
 import { createQuery } from '$lib/hooks/createQuery.svelte';
 import { createValidation } from '$lib/hooks/createValidation.svelte';
 import { axiosFetch } from '$lib/stores/api/baseConfig';
 import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
 import encryption from '$lib/utils/cryptography/encryption';
-import { hashing } from '$lib/utils/cryptography/hashing';
-import keyManagement from '$lib/utils/cryptography/keyManagement';
 import { signinUserValidator } from '$lib/validator/user';
 
 export function signInController() {
@@ -75,19 +74,16 @@ export function signInController() {
 
 	const submitHandler = form.submitHandler(async (fields) => {
 		if (passwordQuery.data?.success) {
-			const importedPasswordKey = await keyManagement.importKeyFromString(
+			const passwordKey = await userCryptography.generatePasswordKey(
 				fields.password,
 				passwordQuery.data.payload.salt,
 			);
 
-			const exportedPasswordKey = await keyManagement.exportKey(importedPasswordKey);
-			const hashedPasswordKey = await hashing(exportedPasswordKey);
-
-			passwordCryptoKey = importedPasswordKey;
+			passwordCryptoKey = passwordKey.key;
 
 			signinMutation.mutate({
 				...fields,
-				password: hashedPasswordKey,
+				password: passwordKey.hashedKey,
 			});
 		}
 	});
