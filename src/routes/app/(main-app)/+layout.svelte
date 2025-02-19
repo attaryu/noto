@@ -1,13 +1,19 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { LayoutProps } from './$types';
 
 	import Navigation from '$lib/components/Navigation.svelte';
 
-	interface Props {
-		children?: Snippet;
-	}
+	import { setUserStore } from '$lib/stores/user.svelte';
+	import { makeUserImageProfile } from '$lib/utils/makeUserImageProfile';
 
-	let { children }: Props = $props();
+	let { children, data }: LayoutProps = $props();
+
+	setUserStore({
+		id: data.user.id,
+		fullname: data.user.fullname,
+		email: data.user.email,
+		image: makeUserImageProfile(data.user.fullname),
+	});
 </script>
 
 {@render children?.()}
