@@ -9,22 +9,23 @@
 		Shield,
 		SunMoon,
 	} from 'lucide-svelte';
+	import { goto } from '$app/navigation';
 
 	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import Header from '$lib/components/Header.svelte';
-	import PreferenceItem from '$lib/components/Profile/PreferenceItem.svelte';
+	import MenuItem from '$lib/components/Profile/MenuItem.svelte';
 	import Select from '$lib/components/Select.svelte';
 	import Text from '$lib/components/Text.svelte';
-	import { goto } from '$app/navigation';
 
-	const user = {
-		fullname: 'John Doe',
-		email: 'johndoe@gmail.com',
-		image:
-			'https://images.unsplash.com/photo-1601887389937-0b02c26b602c?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-	};
+	import { getUserStore } from '$lib/stores/user.svelte';
+	import { profileController } from './Controller.svelte';
+	import { createMutation } from '@tanstack/svelte-query';
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+
+	const controller = profileController();
+	const user = getUserStore();
 </script>
 
 <svelte:head>
@@ -46,7 +47,7 @@
 			/>
 
 			<Button class="absolute bottom-0 right-0 border border-tertiary-2">
-				<Pen size={24} />
+				<Pen size={20} />
 			</Button>
 		</div>
 
@@ -65,18 +66,18 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<PreferenceItem text="Backup" action={() => goto('/app/backup')}>
+						<MenuItem text="Backup" action={() => goto('/app/backup')}>
 							{#snippet icon()}
 								<CloudUpload />
 							{/snippet}
 							{#snippet rightElement()}
 								<ArrowRight />
 							{/snippet}
-						</PreferenceItem>
+						</MenuItem>
 					</li>
 
 					<li>
-						<PreferenceItem text="Theme">
+						<MenuItem text="Theme">
 							{#snippet icon()}
 								<SunMoon />
 							{/snippet}
@@ -103,11 +104,11 @@
 									}}
 								/>
 							{/snippet}
-						</PreferenceItem>
+						</MenuItem>
 					</li>
 
 					<li>
-						<PreferenceItem text="Language">
+						<MenuItem text="Language">
 							{#snippet icon()}
 								<Globe />
 							{/snippet}
@@ -130,7 +131,7 @@
 									}}
 								/>
 							{/snippet}
-						</PreferenceItem>
+						</MenuItem>
 					</li>
 				</ul>
 			{/snippet}
@@ -145,39 +146,53 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<PreferenceItem text="Privacy and Policy">
+						<MenuItem text="Privacy and Policy">
 							{#snippet icon()}
 								<Shield />
 							{/snippet}
 							{#snippet rightElement()}
 								<ArrowRight />
 							{/snippet}
-						</PreferenceItem>
+						</MenuItem>
 					</li>
 					<li>
-						<PreferenceItem text="Support">
+						<MenuItem text="Support">
 							{#snippet icon()}
 								<HeartHandshake />
 							{/snippet}
 							{#snippet rightElement()}
 								<ArrowRight />
 							{/snippet}
-						</PreferenceItem>
+						</MenuItem>
 					</li>
 					<li>
-						<PreferenceItem text="About">
+						<MenuItem text="About">
 							{#snippet icon()}
 								<Info />
 							{/snippet}
 							{#snippet rightElement()}
 								<ArrowRight />
 							{/snippet}
-						</PreferenceItem>
+						</MenuItem>
 					</li>
 				</ul>
 			{/snippet}
 		</Card>
 	</section>
+
+	<Card color="white" class="bg-zinc-200 p-2">
+		{#snippet as(props)}
+			<ul {...props}>
+				<li>
+					<MenuItem
+						text="Logout"
+						action={controller.logOutMutation.mutate}
+						disabled={controller.logOutMutation.isPending}
+					/>
+				</li>
+			</ul>
+		{/snippet}
+	</Card>
 </main>
 
 <Decorator color="green" class="-left-0 -top-8" />

@@ -5,13 +5,8 @@ import { createQuery as TanstackCreateQuery } from '@tanstack/svelte-query';
 import { onDestroy } from 'svelte';
 import { get } from 'svelte/store';
 
-export function createQuery<Response>(
-	options: UndefinedInitialDataOptions<
-		Response | undefined,
-		IErrorResponseAPI,
-		Response | undefined,
-		string[]
-	>,
+export function createQuery<Response = unknown>(
+	options: UndefinedInitialDataOptions<Response, IErrorResponseAPI, Response, string[]>,
 ) {
 	/**
 	 * original query store from tanstack/svelte-query
@@ -21,7 +16,7 @@ export function createQuery<Response>(
 	/**
 	 * query state value for easy reactivity
 	 */
-	let query = $state.raw<QueryObserverResult<Response | undefined, IErrorResponseAPI>>(
+	let query = $state.raw<QueryObserverResult<Response, IErrorResponseAPI>>(
 		// get query store value immediately for avoid undefined value
 		get(queryStore),
 	);

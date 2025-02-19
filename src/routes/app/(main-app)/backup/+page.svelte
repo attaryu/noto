@@ -5,7 +5,7 @@
 	import Card from '$lib/components/Card.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import Header from '$lib/components/Header.svelte';
-	import PreferenceItem from '$lib/components/Profile/PreferenceItem.svelte';
+	import MenuItem from '$lib/components/Profile/MenuItem.svelte';
 	import Text from '$lib/components/Text.svelte';
 </script>
 
@@ -29,11 +29,11 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<PreferenceItem text="Export" action={() => {}} />
+						<MenuItem text="Export" action={() => {}} />
 					</li>
 
 					<li>
-						<PreferenceItem text="Import" action={() => {}} />
+						<MenuItem text="Import" action={() => {}} />
 					</li>
 				</ul>
 			{/snippet}

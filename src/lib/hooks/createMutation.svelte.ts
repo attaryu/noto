@@ -6,8 +6,8 @@ import { createMutation as TanstackCreateMutation } from '@tanstack/svelte-query
 import { onDestroy } from 'svelte';
 import { get } from 'svelte/store';
 
-export function createMutation<Response, Payload>(
-	options: CreateMutationOptions<Response | undefined, IErrorResponseAPI, Payload, unknown>,
+export function createMutation<Response = unknown, Payload = void>(
+	options: CreateMutationOptions<Response, IErrorResponseAPI, Payload, unknown>,
 ) {
 	/**
 	 * original mutation store from tanstack/svelte-query
@@ -18,7 +18,7 @@ export function createMutation<Response, Payload>(
 	 * mutation state value for easy reactivity
 	 */
 	let mutation = $state.raw<
-		CreateBaseMutationResult<Response | undefined, IErrorResponseAPI, Payload, unknown>
+		CreateBaseMutationResult<Response, IErrorResponseAPI, Payload, unknown>
 	>(
 		// get mutation store value immediately for avoid undefined value
 		get(mutationStore),

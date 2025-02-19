@@ -6,5 +6,6 @@ import type { TokenPurposeEnum } from '../../enums/TokenPurpose';
 export interface ITokenPayloadDTO {
 	id: string;
 	email: string;
+	fullname: string;
 	purpose: TokenPurposeEnum;
 }
