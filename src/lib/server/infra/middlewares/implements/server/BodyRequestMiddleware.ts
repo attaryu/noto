@@ -1,6 +1,6 @@
 import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
 import type { IHttpResponse } from '$lib/server/presentation/helpers/interfaces/HttpResponse';
-import type { IMiddleware } from '../Middleware';
+import type { IMiddleware } from '../../Middleware';
 
 export class BodyRequestMiddleware implements IMiddleware {
 	async handle(

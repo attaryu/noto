@@ -1,7 +1,7 @@
 import type { ITokenRepository } from '$lib/server/app/repositories/Token';
 import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
 import type { IHttpResponse } from '$lib/server/presentation/helpers/interfaces/HttpResponse';
-import type { IMiddleware } from '../Middleware';
+import type { IMiddleware } from '../../Middleware';
 
 import { TokenError } from '$lib/server/domain/errors/Token';
 import { API_VERSION } from '$env/static/private';

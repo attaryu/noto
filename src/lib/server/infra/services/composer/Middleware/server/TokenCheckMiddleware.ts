@@ -1,7 +1,7 @@
 import type { IMiddleware } from '$lib/server/infra/middlewares/Middleware';
 
 import { client } from '$lib/server/infra/databases/mongodb/connection';
-import { TokenCheckMiddleware } from '$lib/server/infra/middlewares/implements/TokenCheckMiddleware';
+import { TokenCheckMiddleware } from '$lib/server/infra/middlewares/implements/server/TokenCheckMiddleware';
 import { TokenRepository } from '$lib/server/infra/repositories/Token';
 
 export function tokenCheckMiddlewareComposer(): IMiddleware {

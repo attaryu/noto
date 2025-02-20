@@ -1,14 +1,13 @@
 import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
 import type { IHttpRequest } from '$lib/server/presentation/helpers/interfaces/HttpRequest';
 import type { IHttpResponse } from '$lib/server/presentation/helpers/interfaces/HttpResponse';
-import type { IMiddleware } from '../Middleware';
+import type { IMiddleware } from '../../Middleware';
 
+import { API_VERSION } from '$env/static/private';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 import { TokenError } from '$lib/server/domain/errors/Token';
 
-export class AuthorizationPagesMiddleware implements IMiddleware {
-	private publicPathname = ['/app/sign-in', '/app/sign-up', '/'];
-
+export class SessionMiddleware implements IMiddleware {
 	constructor(private readonly tokenManager: ITokenManager) {}
 
 	async handle(
@@ -17,29 +16,24 @@ export class AuthorizationPagesMiddleware implements IMiddleware {
 		next: () => Promise<Response>,
 	): Promise<Response> {
 		const { pathname } = request.url;
+		const basePathname = `/api/v${API_VERSION}`;
 
-		if (pathname.startsWith('/api')) {
-			return next();
-		}
+		if (
+			pathname.startsWith(`${basePathname}/notes`) ||
+			pathname.startsWith(`${basePathname}/note`) ||
+			pathname === `${basePathname}/auth/sign-out`
+		) {
+			const token = request.cookies.get('AUTH_TOKEN');
 
-		if (this.publicPathname.includes(pathname)) {
-			return next();
-		}
-
-		const authToken = request.cookies.get('AUTH_TOKEN');
-
-		try {
-			if (!authToken) {
+			if (!token) {
 				throw new TokenError.NotIncluded();
 			}
 
-			const payload = await this.tokenManager.verify(authToken);
+			request.locals!.tokenPayload = await this.tokenManager.verify(token);
 
-			if (payload.purpose !== TokenPurposeEnum.session) {
+			if (request.locals!.tokenPayload.purpose !== TokenPurposeEnum.session) {
 				throw new TokenError.Purpose();
 			}
-		} catch {
-			return response.redirect(302, '/app/sign-in');
 		}
 
 		return next();
