@@ -44,6 +44,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 			email: existingUser.email,
 			id: existingUser.id,
 			purpose: TokenPurposeEnum.resetPassword,
+			fullname: existingUser.fullname,
 		});
 
 		const tokenEntity = TokenEntity.create({

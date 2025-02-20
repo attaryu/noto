@@ -35,6 +35,7 @@ export class RequestAccountRecovery implements IRequestAccountRecovery {
 			email: user.email,
 			id: user.id,
 			purpose: TokenPurposeEnum.recoveryEmail,
+			fullname: user.fullname,
 		});
 
 		const tokenEntity = TokenEntity.create({
