@@ -12,7 +12,7 @@ import { HOST } from '$env/static/private';
 
 export class EmailTemplate implements IEmailTemplate {
 	async accountRecovery(user: IUserInDTO, token: ITokenDTO): Promise<string> {
-		const recoveryLink = `${HOST}/app/recover-email?token=${token.token}`;
+		const recoveryLink = `${HOST}/app/account-recovery/step-2?token=${token.token}`;
 
 		const expiredAt = dayjs(token.expiredAt).format('D MMMM YYYY, HH.mm UTCZ');
 
