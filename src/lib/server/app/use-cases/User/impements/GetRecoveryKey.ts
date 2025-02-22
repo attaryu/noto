@@ -37,7 +37,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 		const recoveryKey = existingUser.recoveryKeys.find(({ code }) => code === keyOrder);
 
 		if (!recoveryKey) {
-			throw new UserError.RecoveryKeyNotFound();
+			throw new UserError.RecoveryKeyIncorrect();
 		}
 
 		const resetPasswordToken = await this.tokenManager.sign({
@@ -53,9 +53,6 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 			expiredAt: resetPasswordToken.expired,
 			token: resetPasswordToken.value,
 		}).toObject();
-
-		// delete email recovery token
-		await this.tokenRepository.delete({ token: existingToken.token });
 
 		// delete old reset password token if exist
 		await this.tokenRepository.delete({

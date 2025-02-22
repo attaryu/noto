@@ -30,7 +30,7 @@ export function errorHandler(error: any): IResponseDTO {
 		404: [
 			UserError.NotFound,
 			TokenError.NotRegistered,
-			UserError.RecoveryKeyNotFound,
+			UserError.RecoveryKeyIncorrect,
 			NoteError.NotFound,
 		],
 		409: [UserError.AlreadyExist],

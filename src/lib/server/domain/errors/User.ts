@@ -7,10 +7,10 @@ export namespace UserError {
 		}
 	}
 
-	export class RecoveryKeyNotFound extends Error {
+	export class RecoveryKeyIncorrect extends Error {
 		constructor() {
-			super(`recovery key with order not found`);
-			this.name = 'RecoveryKeyNotFoundError';
+			super(`Recovery key incorrect`);
+			this.name = 'RecoveryKeyIncorrectError';
 		}
 	}
 
