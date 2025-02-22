@@ -6,14 +6,20 @@
 
 	interface Props {
 		children?: Snippet;
-		className?: string;
+		class?: string;
+		message?: string | null;
 	}
 
-	const { children, className }: Props = $props();
+	const { children, message, class: className }: Props = $props();
 </script>
 
-{#if children}
-	<Text tag="small" class={mergeClass('text-center text-red-500', className)}
-		>{@render children()}</Text
-	>
+{#if message}
+	<Text tag="small" class={mergeClass('text-center text-red-500', className)}>
+		{message}
+	</Text>
+{:else if children}
+	<!-- deprecated, use message property instead -->
+	<Text tag="small" class={mergeClass('text-center text-red-500', className)}>
+		{@render children()}
+	</Text>
 {/if}
