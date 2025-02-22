@@ -7,9 +7,9 @@
 	import Button from './Button.svelte';
 	import Text from './Text.svelte';
 
-	import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
-	const dialogCVA = cva('flex items-center rounded-lg border', {
+	const toastCVA = cva('flex items-center rounded-lg border', {
 		variants: {
 			type: {
 				success:
@@ -23,11 +23,11 @@
 		},
 	});
 
-	const dialogStore = getDialogStoreContext();
+	const toastStore = getToastStoreContext();
 
 	// for testing purposes
-	// const dialogStore = {
-	// 	dialogs: [
+	// const toastStore = {
+	// 	toasts: [
 	// 		{
 	// 			message: 'This is a success message',
 	// 			type: 'success' as const,
@@ -45,9 +45,9 @@
 </script>
 
 <aside class="fixed inset-x-4 top-4 z-[99] min-h-8 space-y-2">
-	{#each dialogStore.dialogs as { message, type } (message)}
+	{#each toastStore.toasts as { message, type } (message)}
 		<div
-			class={dialogCVA({ type })}
+			class={toastCVA({ type })}
 			animate:flip={{ duration: 300, delay: 50 }}
 			in:fly={{ duration: 300, y: '-50%' }}
 			out:scale={{ duration: 300 }}
@@ -58,7 +58,7 @@
 				<Button
 					variant="secondary"
 					class="rounded-none border-none bg-transparent p-4"
-					onclick={() => dialogStore.unsetDialog(message)}
+					onclick={() => toastStore.unsetToast(message)}
 				>
 					<X size="16" />
 				</Button>

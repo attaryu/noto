@@ -12,12 +12,12 @@ import { createMutation } from '$lib/hooks/createMutation.svelte';
 import { createQuery } from '$lib/hooks/createQuery.svelte';
 import { createValidation } from '$lib/hooks/createValidation.svelte';
 import { axiosFetch } from '$lib/stores/api/baseConfig';
-import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+import { getToastStoreContext } from '$lib/stores/toast.svelte';
 import encryption from '$lib/utils/cryptography/encryption';
 import { signinUserValidator } from '$lib/validator/user';
 
 export function signInController() {
-	const dialog = getDialogStoreContext();
+	const toast = getToastStoreContext();
 
 	const form = createValidation<z.infer<typeof signinUserValidator>>(signinUserValidator, {
 		email: '',
@@ -65,7 +65,7 @@ export function signInController() {
 			}
 		},
 		onError: (error) => {
-			dialog.setDialog({
+			toast.setToast({
 				message: error.error.message ?? 'An error occurred',
 				type: 'error',
 			});

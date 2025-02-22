@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	import Dialog from '$lib/components/Dialog.svelte';
+	import Toast from '$lib/components/Toast.svelte';
 
-	import { setDialogStoreContext } from '$lib/stores/dialog.svelte';
+	import { setToastStoreContext } from '$lib/stores/toast.svelte';
 
 	interface Props {
 		children: Snippet;
@@ -12,9 +12,9 @@
 	const { children }: Props = $props();
 
 	// initialize the stores
-	setDialogStoreContext();
+	setToastStoreContext();
 </script>
 
 {@render children()}
 
-<Dialog />
+<Toast />

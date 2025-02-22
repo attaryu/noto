@@ -19,11 +19,11 @@
 	import { userCryptography } from '$lib/business/userCrytography';
 	import { createValidation } from '$lib/hooks/createValidation.svelte';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import { resetPasswordValidator } from '$lib/validator/user';
 
 	const formId = 'account-recovery-step-3';
-	const dialogStore = getDialogStoreContext();
+	const toastStore = getToastStoreContext();
 
 	let secretKey = $state<string>();
 	let recoveryKeys = $state.raw<string[]>([]);
@@ -54,7 +54,7 @@
 			goto('/app/recovery-key', { replaceState: true, state: { recoveryKeys } });
 		},
 		onError: (error) => {
-			dialogStore.setDialog({
+			toastStore.setToast({
 				message: error.error.message ?? 'An error occured',
 				type: 'error',
 			});

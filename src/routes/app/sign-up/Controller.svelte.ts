@@ -8,7 +8,7 @@ import { createMutation } from '$lib/hooks/createMutation.svelte';
 import { createValidation } from '$lib/hooks/createValidation.svelte';
 
 import { axiosFetch } from '$lib/stores/api/baseConfig';
-import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+import { getToastStoreContext } from '$lib/stores/toast.svelte';
 import encryption from '$lib/utils/cryptography/encryption';
 import { generateRandomChar } from '$lib/utils/cryptography/generateRandomChar';
 import { hashing } from '$lib/utils/cryptography/hashing';
@@ -17,7 +17,7 @@ import { signupUserValidator } from '$lib/validator/user';
 import { userCryptography } from '$lib/business/userCrytography';
 
 export function signUpController() {
-	const dialog = getDialogStoreContext();
+	const toast = getToastStoreContext();
 
 	let recoveryKeys = $state.raw<string[]>([]);
 
@@ -37,7 +37,7 @@ export function signUpController() {
 			goto('/app/recovery-key', { state: { recoveryKeys } });
 		},
 		onError: (error) => {
-			dialog.setDialog({
+			toast.setToast({
 				message: error.error.message ?? 'An error occurred',
 				type: 'error',
 			});

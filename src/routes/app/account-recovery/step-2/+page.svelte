@@ -15,7 +15,7 @@
 	import Text from '$lib/components/Text.svelte';
 
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 
 	import encryption from '$lib/utils/cryptography/encryption';
@@ -24,7 +24,7 @@
 	const { data }: PageProps = $props();
 
 	const formId = 'account-recovery-step-2';
-	const dialogStore = getDialogStoreContext();
+	const toastStore = getToastStoreContext();
 
 	let recoveryKeyFromUser = $state('');
 	const recoveryKeyUpperCase = $derived(recoveryKeyFromUser.toUpperCase());
@@ -73,7 +73,7 @@
 
 			goto(`/app/account-recovery/step-3`, { replaceState: true });
 		} catch {
-			dialogStore.setDialog({
+			toastStore.setToast({
 				message: 'Last 4 digits of the recovery key are incorrect',
 				type: 'error',
 			});

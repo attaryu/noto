@@ -18,12 +18,12 @@
 
 	import { createValidation } from '$lib/hooks/createValidation.svelte';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
 	import { accountRecoveryValidator } from '$lib/validator/user';
 
 	const formId = 'account-recovery-step-1';
-	const dialog = getDialogStoreContext();
+	const toast = getToastStoreContext();
 
 	const form = createValidation<z.infer<typeof accountRecoveryValidator>>(
 		accountRecoveryValidator,
@@ -37,13 +37,13 @@
 	>({
 		mutationFn: (payload) => axiosFetch.POST('/auth/recover-email', payload),
 		onSuccess: () => {
-			dialog.setDialog({
+			toast.setToast({
 				message: 'Success, please check your email',
 				type: 'success',
 			});
 		},
 		onError: (error) => {
-			dialog.setDialog({
+			toast.setToast({
 				message: error.error.message ?? 'An error occurred',
 				type: 'error',
 			});
