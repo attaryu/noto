@@ -192,7 +192,10 @@ paths:
                 success: true
                 statusCode: 200
                 payload:
-                  recoveryKey: '[ENCRYPTED]'
+                  code: 001
+                  value: '[ENCRYPTED_VALUE]'
+                  iv: xxxxxx
+                  salt: xxxxxxxxxxxx
 
   /users/security:
     put:
@@ -212,16 +215,15 @@ paths:
             example:
               password:
                 value: '[HASHED]'
-                salt: '[RANDOM 16 BIT]'
+                salt: '[RANDOM]'
+              secretKey:
+                value: '[ENCRYPTED]'
+                iv: '[RANDOM]'
               recoveryKeys:
-                '001': '[ENCRYPTED]'
-                '002': '[ENCRYPTED]'
-                '003': '[ENCRYPTED]'
-                '004': '[ENCRYPTED]'
-                '005': '[ENCRYPTED]'
-                '006': '[ENCRYPTED]'
-                '007': '[ENCRYPTED]'
-                '008': '[ENCRYPTED]'
+                - code: '001'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
       responses:
         201:
           description: CREATED
