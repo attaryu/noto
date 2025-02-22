@@ -21,7 +21,7 @@ export function validatePrimitive(value: any, type: PrimitiveType, errorInstance
 
 type ValidateArrayOptions = {
 	itemRequired?: boolean;
-	itemType: PrimitiveType | 'any';
+	itemType: PrimitiveType | Record<string, PrimitiveType>;
 	errorInstance: Error;
 };
 
@@ -32,7 +32,7 @@ type ValidateArrayOptions = {
  * @param options options for validation
  */
 export function validateArray(array: any[], options: ValidateArrayOptions): void {
-	const { itemRequired = false, errorInstance, itemType = 'any' } = options;
+	const { itemRequired = false, errorInstance, itemType } = options;
 
 	// ? array should be defined || array is array not any else
 	if (array === undefined || !Array.isArray(array)) {
@@ -44,10 +44,22 @@ export function validateArray(array: any[], options: ValidateArrayOptions): void
 		throw errorInstance;
 	}
 
-	// ? check every item if itemType not any
-	if (itemType !== 'any') {
+	// ? check every item if it's primitive
+	if (
+		typeof itemType === 'string' ||
+		typeof itemType === 'number' ||
+		typeof itemType === 'boolean'
+	) {
 		for (const item of array) {
 			validatePrimitive(item, itemType, errorInstance);
+		}
+	}
+
+	if (typeof itemType === 'object') {
+		for (const item of array) {
+			for (const key in item) {
+				validatePrimitive(item[key], itemType[key], errorInstance);
+			}
 		}
 	}
 }

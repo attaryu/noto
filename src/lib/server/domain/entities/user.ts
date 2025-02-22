@@ -3,6 +3,7 @@ import type { IUpdateUserDTO } from '../dtos/User/UpdateUser';
 import type { IUserOutDTO } from '../dtos/User/UserOut';
 
 import { UserError } from '../errors/User';
+import { validateArray } from '../helper/validateProperty';
 
 export interface UserInterface {
 	id?: string;
@@ -74,7 +75,16 @@ export class UserEntity {
 		}
 
 		if (recoveryKeys !== undefined) {
-			UserEntity.validateRecoveryKeys(recoveryKeys);
+			validateArray(recoveryKeys, {
+				errorInstance: new UserError.Entity('recoveryKeys'),
+				itemRequired: true,
+				itemType: {
+					code: 'string',
+					iv: 'string',
+					salt: 'string',
+					value: 'string',
+				},
+			});
 		}
 
 		return props;
@@ -93,18 +103,6 @@ export class UserEntity {
 
 		if (value !== undefined && (!value || typeof value !== 'string')) {
 			throw new UserError.Entity('recoveryKeys');
-		}
-	}
-
-	static validateRecoveryKeys(recoveryKeys: UserInterface['recoveryKeys']): void {
-		if (typeof recoveryKeys !== 'object') {
-			throw new UserError.Entity('recoveryKeys');
-		}
-
-		for (const key in recoveryKeys) {
-			if (!recoveryKeys[key] || typeof recoveryKeys[key] !== 'string') {
-				throw new UserError.Entity('recoveryKeys');
-			}
 		}
 	}
 
