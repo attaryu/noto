@@ -23,11 +23,7 @@
 	 */
 	function downloadAsFile() {
 		if (recoveryKeys && !isDownloaded) {
-			const recoveryKey = recoveryKeys
-				.map((key) => key.slice(0, 4) + '-' + key.slice(4))
-				.join('\n');
-
-			const blob = new Blob([recoveryKey], { type: 'text/plain' });
+			const blob = new Blob([recoveryKeys.join('\n')], { type: 'text/plain' });
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement('a');
 
@@ -83,7 +79,7 @@
 				variant="secondary"
 				class="w-full"
 				onclick={downloadAsFile}
-				disabled={!aggreement || isDownloaded}
+				disabled={isDownloaded}
 			>
 				<Download />
 

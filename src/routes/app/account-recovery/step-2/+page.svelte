@@ -1,32 +1,84 @@
 <script lang="ts">
-	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
-	import KeyRound from 'lucide-svelte/icons/key-round';
+	import type { PageProps } from './$types';
+
+	import type { IRecoveryKeyResponse } from '$lib/types/api/users/recovery-key';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
+	import { goto } from '$app/navigation';
+	import { createQuery } from '@tanstack/svelte-query';
+	import { KeyRound } from 'lucide-svelte';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
+	import FieldError from '$lib/components/FieldError.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
 
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
+
+	import encryption from '$lib/utils/cryptography/encryption';
+	import keyManagement from '$lib/utils/cryptography/keyManagement';
+
+	const { data }: PageProps = $props();
+
 	const formId = 'account-recovery-step-2';
-	const inputId = 'recovery-key-input-';
-	const recoveryKey: string[] = $state(['', '', '', '', '', '', '', '']);
+	const dialogStore = getDialogStoreContext();
 
-	const inputAndFocusOnNext = (value: string, pair: number) => {
-		recoveryKey[pair] = value.toUpperCase();
+	let recoveryKeyFromUser = $state('');
+	const recoveryKeyUpperCase = $derived(recoveryKeyFromUser.toUpperCase());
+	const firstRecoveryKeyPair = $derived(recoveryKeyUpperCase.slice(0, 4));
 
-		// return directly if the user deletes without focusing on the next pair
-		if (value === '') {
+	/**
+	 * get recovery key from the server every time the first 4 digits change.
+	 * reset token will be obtained if the user successfully gets a recovery key.
+	 */
+	const recoveryKeyQuery = $derived(
+		createQuery<IRecoveryKeyResponse, IErrorResponseAPI>({
+			queryKey: ['recovery-key', firstRecoveryKeyPair],
+			queryFn: () =>
+				axiosFetch.GET(
+					`/users/recovery-key?key-order=${firstRecoveryKeyPair}&recovery-token=${data.token}`,
+				),
+			retry: false,
+			enabled: firstRecoveryKeyPair.length === 4,
+		}),
+	);
+
+	async function submitHandler(e: EventParameter<SubmitEvent, HTMLFormElement>) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (!$recoveryKeyQuery.isSuccess) {
 			return;
 		}
 
-		// looping to find an empty pair input and do focus on it
-		for (let nextPair = pair; nextPair < recoveryKey.length; nextPair++) {
-			if (recoveryKey[nextPair] === '') {
-				document.getElementById(`${inputId}-${nextPair}`)?.focus();
-				break;
-			}
+		try {
+			// make PBKDF2 key with recovery key from user input and salt from the server
+			const recoveryKeyPBKDF2 = await keyManagement.importKeyFromString(
+				recoveryKeyUpperCase,
+				$recoveryKeyQuery.data.payload.recoveryKey.salt,
+			);
+
+			// decrypt the secret key with the PBKDF2 key
+			const secretKey = await encryption.decrypt(
+				$recoveryKeyQuery.data.payload.recoveryKey.value,
+				$recoveryKeyQuery.data.payload.recoveryKey.iv,
+				recoveryKeyPBKDF2,
+			);
+
+			// store the secret key in the local storage for next step account recovery
+			await secretKeyManagement.storeSecretKey(secretKey);
+
+			goto(`/app/account-recovery/step-3`, { replaceState: true });
+		} catch {
+			dialogStore.setDialog({
+				message: 'Last 4 digits of the recovery key are incorrect',
+				type: 'error',
+			});
 		}
-	};
+	}
 </script>
 
 <main class="flex h-screen flex-col p-4">
@@ -38,35 +90,28 @@
 			automatic loss of access
 		</Text>
 
-		<form
-			action=""
-			id={formId}
-			class="mt-8 flex w-full justify-between rounded-xl border border-zinc-900 bg-white p-2"
-		>
-			{#snippet input(value: string, pair: number)}
-				<Input
-					type="text"
-					placeholder="-"
-					{value}
-					id="{inputId}-{pair}"
-					class="h-12 w-8 rounded-lg p-0 text-center"
-					oninput={(e) => inputAndFocusOnNext(e.currentTarget.value, pair)}
-					maxlength={1}
-				/>
-			{/snippet}
+		<form action="" id={formId} class="mt-8 w-full" onsubmit={submitHandler}>
+			<Input
+				type="text"
+				placeholder="Recovery key"
+				class="w-full text-center uppercase placeholder:normal-case"
+				required
+				maxlength={8}
+				bind:value={recoveryKeyFromUser}
+			/>
 
-			{@render input(recoveryKey[0], 0)}
-			{@render input(recoveryKey[1], 1)}
-			{@render input(recoveryKey[2], 2)}
-			{@render input(recoveryKey[3], 3)}
-			{@render input(recoveryKey[4], 4)}
-			{@render input(recoveryKey[5], 5)}
-			{@render input(recoveryKey[6], 6)}
-			{@render input(recoveryKey[7], 7)}
+			<FieldError class="mt-4">{$recoveryKeyQuery.error?.error.message}</FieldError>
 		</form>
 	</div>
 
-	<Button form={formId} type="submit" class="mt-auto w-full"><KeyRound /> Verify</Button>
+	<Button
+		form={formId}
+		type="submit"
+		class="mt-auto w-full"
+		disabled={$recoveryKeyQuery.isLoading || !$recoveryKeyQuery.data}
+	>
+		<KeyRound /> Verify
+	</Button>
 </main>
 
 <Decorator color="green" class="-left-6 top-0" />

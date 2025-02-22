@@ -1,13 +1,58 @@
 <script lang="ts">
+	import type { z } from 'zod';
+
+	import type {
+		IRecoverEmailPayload,
+		IRecoverEmailResponse,
+	} from '$lib/types/api/auth/recover-email';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import Send from 'lucide-svelte/icons/send';
+	import { createMutation } from '@tanstack/svelte-query';
 
 	import Button from '$lib/components/Button.svelte';
+	import Decorator from '$lib/components/Decorator.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
-	import Decorator from '$lib/components/Decorator.svelte';
+
+	import { createValidation } from '$lib/hooks/createValidation.svelte';
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getDialogStoreContext } from '$lib/stores/dialog.svelte';
+
+	import { accountRecoveryValidator } from '$lib/validator/user';
 
 	const formId = 'account-recovery-step-1';
+	const dialog = getDialogStoreContext();
+
+	const form = createValidation<z.infer<typeof accountRecoveryValidator>>(
+		accountRecoveryValidator,
+		{ email: '' },
+	);
+
+	const recoverEmailMutation = createMutation<
+		IRecoverEmailResponse,
+		IErrorResponseAPI,
+		IRecoverEmailPayload
+	>({
+		mutationFn: (payload) => axiosFetch.POST('/auth/recover-email', payload),
+		onSuccess: () => {
+			dialog.setDialog({
+				message: 'Success, please check your email',
+				type: 'success',
+			});
+		},
+		onError: (error) => {
+			dialog.setDialog({
+				message: error.error.message ?? 'An error occurred',
+				type: 'error',
+			});
+		},
+	});
+
+	const submitHandler = form.submitHandler((data) => {
+		$recoverEmailMutation.mutate(data);
+	});
 </script>
 
 <main class="flex h-screen flex-col p-4">
@@ -26,12 +71,30 @@
 			We will send an email message along with a link to enter the recovery key
 		</Text>
 
-		<form action="" id={formId} class="mt-8 w-full">
-			<Input type="email" placeholder="Email" class="w-full" />
+		<form action="" id={formId} class="mt-8 w-full" onsubmit={submitHandler}>
+			<Input
+				type="email"
+				name="email"
+				placeholder="Email"
+				class="w-full"
+				value={form.fields.email}
+				oninput={({ currentTarget }) => (form.fields.email = currentTarget.value ?? '')}
+			/>
 		</form>
 	</div>
 
-	<Button form={formId} type="submit" class="mt-auto w-full"><Send /> Send now</Button>
+	<Button
+		form={formId}
+		type="submit"
+		class="mt-auto w-full"
+		disabled={$recoverEmailMutation.isPending}
+	>
+		{#if $recoverEmailMutation.isPending}
+			Loading...
+		{:else}
+			<Send /> Send now
+		{/if}
+	</Button>
 </main>
 
 <Decorator size="normal" color="yellow" class="top-0" />

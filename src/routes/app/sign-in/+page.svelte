@@ -57,7 +57,7 @@
 		</form>
 
 		<Text tag="small" class="mt-8">
-			Forgot your password? <a href="/app/recovery-account/step-1" class="text-sky-500"
+			Forgot your password? <a href="/app/account-recovery/step-1" class="text-sky-500"
 				>Recover here</a
 			>
 		</Text>

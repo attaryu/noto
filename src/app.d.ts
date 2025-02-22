@@ -12,7 +12,7 @@ declare global {
 		}
 		// interface PageData {}
 		interface PageState {
-			recoveryKeys: string[] | undefined;
+			recoveryKeys?: string[];
 		}
 		// interface Platform {}
 	}

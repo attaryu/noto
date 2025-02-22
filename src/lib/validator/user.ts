@@ -23,3 +23,12 @@ export const signinUserValidator = z.object({
 	email,
 	password,
 });
+
+export const accountRecoveryValidator = z.object({
+	email,
+});
+
+export const resetPasswordValidator = z.object({
+	password,
+	repeatPassword: password,
+})
