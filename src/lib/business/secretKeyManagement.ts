@@ -28,7 +28,12 @@ async function getSecretKey() {
 	return null;
 }
 
+async function removeSecretKey() {
+	localStorageManagement.remove(localStorageManagement.key.SECRET_KEY);
+}
+
 export const secretKeyManagement = {
-	storeSecretKey,
 	getSecretKey,
+	removeSecretKey,
+	storeSecretKey,
 };
