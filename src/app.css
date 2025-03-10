@@ -34,18 +34,86 @@
 		font-weight: 700;
 		font-style: normal;
 	}
-
-	.tiptap p.is-editor-empty:first-child::before {
-		color: #adb5bd;
-		content: attr(data-placeholder);
-		float: left;
-		height: 0;
-		pointer-events: none;
-	}
 }
 
 @layer components {
 	.debug {
-		@apply border border-red-500
+		@apply outline outline-1 outline-red-500;
+	}
+
+	.tiptap {
+		--before-heading-spacing: 24px;
+		--after-heading-spacing: 16px;
+
+		--after-p-spacing: 8px;
+
+		--list-y-spacing: 16px;
+
+		@apply text-zinc-900;
+
+		:first-child {
+			@apply mt-0;
+		}
+
+		/* heading */
+
+		:is(h1, h2, h3) {
+			@apply font-bold tracking-tight;
+
+			&:has(+ h1, + h2, + h3) {
+				@apply mb-4;
+			}
+
+			&:has(+ p, + ul, + ol) {
+				@apply mb-2 mt-6;
+			}
+		}
+
+		h1 {
+			@apply text-3xl;
+		}
+
+		h2 {
+			@apply text-2xl;
+		}
+
+		h3 {
+			@apply text-xl;
+		}
+
+		/* paragraph */
+
+		p {
+			@apply text-base opacity-90;
+
+			&:has(+ p) {
+				@apply mb-2;
+			}
+		}
+
+		/* bold */
+
+		strong {
+			@apply font-bold;
+		}
+
+		/* order and unorder list */
+
+		:is(ul, ol) {
+			@apply my-2 space-y-1 ml-6;
+		}
+
+		ol {
+			@apply list-decimal;
+		}
+
+		ul {
+			@apply list-disc;
+		}
+
+		/* placeholder */
+		p.is-editor-empty:first-child::before {
+			@apply pointer-events-none float-left h-0 text-xl text-zinc-900 opacity-50 content-[attr(data-placeholder)];
+		}
 	}
 }
