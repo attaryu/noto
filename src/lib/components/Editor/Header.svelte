@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Editor } from '@tiptap/core';
+	import type { Editor, JSONContent } from '@tiptap/core';
 
 	import _ from 'lodash';
 	import { ArrowLeft, Check, Pencil, X } from 'lucide-svelte';
@@ -11,60 +11,69 @@
 	interface Props {
 		title: string;
 		editorInstance: Editor;
-		originalData: any;
+		originalData?: JSONContent;
+		onsave?: () => void;
 	}
 
-	let { title, editorInstance, originalData }: Props = $props();
+	const { title, editorInstance, originalData, onsave }: Props = $props();
 
 	const controlButtons = $derived([
 		{
-			icon: X,
-			/**
-			 * determine whether the editor is empty?
-			 * Or, is the original data the same as the data in the editor?
-			 */
+			id: 'cancel',
 			disabled: originalData
-				? _.isEqual(editorInstance.getJSON(), originalData)
+				? _.isEqual(originalData, editorInstance.getJSON())
 				: editorInstance.isEmpty,
-			onclick: () => editorInstance.commands.setContent(originalData ?? ''),
+			icon: X,
+			onclick: () => editorInstance.chain().clearContent().focus().run(),
 		},
 		{
+			id: 'edit',
+			disabled: editorInstance.isEmpty,
 			icon: editorInstance.isEditable ? Check : Pencil,
-			disabled: false,
 			onclick: () => {
-				editorInstance.commands.focus();
 				editorInstance.setEditable(!editorInstance.isEditable);
-				originalData = editorInstance.getJSON();
+
+				if (editorInstance.isEditable) {
+					editorInstance.commands.focus();
+				}
+
+				if (!editorInstance.isEditable) {
+					onsave?.();
+				}
 			},
 		},
 	]);
 </script>
 
 <Header class="flex items-center bg-zinc-900 p-1">
-	<Button variant="secondary" onclick={() => history.back()}>
-		<ArrowLeft />
+	<Button variant="secondary">
+		{#snippet as(props)}
+			<a href="/app/notes" {...props}>
+				<ArrowLeft />
+			</a>
+		{/snippet}
 	</Button>
 
 	<Text tag="h3" class="ml-4 text-white">{title}</Text>
 
 	<div class="ml-auto mr-2 flex gap-2">
-		{#each controlButtons as controlButton}
+		{#each controlButtons as controlButton (controlButton.id)}
 			{@const Icon = controlButton.icon}
 
-			{#key editorInstance}
-				<Button
-					class="p-2 disabled:bg-zinc-900"
-					disabled={controlButton.disabled}
-					ontouchstartcapture={(event) => {
-						event.preventDefault();
-						event.currentTarget.blur();
-
-						controlButton.onclick();
-					}}
-				>
-					<Icon class="pointer-events-none" />
-				</Button>
-			{/key}
+			<Button
+				class="p-2 disabled:bg-zinc-900"
+				disabled={controlButton.disabled}
+				ontouchend={(event) => {
+					event.preventDefault();
+					controlButton.onclick();
+				}}
+				onmouseup={(event) => {
+					event.preventDefault();
+					controlButton.onclick();
+				}}
+			>
+				<Icon />
+			</Button>
 		{/each}
 	</div>
 </Header>
