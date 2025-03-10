@@ -44,7 +44,7 @@
 	// };
 </script>
 
-<aside class="fixed inset-x-4 top-4 z-[99] min-h-8 space-y-2">
+<aside class="pointer-events-none fixed inset-x-4 top-4 z-[99] min-h-8 space-y-2">
 	{#each toastStore.toasts as { message, type } (message)}
 		<div
 			class={toastCVA({ type })}
