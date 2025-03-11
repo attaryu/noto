@@ -59,7 +59,6 @@ async function generateRecoveryKeys(exportedSecretKey: string) {
 async function generateCryptoKeys(password: string) {
 	const secretKey = await keyManagement.generateKey();
 	const exportedSecretKey = await keyManagement.exportKey(secretKey);
-	console.log(' exportedSecretKey:', exportedSecretKey);
 
 	const passwordSalt = generateRandomChar(32);
 	const passwordKey = await generatePasswordKey(password, passwordSalt);
