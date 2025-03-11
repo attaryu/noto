@@ -279,7 +279,9 @@ paths:
                   notes:
                     - id: '123'
                       iv: '[RANDOM]'
-                      label:
+                      pinned: false
+                      archived: false
+                      labels:
                         - Label 1
                         - Label 2
                       content: '[ENCRYPTED]'
@@ -301,10 +303,12 @@ paths:
               $ref: '#/components/schemas/Note'
             example:
               iv: '[RANDOM]'
+              pinned: false
+              archived: false
               index:
                 - '[ENCRYPTED]'
                 - '[ENCRYPTED]'
-              label:
+              labels:
                 - Label 1
                 - Label 2
               content: '[ENCRYPTED]'
@@ -321,7 +325,9 @@ paths:
                 payload:
                   note:
                     id: '123'
-                    label:
+                    pinned: false
+                    archived: false
+                    labels:
                       - Label 1
                       - Label 2
                     content: '[ENCRYPTED]'
@@ -372,7 +378,9 @@ paths:
                   note:
                     id: '123'
                     iv: '[RANDOM]'
-                    label:
+                    pinned: false
+                    archived: false
+                    labels:
                       - Label 1
                       - Label 2
                     content: '[ENCRYPTED]'
@@ -398,10 +406,12 @@ paths:
             schema:
               $ref: '#/components/schemas/Note'
             example:
+              pinned: false
+              archived: false
               index:
                 - '[ENCRYPTED]'
                 - '[ENCRYPTED]'
-              label:
+              labels:
                 - Label 1
                 - Label 2
               content: '[ENCRYPTED]'
@@ -418,7 +428,9 @@ paths:
                 payload:
                   note:
                     id: '123'
-                    label:
+                    pinned: false
+                    archived: false
+                    labels:
                       - Label 1
                       - Label 2
                     content: '[ENCRYPTED]'
@@ -458,7 +470,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Label'
+                $ref: '#/components/schemas/Labels'
               example:
                 success: true
                 statusCode: 200
@@ -488,7 +500,7 @@ components:
       properties:
         iv:
           type: string
-        label:
+        labels:
           type: array
           items:
             type: string
@@ -502,6 +514,10 @@ components:
         - properties:
             id:
               type: string
+            pinned:
+              type: boolean
+            archived:
+              type: boolean
             createdAt:
               type: string
             updatedAt:
@@ -548,10 +564,10 @@ components:
         updatedAt:
           type: string
 
-    Label:
+    Labels:
       type: object
       properties:
         id:
           type: string
-        label:
+        labels:
           type: string
