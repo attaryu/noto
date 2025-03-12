@@ -15,7 +15,7 @@
 	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
-	
+
 	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import createEditor from '$lib/utils/editor';
 
@@ -64,9 +64,12 @@
 		}
 
 		const rawSecretKey = await keyManagement.importKey(secretKey);
-		const payload = await noteManagement.transform($editor.getJSON(), rawSecretKey);
+		const payload = await noteManagement.processContent($editor.getJSON(), rawSecretKey);
 
-		$noteMutation.mutate(payload);
+		$noteMutation.mutate({
+			...payload,
+			labels: [], // label feature not implemented yet
+		});
 	}
 
 	$effect(() => {
@@ -77,44 +80,6 @@
 					class: 'pt-2 pb-14 outline-none min-h-[50lvh]',
 				},
 			},
-			content: `
-				<h1>Daily Notes and Daily Motivation</h1>
-
-				<h2>Summary of the Day</h2>
-				<p><b>Date:</b> <i>March 8, 2025</i></p>
-				<p>
-						Today was quite a productive day. I completed some pending tasks and managed to finish
-						a chapter of the book I am currently reading.
-				</p>
-				<p>
-						And I also managed to complete the project report that I was working on for the past week.
-				</p>
-
-				<h2>Tasks Completed</h2>
-				<p>Fortunately, I can complete this task as fast as possible. So, I can rest as soon 🥰</p>
-				<ul>
-						<li><b>Finished the project report</b></li>
-						<li><i>Replied to important emails</i></li>
-						<li><u>Scheduled a meeting</u></li>
-				</ul>
-
-				<h2>Goals for Tomorrow</h2>
-				<ol>
-						<li><b>Complete the UI design for the application</b></li>
-						<li><i>Study the basics of Machine Learning</i></li>
-						<li><u>Exercise for 30 minutes</u></li>
-				</ol>
-
-				<h3>Additional Notes</h3>
-				<p>
-						I need to be more disciplined in managing my time to avoid procrastination.
-				</p>
-
-				<h3>Today's Motivation for Me</h3>
-				<p>
-						<i>"Failure is part of the journey to success."</i>
-				</p>
-			`,
 		});
 
 		return () => {

@@ -2,11 +2,12 @@
 	import type { Editor, JSONContent } from '@tiptap/core';
 
 	import _ from 'lodash';
-	import { ArrowLeft, Check, Pencil, X } from 'lucide-svelte';
+	import { ArrowLeft, Check, Pencil, X, RotateCcw } from 'lucide-svelte';
 
 	import Button from '../Button.svelte';
 	import Header from '../Header.svelte';
 	import Text from '../Text.svelte';
+	import { schemaComparison } from '$lib/utils/schemaComparison';
 
 	interface Props {
 		title: string;
@@ -17,14 +18,26 @@
 
 	const { title, editorInstance, originalData, onsave }: Props = $props();
 
+	const firstSchema = editorInstance.getJSON();
+
 	const controlButtons = $derived([
 		{
 			id: 'cancel',
-			disabled: originalData
-				? _.isEqual(originalData, editorInstance.getJSON())
-				: editorInstance.isEmpty,
-			icon: X,
-			onclick: () => editorInstance.chain().clearContent().focus().run(),
+			disabled:
+				!editorInstance.isEditable ||
+				schemaComparison(editorInstance.getJSON(), originalData ?? firstSchema),
+			icon: originalData ? RotateCcw : X,
+			onclick: () => {
+				if (originalData) {
+					editorInstance
+						.chain()
+						.focus('end', { scrollIntoView: false })
+						.setContent(originalData)
+						.run();
+				} else {
+					editorInstance.chain().focus('end', { scrollIntoView: false }).clearContent().run();
+				}
+			},
 		},
 		{
 			id: 'edit',
@@ -34,10 +47,8 @@
 				editorInstance.setEditable(!editorInstance.isEditable);
 
 				if (editorInstance.isEditable) {
-					editorInstance.commands.focus();
-				}
-
-				if (!editorInstance.isEditable) {
+					editorInstance.commands.focus('end', { scrollIntoView: false });
+				} else {
 					onsave?.();
 				}
 			},

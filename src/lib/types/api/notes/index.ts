@@ -18,7 +18,7 @@ export interface INotePayload {
 	content: string;
 }
 
-export type INoteUpdate = Partial<Omit<INotePayload, 'iv'>>;
+export type INoteUpdate = Partial<Omit<INotes, 'id' | 'createdAt' | 'updatedAt'>>;
 
 export type INoteResponse = IResponseAPI<{ note: INotes }>;
 

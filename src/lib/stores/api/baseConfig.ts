@@ -10,7 +10,7 @@ class AxiosFetch {
 	});
 
 	private async request<Response, Payload = unknown>(
-		method: 'get' | 'post' | 'put' | 'delete',
+		method: 'get' | 'post' | 'put' | 'delete' | 'patch',
 		pathname: string,
 		payload?: Payload,
 	) {
@@ -32,6 +32,10 @@ class AxiosFetch {
 
 	public async PUT<Response, Payload = unknown>(pathname: string, payload: Payload) {
 		return this.request<Response, Payload>('put', pathname, payload);
+	}
+
+	public async PATCH<Response, Payload = unknown>(pathname: string, payload: Payload) {
+		return this.request<Response, Payload>('patch', pathname, payload);
 	}
 
 	public async DELETE<Response>(pathname: string) {
