@@ -2,12 +2,72 @@
 	import type { Editor } from '@tiptap/core';
 	import type { Readable } from 'svelte/store';
 
+	import type { INotePayload, INoteResponse } from '$lib/types/api/notes';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
+	import { goto } from '$app/navigation';
+	import { createMutation } from '@tanstack/svelte-query';
+
 	import Controller from '$lib/components/Editor/Controller.svelte';
 	import Header from '$lib/components/Editor/Header.svelte';
+
+	import noteManagement from '$lib/business/noteManagement';
+	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
+	
+	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import createEditor from '$lib/utils/editor';
+
+	const toastStore = getToastStoreContext();
 
 	let editorElement: HTMLDivElement;
 	let editor = $state.raw<Readable<Editor>>();
+
+	const noteMutation = createMutation<INoteResponse, IErrorResponseAPI, INotePayload>({
+		mutationFn: (payload) => axiosFetch.POST('/notes', payload),
+		onSuccess: (data) => {
+			toastStore.setToast({
+				message: 'Note saved successfully',
+				type: 'success',
+			});
+
+			goto(`/app/notes/${data.payload.note.id}`, { replaceState: true });
+		},
+		onError: (error) => {
+			toastStore.setToast({
+				message: error.error.message ?? 'An error occured',
+				type: 'error',
+			});
+		},
+	});
+
+	async function submitHandler() {
+		if (!$editor || $editor.isEmpty) {
+			toastStore.setToast({
+				message: 'Note cannot be empty',
+				type: 'error',
+			});
+
+			return;
+		}
+
+		const secretKey = await secretKeyManagement.getSecretKey();
+
+		if (!secretKey) {
+			toastStore.setToast({
+				message: 'Secret key not found. Please sign in again!',
+				type: 'error',
+			});
+
+			return;
+		}
+
+		const rawSecretKey = await keyManagement.importKey(secretKey);
+		const payload = await noteManagement.transform($editor.getJSON(), rawSecretKey);
+
+		$noteMutation.mutate(payload);
+	}
 
 	$effect(() => {
 		editor = createEditor({
@@ -73,7 +133,7 @@
 
 <main class="px-5 pb-24 pt-24">
 	{#if $editor}
-		<Header editorInstance={$editor} title="Take notes" />
+		<Header editorInstance={$editor} title="Take notes" onsave={submitHandler} />
 	{/if}
 
 	<div bind:this={editorElement}></div>

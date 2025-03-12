@@ -9,7 +9,7 @@
 
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
-	const toastCVA = cva('flex items-center rounded-lg border', {
+	const toastCVA = cva('flex items-center rounded-lg border pointer-events-auto', {
 		variants: {
 			type: {
 				success:
