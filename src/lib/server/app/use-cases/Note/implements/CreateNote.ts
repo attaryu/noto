@@ -28,6 +28,8 @@ export class CreateNote implements ICreateNote {
 			label: newNote.labels,
 		});
 
+		const noteEntity = NoteEntity.create({ ...newNote });
+
 		/**
 		 * Transformed label, from name to id
 		 */
@@ -54,12 +56,13 @@ export class CreateNote implements ICreateNote {
 			}),
 		);
 
-		const noteEntity = NoteEntity.create({ ...newNote, labels: newLabelIds });
+		// update note label name to id
+		noteEntity.update({ labels: newLabelIds });
 
 		const { deletedAt, updatedAt, userId, ...note } = await this.noteRepository.create({
 			iv: noteEntity.iv,
 			content: noteEntity.content,
-			indexedWords: noteEntity.indexedWords,
+			index: noteEntity.index,
 			labels: newLabelIds,
 			userId: noteEntity.userId,
 		});

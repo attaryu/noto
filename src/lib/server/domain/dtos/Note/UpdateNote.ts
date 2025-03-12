@@ -1,6 +1,6 @@
 export interface IUpdateNoteDTO {
 	labels?: string[];
-	indexedWords?: string[];
+	index?: string[];
 	content?: string;
 	archived?: boolean;
 	pinned?: boolean;

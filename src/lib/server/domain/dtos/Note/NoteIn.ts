@@ -3,7 +3,7 @@ export interface INoteInDTO {
 	iv: string;
 	userId: string;
 	labels: string[];
-	indexedWords: string[];
+	index: string[];
 	content: string;
 	archived: boolean;
 	pinned: boolean;
