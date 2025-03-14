@@ -27,7 +27,7 @@ export class NoteRepository implements INoteRepository {
 			deletedAt: deleted ? { $ne: null } : null,
 			...(noteId && { _id: { $in: noteId.map((id) => objectId(id)) } }),
 			...(label && { labels: { $in: [label] } }),
-			...(search && { indexedWords: { $in: search } }),
+			...(search && { index: { $all: search } }),
 		};
 	}
 
@@ -66,7 +66,7 @@ export class NoteRepository implements INoteRepository {
 	async findManyByFilter(filter: INoteFilter): Promise<INoteInDTO[]> {
 		const cursor = this.database
 			.find(this.transformFilter(filter), { ignoreUndefined: true })
-			.sort({ updatedAt: -1, _id: -1 })
+			.sort({ pinned: -1, updatedAt: -1, _id: -1 })
 			.skip(filter.offset ?? 0);
 
 		if (filter.limit) {

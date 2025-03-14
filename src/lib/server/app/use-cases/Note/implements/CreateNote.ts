@@ -59,7 +59,7 @@ export class CreateNote implements ICreateNote {
 		// update note label name to id
 		noteEntity.update({ labels: newLabelIds });
 
-		const { deletedAt, updatedAt, userId, ...note } = await this.noteRepository.create({
+		const { deletedAt, userId, ...note } = await this.noteRepository.create({
 			iv: noteEntity.iv,
 			content: noteEntity.content,
 			index: noteEntity.index,
