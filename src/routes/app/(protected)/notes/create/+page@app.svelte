@@ -2,11 +2,11 @@
 	import type { Editor } from '@tiptap/core';
 	import type { Readable } from 'svelte/store';
 
-	import type { INotePayload, INoteResponse } from '$lib/types/api/notes';
+	import type { INotePayload, INoteResponse, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { goto } from '$app/navigation';
-	import { createMutation } from '@tanstack/svelte-query';
+	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 
 	import Controller from '$lib/components/Editor/Controller.svelte';
 	import Header from '$lib/components/Editor/Header.svelte';
@@ -20,6 +20,7 @@
 	import createEditor from '$lib/utils/editor';
 
 	const toastStore = getToastStoreContext();
+	const queryClient = useQueryClient();
 
 	let editorElement: HTMLDivElement;
 	let editor = $state.raw<Readable<Editor>>();
@@ -30,6 +31,26 @@
 			toastStore.setToast({
 				message: 'Note saved successfully',
 				type: 'success',
+			});
+
+			queryClient.setQueriesData<INotesResponse>({ queryKey: ['notes', 'list'] }, (oldData) => {
+				if (!oldData) return;
+
+				const { notes } = oldData.payload;
+
+				const pinnedNotes = notes.filter((note) => note.pinned);
+				const unpinnedNotes = notes.filter((note) => !note.pinned);
+
+				if (oldData.payload.notes.length >= 10) {
+					unpinnedNotes.pop();
+				}
+
+				return {
+					...oldData,
+					payload: {
+						notes: [...pinnedNotes, data.payload.note, ...unpinnedNotes],
+					},
+				};
 			});
 
 			goto(`/app/notes/${data.payload.note.id}`, { replaceState: true });

@@ -8,6 +8,7 @@ import { removeStopwords } from 'stopword';
 import encryption from '$lib/utils/cryptography/encryption';
 import { generateRandomChar } from '$lib/utils/cryptography/generateRandomChar';
 import { extensions } from '$lib/utils/editor';
+import { hashing } from '$lib/utils/cryptography/hashing';
 
 async function encrypt(note: JSONContent, secretKey: CryptoKey, iv: string): Promise<string> {
 	return encryption.encrypt(JSON.stringify(note), iv, secretKey);
@@ -19,14 +20,12 @@ async function decrypt(note: string, secretKey: CryptoKey, iv: string): Promise<
 }
 
 /**
- * Generates an index for the content and encrypts it
+ * Generates an index of text and hash it
  *
- * @param text note content
- * @param secretKey user secret key
- * @param iv iv for the encryption
+ * @param text text to be indexed
  */
-async function indexingContent(text: JSONContent, secretKey: CryptoKey, iv: string) {
-	const rawText = generateText(text, extensions)
+async function textIndexing(text: string) {
+	const rawText = text
 		.trim()
 		.replace(/\n/g, ' ') // remove new lines
 		.replace(/[\p{P}\p{S}]/gu, '') // remove any punctuation or symbols
@@ -42,11 +41,9 @@ async function indexingContent(text: JSONContent, secretKey: CryptoKey, iv: stri
 		}
 	}
 
-	const encryptedIndex = await Promise.all(
-		index.map((word) => encryption.encrypt(word, iv, secretKey)),
-	);
+	const hashedIndex = await Promise.all(index.map((word) => hashing(word)));
 
-	return encryptedIndex;
+	return hashedIndex;
 }
 
 /**
@@ -61,7 +58,7 @@ async function processContent(content: JSONContent, secretKey: CryptoKey, iv?: s
 	const _iv = iv ?? generateRandomChar(16);
 
 	const encryptedContent = await encrypt(content, secretKey, _iv);
-	const index = await indexingContent(content, secretKey, _iv);
+	const index = await textIndexing(generateText(content, extensions));
 
 	return {
 		iv: _iv,
@@ -72,5 +69,6 @@ async function processContent(content: JSONContent, secretKey: CryptoKey, iv?: s
 
 export default {
 	processContent,
+	textIndexing,
 	decrypt,
 };

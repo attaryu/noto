@@ -1,112 +1,125 @@
 <script lang="ts">
-	import type { Editor } from '@tiptap/core';
-	import type { Readable } from 'svelte/store';
+	import type { JSONContent } from '@tiptap/core';
 
+	import type { INote, INoteResponse } from '$lib/types/api/notes';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
+	import { goto } from '$app/navigation';
+	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import dayjs from 'dayjs';
+	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { Ellipsis, Pin, PinOff } from 'lucide-svelte';
-	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
-	import createEditor from '$lib/utils/editor';
 	import Button from './Button.svelte';
 	import Card from './Card.svelte';
 	import Dropdown from './Dropdown.svelte';
 
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
+	import createEditor from '$lib/utils/editor';
+
 	type Props = {
-		data: {
-			id: number;
-			label: string;
-			updateAt: Date;
-			pin: boolean;
-			color: 'yellow' | 'green' | 'white';
-			archived: boolean;
-			note: {
-				type: string;
-				content: {
-					type: string;
-					content: (
-						| {
-								type: string;
-								text: string;
-								marks?: undefined;
-						  }
-						| {
-								type: string;
-								marks: {
-									type: string;
-								}[];
-								text: string;
-						  }
-					)[];
-				}[];
-			};
-		};
+		data: INote;
+		index: number;
 	};
 
-	const { data }: Props = $props();
+	dayjs.extend(relativeTime);
 
-	const cardShadow =
-		data.color === 'yellow'
-			? 'shadow-tertiary-1/50'
-			: data.color === 'green'
-				? 'shadow-tertiary-2/50'
-				: '';
+	const { data, index }: Props = $props();
+	const toastStore = getToastStoreContext();
+	const querClient = useQueryClient();
 
-	const updateAt = data.updateAt.toLocaleDateString();
+	let displayElement = $state<HTMLDivElement>();
 
-	let displayElement: HTMLDivElement;
-	let editor = $state() as Readable<Editor>;
+	const noteMutation = createMutation<
+		INoteResponse,
+		IErrorResponseAPI,
+		{ pinned?: boolean; archived?: boolean }
+	>({
+		mutationKey: ['notes', 'detail', data.id],
+		mutationFn: (payload) => axiosFetch.PATCH(`/notes/${data.id}`, payload),
+		onSuccess: () => {
+			toastStore.setToast({
+				message: 'Note updated',
+				type: 'success',
+			});
 
-	onMount(() => {
-		editor = createEditor({
+			querClient.invalidateQueries({ queryKey: ['notes'] });
+		},
+	});
+
+	const color = $derived((index + 1) % 2 ? 'yellow' : 'green');
+	const cardShadow = $derived(color === 'yellow' ? 'shadow-tertiary-1/50' : 'shadow-tertiary-2/50');
+	const updateAt = $derived(new Date(data.updatedAt).toISOString());
+	const isPinned = $derived($noteMutation.variables?.pinned ?? data.pinned);
+	const PinIcon = $derived(isPinned ? Pin : PinOff);
+
+	function updatePin() {
+		$noteMutation.mutate({
+			pinned: !data.pinned,
+		});
+	}
+
+	function updateArchived() {
+		$noteMutation.mutate({
+			archived: !data.archived,
+		});
+	}
+
+	$effect(() => {
+		const schema = JSON.parse(data.content) as JSONContent;
+
+		const editor = createEditor({
 			element: displayElement,
+			editorProps: {
+				attributes: {
+					class: 'max-h-64 overflow-y-hidden',
+				},
+			},
 			editable: false,
 			content: {
-				...data.note,
-				content: data.note.content.slice(0, 2),
+				...schema,
+				content: schema.content!.slice(0, 2),
 			},
 		});
+
+		return () => {
+			get(editor).destroy();
+		};
 	});
 </script>
 
-<Card
-	color={data.archived ? 'white' : data.color}
-	class="{data.archived ? 'bg-zinc-100' : cardShadow} p-4 shadow-md"
->
+<Card class={`p-4 shadow-md ${cardShadow}`} {color}>
 	{#snippet as(props)}
 		<div {...props}>
 			<div bind:this={displayElement}></div>
 
-			<div class="flex items-end gap-2">
-				<time datetime={updateAt} class="w-full opacity-50">
-					{dayjs(updateAt).format('MMMM D, YYYY')}
+			<div class="flex items-end gap-2 mt-2">
+				<time datetime={updateAt} class="w-full text-sm opacity-50 font-medium">
+					{dayjs().to(updateAt)}
 				</time>
 
 				{#if !data.archived}
-					{#if data.pin}
-						<Button variant="primary" class="p-2">
-							<Pin size={20} />
-						</Button>
-					{:else}
-						<Button variant="secondary" class="bg-transparent p-2">
-							<PinOff size={20} />
-						</Button>
-					{/if}
+					<Button
+						variant={isPinned ? 'primary' : 'secondary'}
+						class={`${!isPinned && 'bg-transparent'} size-10`}
+						onclick={updatePin}
+					>
+						<PinIcon className="rotate-24" />
+					</Button>
 				{/if}
 
 				<Dropdown
-					class="p-2"
+					class="size-10"
 					items={[
 						{
 							title: 'Detail',
-							action: () => {},
-						},
-						{
-							title: 'Edit',
-							action: () => {},
+							action: () => goto(`/app/notes/${data.id}`),
 						},
 						{
 							title: 'Archive',
-							action: () => {},
+							action: updateArchived,
 						},
 					]}
 				>

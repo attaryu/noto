@@ -1,98 +1,76 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
+	import type { INote, INotesResponse } from '$lib/types/api/notes';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
+	import { createQuery } from '@tanstack/svelte-query';
+
 	import Header from '$lib/components/Header.svelte';
 	import NoteCard from '$lib/components/NoteCard.svelte';
 	import Searchbar from '$lib/components/Searchbar.svelte';
-	import Text from '$lib/components/Text.svelte';
 
-	let labels = ['Testing', 'Noto', 'Lorem', 'Ipsum', 'Dolor'];
-	let notes = [
-		{
-			id: 1,
-			label: 'Testing',
-			updateAt: new Date('2024-11-01T03:41:47.977Z'),
-			pin: true,
-			archived: false,
-			color: 'green' as const,
-			note: {
-				type: 'doc',
-				content: [
-					{
-						type: 'paragraph',
-						content: [
-							{
-								type: 'text',
-								text: 'This is title',
-							},
-						],
-					},
-					{
-						type: 'paragraph',
-						content: [
-							{
-								type: 'text',
-								text: 'And some description',
-							},
-							{
-								type: 'text',
-								marks: [
-									{
-										type: 'bold',
-									},
-								],
-								text: ' ',
-							},
-							{
-								type: 'text',
-								text: 'that i need for ',
-							},
-							{
-								type: 'text',
-								marks: [
-									{
-										type: 'bold',
-									},
-								],
-								text: 'testing',
-							},
-						],
-					},
-				],
-			},
-		},
-		{
-			id: 2,
-			label: 'Noto',
-			updateAt: new Date('2024-12-01T03:41:47.977Z'),
-			pin: false,
-			archived: false,
-			color: 'yellow' as const,
-			note: {
-				type: 'doc',
-				content: [
-					{
-						type: 'paragraph',
-						content: [
-							{
-								type: 'text',
-								text: 'Wow, this editor instance exports its content as JSON.',
-							},
-						],
-					},
-				],
-			},
-		},
-	];
+	import noteManagement from '$lib/business/noteManagement';
+	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
-	let activeLabel: string | undefined = $state();
-	let search: string = $state('');
-	let filteredNotes = $derived(
-		notes
-			.filter((item) => (activeLabel ? item.label.includes(activeLabel!) : item))
-			.sort((a, b) => a.updateAt.getTime() - b.updateAt.getTime())
-			// <!--? pinned sorting --->
-			.sort((a, b) => (a.pin ? -1 : b.pin ? 1 : 0)),
+	import keyManagement from '$lib/utils/cryptography/keyManagement';
+	import { stichSearchParam } from '$lib/utils/stichSearchParam';
+
+	const toastStore = getToastStoreContext();
+	let userSecretKey = $state<CryptoKey>();
+
+	let notes = $state.raw<INote[] | null>();
+	let search = $state('');
+
+	const notesQuery = $derived(
+		createQuery<INotesResponse, IErrorResponseAPI>({
+			queryKey: ['notes', 'list', search],
+			queryFn: async () => {
+				const query: Record<string, string> = {};
+
+				if (search.length) {
+					const index = await noteManagement.textIndexing(search);
+					query.search = JSON.stringify(index);
+				}
+
+				return axiosFetch.GET(stichSearchParam('/notes', query));
+			},
+		}),
 	);
+
+	/**
+	 * This effect will be triggered when the notes query is successful
+	 * It will decrypt the notes content
+	 */
+	$effect(() => {
+		if ($notesQuery.isSuccess) {
+			secretKeyManagement.getSecretKey().then(async (secretKey) => {
+				if (!secretKey) {
+					toastStore.setToast({
+						message: 'Secret key is not found, please sign in again',
+						type: 'error',
+					});
+
+					return;
+				}
+
+				userSecretKey = await keyManagement.importKey(secretKey);
+
+				const processedNotes = await Promise.all(
+					$notesQuery.data.payload.notes.map(async (note) => {
+						return {
+							...note,
+							content: JSON.stringify(
+								await noteManagement.decrypt(note.content, userSecretKey!, note.iv),
+							),
+						};
+					}),
+				);
+
+				notes = processedNotes;
+			});
+		}
+	});
 </script>
 
 <svelte:head>
@@ -103,45 +81,41 @@
 	<Searchbar class="w-full rounded-full" bind:value={search} />
 </Header>
 
-<main class="relative px-4 pt-32">
-	<Text tag="h1" class="text-6xl">Let's Note!</Text>
+<main class="relative px-4 pb-32 pt-16">
+	<!-- <section>
+			<Text tag="h2" class="sr-only">Labels</Text>
 
-	<section>
-		<Text tag="h2" class="sr-only">Labels</Text>
-
-		<ul class="-ml-4 mt-12 flex w-dvw gap-2 overflow-x-scroll px-4">
-			<li>
-				{@render labelComponent(
-					!activeLabel,
-					`All(${notes.length})`,
-					() => (activeLabel = undefined),
-				)}
-			</li>
-
-			{#each labels as label}
+			<ul class="-ml-4 mt-12 flex w-dvw gap-2 overflow-x-scroll px-4">
 				<li>
-					{@render labelComponent(activeLabel === label, label, () => (activeLabel = label))}
+					{@render labelComponent(
+						!activeLabel,
+						`All(${notes.length})`,
+						() => (activeLabel = undefined),
+					)}
 				</li>
-			{/each}
 
-			{#snippet labelComponent(isActive: boolean, content: string, onclick: () => void)}
-				{#key activeLabel}
-					<Button variant={isActive ? 'primary' : 'secondary'} class="py-2" {onclick}>
-						{content}
-					</Button>
-				{/key}
-			{/snippet}
-		</ul>
-	</section>
+				{#each labels as label}
+					<li>
+						{@render labelComponent(activeLabel === label, label, () => (activeLabel = label))}
+					</li>
+				{/each}
+
+				{#snippet labelComponent(isActive: boolean, content: string, onclick: () => void)}
+					{#key activeLabel}
+						<Button variant={isActive ? 'primary' : 'secondary'} class="py-2" {onclick}>
+							{content}
+						</Button>
+					{/key}
+				{/snippet}
+			</ul>
+		</section> -->
 
 	<section class="mt-4">
-		{#if filteredNotes.length}
-			<ul class="flex flex-col gap-4" role="list">
-				{#each filteredNotes as note}
+		{#if notes && notes.length}
+			<ul class="flex flex-col gap-4">
+				{#each notes as data, index (data.id)}
 					<li>
-						{#key activeLabel}
-							<NoteCard data={note} />
-						{/key}
+						<NoteCard {data} {index} />
 					</li>
 				{/each}
 			</ul>

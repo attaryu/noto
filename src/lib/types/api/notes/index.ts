@@ -1,6 +1,6 @@
 import type { IResponseAPI } from '$lib/types/response';
 
-interface INotes {
+export interface INote {
 	id: string;
 	iv: string;
 	labels: string[];
@@ -18,8 +18,8 @@ export interface INotePayload {
 	content: string;
 }
 
-export type INoteUpdate = Partial<Omit<INotes, 'id' | 'createdAt' | 'updatedAt'>>;
+export type INoteUpdate = Partial<Omit<INote, 'id' | 'createdAt' | 'updatedAt'>>;
 
-export type INoteResponse = IResponseAPI<{ note: INotes }>;
+export type INoteResponse = IResponseAPI<{ note: INote }>;
 
-export type INotesResponse = IResponseAPI<{ notes: INotes[] }>;
+export type INotesResponse = IResponseAPI<{ notes: INote[] }>;

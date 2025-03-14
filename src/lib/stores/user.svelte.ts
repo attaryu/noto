@@ -5,6 +5,10 @@ export interface IUserStore {
 	fullname: string;
 	email: string;
 	image: string;
+	secretKey: {
+		iv: string;
+		key: CryptoKey;
+	}
 }
 
 export type IUpdateUserStore = Partial<Omit<IUserStore, 'id'>>;

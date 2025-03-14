@@ -3,6 +3,7 @@
 
 	import { browser } from '$app/environment';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
+	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 	import { onMount } from 'svelte';
 	import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { pwaInfo } from 'virtual:pwa-info';
@@ -61,6 +62,8 @@
 			{@render children?.()}
 		{/if}
 	{/if}
+
+	<SvelteQueryDevtools />
 </QueryClientProvider>
 
 {#if ReloadPrompt}
