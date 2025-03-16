@@ -29,6 +29,7 @@ async function textIndexing(text: string) {
 		.trim()
 		.replace(/\n/g, ' ') // remove new lines
 		.replace(/[\p{P}\p{S}]/gu, '') // remove any punctuation or symbols
+		.toLowerCase()
 		.split(' ');
 
 	const cleanText = removeStopwords(rawText);
