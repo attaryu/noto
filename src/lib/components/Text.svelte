@@ -10,6 +10,7 @@
 
 	type Props = {
 		as?: Snippet<[any]>;
+		styling?: VariantProps<typeof textCVA>['tag'];
 	} & VariantProps<typeof textCVA> &
 		(
 			| SvelteHTMLElements['h1']
@@ -18,7 +19,7 @@
 			| SvelteHTMLElements['p']
 		);
 
-	const { children, as, tag = 'p', class: className, ...props }: Props = $props();
+	const { children, as, tag = 'p', styling, class: className, ...props }: Props = $props();
 
 	const textCVA = cva('leading-relaxed block', {
 		variants: {
@@ -34,7 +35,7 @@
 
 	const modifiedProps = {
 		...props,
-		class: mergeClass(textCVA({ tag, className })),
+		class: mergeClass(textCVA({ tag: styling ?? tag, className })),
 	};
 </script>
 
