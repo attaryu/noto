@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Editor } from '@tiptap/core';
 	import type { Readable } from 'svelte/store';
+	import type { InfiniteData } from '@tanstack/svelte-query';
 
 	import type { INotePayload, INoteResponse, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
@@ -33,25 +34,67 @@
 				type: 'success',
 			});
 
-			queryClient.setQueriesData<INotesResponse>({ queryKey: ['notes', 'list'] }, (oldData) => {
-				if (!oldData) return;
+			/**
+			 * Updating the notes list cache
+			 *
+			 * Since the notes list is descending, the first page will always be the latest note or
+			 * pinned note. So, just update the first page with the new note or update the pagination
+			 * information if the pinned notes length is more than 10. Always reset the page number
+			 */
+			queryClient.setQueriesData<InfiniteData<INotesResponse>>(
+				{ queryKey: ['notes', 'list'] },
+				(oldData) => {
+					if (!oldData) return;
 
-				const { notes } = oldData.payload;
+					const [firstPage] = oldData.pages;
+					const pinnedNote = firstPage.payload.notes.filter(({ pinned }) => pinned);
 
-				const pinnedNotes = notes.filter((note) => note.pinned);
-				const unpinnedNotes = notes.filter((note) => !note.pinned);
+					const updatedFirstPageInformation: INotesResponse['pagination'] = {
+						...firstPage.pagination!,
+						total: firstPage.pagination!.total + 1,
+					};
 
-				if (oldData.payload.notes.length >= 10) {
-					unpinnedNotes.pop();
-				}
+					const pageParams = oldData.pageParams.slice(0, 1);
 
-				return {
-					...oldData,
-					payload: {
-						notes: [...pinnedNotes, data.payload.note, ...unpinnedNotes],
-					},
-				};
-			});
+					// update the page information of first page if the pinned notes length is more than 10
+					if (pinnedNote.length >= 10) {
+						return {
+							pageParams,
+							pages: [
+								{
+									...firstPage,
+									pagination: updatedFirstPageInformation,
+								},
+							],
+						};
+					}
+
+					const newNotes = [
+						...pinnedNote,
+						data.payload.note,
+						...firstPage.payload.notes.filter(({ pinned }) => !pinned),
+					];
+
+					// remove the last note if the notes length is more than the limit
+					if (newNotes.length > firstPage.pagination!.limit) {
+						newNotes.pop();
+					}
+
+					return {
+						pageParams,
+						pages: [
+							{
+								...firstPage,
+								pagination: updatedFirstPageInformation,
+								payload: {
+									...firstPage.payload,
+									notes: newNotes,
+								},
+							},
+						],
+					};
+				},
+			);
 
 			goto(`/app/notes/${data.payload.note.id}`, { replaceState: true });
 		},
