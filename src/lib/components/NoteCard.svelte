@@ -40,11 +40,6 @@
 		mutationKey: ['notes', 'detail', data.id],
 		mutationFn: (payload) => axiosFetch.PATCH(`/notes/${data.id}`, payload),
 		onSuccess: () => {
-			toastStore.setToast({
-				message: 'Note updated',
-				type: 'success',
-			});
-
 			querClient.invalidateQueries({ queryKey: ['notes'] });
 		},
 	});
@@ -56,15 +51,43 @@
 	const PinIcon = $derived(isPinned ? Pin : PinOff);
 
 	function updatePin() {
-		$noteMutation.mutate({
-			pinned: !data.pinned,
-		});
+		$noteMutation.mutate(
+			{ pinned: !data.pinned },
+			{
+				onSuccess: (response) => {
+					toastStore.set({
+						message: `Note ${response.payload.note.pinned ? 'pinned' : 'unpinned'}`,
+						type: 'success',
+						action: {
+							title: 'Undo',
+							event: () => {
+								$noteMutation.mutate({ pinned: !response.payload.note.pinned });
+							},
+						},
+					});
+				},
+			},
+		);
 	}
 
 	function updateArchived() {
-		$noteMutation.mutate({
-			archived: !data.archived,
-		});
+		$noteMutation.mutate(
+			{ archived: !data.archived },
+			{
+				onSuccess: (response) => {
+					toastStore.set({
+						message: `Note ${response.payload.note.archived ? 'archived' : 'unarchived'}`,
+						type: 'success',
+						action: {
+							title: 'Undo',
+							event: () => {
+								$noteMutation.mutate({ archived: !response.payload.note.archived });
+							},
+						},
+					});
+				},
+			},
+		);
 	}
 
 	$effect(() => {
@@ -95,8 +118,8 @@
 		<div {...props}>
 			<div bind:this={displayElement}></div>
 
-			<div class="flex items-end gap-2 mt-2">
-				<time datetime={updateAt} class="w-full text-sm opacity-50 font-medium">
+			<div class="mt-2 flex items-end gap-2">
+				<time datetime={updateAt} class="w-full font-medium text-sm opacity-50">
 					{dayjs().to(updateAt)}
 				</time>
 

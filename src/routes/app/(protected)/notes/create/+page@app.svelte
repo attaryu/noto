@@ -28,18 +28,12 @@
 
 	const noteMutation = createMutation<INoteResponse, IErrorResponseAPI, INotePayload>({
 		mutationFn: (payload) => axiosFetch.POST('/notes', payload),
-		onSuccess: (data) => {
-			toastStore.setToast({
-				message: 'Note saved successfully',
-				type: 'success',
-			});
-
+		onSuccess: (response) => {
 			/**
 			 * Updating the notes list cache
 			 *
 			 * Since the notes list is descending, the first page will always be the latest note or
-			 * pinned note. So, just update the first page with the new note or update the pagination
-			 * information if the pinned notes length is more than 10. Always reset the page number
+			 * pinned note. Always reset the page params
 			 */
 			queryClient.setQueriesData<InfiniteData<INotesResponse>>(
 				{ queryKey: ['notes', 'list'] },
@@ -69,9 +63,10 @@
 						};
 					}
 
+					// add the new note to below the pinned note as the latest note
 					const newNotes = [
 						...pinnedNote,
-						data.payload.note,
+						response.payload.note,
 						...firstPage.payload.notes.filter(({ pinned }) => !pinned),
 					];
 
@@ -96,10 +91,33 @@
 				},
 			);
 
-			goto(`/app/notes/${data.payload.note.id}`, { replaceState: true });
+			$editor?.commands.clearContent();
+			$editor?.setEditable(true);
+
+			toastStore.set({
+				message: 'Note saved',
+				type: 'success',
+				action: {
+					title: 'View note',
+					event: () => goto(`/app/notes/${response.payload.note.id}`),
+				},
+			});
 		},
 		onError: (error) => {
-			toastStore.setToast({
+			if (error.statusCode >= 500) {
+				toastStore.set({
+					message: 'Server error',
+					type: 'error',
+					action: {
+						title: 'Retry',
+						event: submitHandler,
+					},
+				});
+
+				return;
+			}
+
+			toastStore.set({
 				message: error.error.message ?? 'An error occured',
 				type: 'error',
 			});
@@ -108,7 +126,7 @@
 
 	async function submitHandler() {
 		if (!$editor || $editor.isEmpty) {
-			toastStore.setToast({
+			toastStore.set({
 				message: 'Note cannot be empty',
 				type: 'error',
 			});
@@ -119,7 +137,7 @@
 		const secretKey = await secretKeyManagement.getSecretKey();
 
 		if (!secretKey) {
-			toastStore.setToast({
+			toastStore.set({
 				message: 'Secret key not found. Please sign in again!',
 				type: 'error',
 			});
