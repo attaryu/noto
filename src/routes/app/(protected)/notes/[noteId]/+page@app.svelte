@@ -30,13 +30,13 @@
 	const noteMutation = createMutation<INoteResponse, IErrorResponseAPI, INoteUpdate>({
 		mutationFn: (payload) => axiosFetch.PATCH(`/notes/${data.noteId}`, payload),
 		onSuccess: () => {
-			toastStore.setToast({
+			toastStore.set({
 				message: 'Saved successfully',
 				type: 'success',
 			});
 		},
 		onError: (error) => {
-			toastStore.setToast({
+			toastStore.set({
 				message: error.error.message ?? 'An error occured',
 				type: 'error',
 			});
@@ -50,7 +50,7 @@
 
 	async function onsave() {
 		if (!$editor || $editor.isEmpty) {
-			toastStore.setToast({
+			toastStore.set({
 				message: 'Note cannot be empty',
 				type: 'error',
 			});
@@ -65,7 +65,7 @@
 		const secretKey = await secretKeyManagement.getSecretKey();
 
 		if (!secretKey) {
-			toastStore.setToast({
+			toastStore.set({
 				message: 'Secret key not found. Please sign in again!',
 				type: 'error',
 			});
@@ -93,7 +93,7 @@
 		const secretKey = await secretKeyManagement.getSecretKey();
 
 		if (!secretKey) {
-			toastStore.setToast({
+			toastStore.set({
 				message: 'Secret key not found. Please sign in again!',
 				type: 'error',
 			});

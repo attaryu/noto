@@ -54,7 +54,7 @@
 			goto('/app/recovery-key', { replaceState: true, state: { recoveryKeys } });
 		},
 		onError: (error) => {
-			toastStore.setToast({
+			toastStore.set({
 				message: error.error.message ?? 'An error occured',
 				type: 'error',
 			});

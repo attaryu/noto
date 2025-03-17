@@ -3,6 +3,7 @@
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
+	import { goto } from '$app/navigation';
 
 	import Header from '$lib/components/Header.svelte';
 	import NoteCard from '$lib/components/NoteCard.svelte';
@@ -66,7 +67,7 @@
 		if ($notesQuery.isSuccess) {
 			secretKeyManagement.getSecretKey().then(async (secretKey) => {
 				if (!secretKey) {
-					toastStore.setToast({
+					toastStore.set({
 						message: 'Secret key is not found, please sign in again',
 						type: 'error',
 					});

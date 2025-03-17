@@ -73,7 +73,7 @@
 
 			goto(`/app/account-recovery/step-3`, { replaceState: true });
 		} catch {
-			toastStore.setToast({
+			toastStore.set({
 				message: 'Last 4 digits of the recovery key are incorrect',
 				type: 'error',
 			});

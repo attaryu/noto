@@ -2,8 +2,13 @@ import { getContext, hasContext, setContext } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
 interface Toast {
+	id: number;
 	message: string;
 	type: 'error' | 'success' | 'info';
+	action?: {
+		title: string;
+		event: () => void;
+	};
 	timeout: NodeJS.Timeout;
 }
 
@@ -14,7 +19,7 @@ class ToastStore {
 	/**
 	 * Duration of the toast message in milliseconds
 	 */
-	private duration = 5000;
+	private duration = 4000;
 
 	/**
 	 * Maximum number of toast messages
@@ -24,7 +29,7 @@ class ToastStore {
 	/**
 	 * Toast list
 	 */
-	private _toasts = new SvelteMap<string, Toast>();
+	private _toasts = new SvelteMap<number, Toast>();
 
 	get toasts() {
 		return this._toasts.values();
@@ -37,37 +42,38 @@ class ToastStore {
 	/**
 	 * Set toast message
 	 *
-	 * @param value message to be displayed
+	 * @param message toast message to display
+	 * @param type toast type (error, success, info)
+	 * @param action toast action (optional)
 	 */
-	public setToast(props: { message: string; type: 'error' | 'success' | 'info' }) {
-		// Check if the toast message is not already in the list before adding it
-		if (!this._toasts.has(props.message)) {
-			// Check if the toast list size is greater than the maximum allowed
-			if (this._toasts.size >= this.MAX) {
-				const firstToast = Array.from(this._toasts.values()).shift();
+	public set(props: Omit<Toast, 'timeout' | 'id'>) {
+		if (this._toasts.size >= this.MAX) {
+			const firstToast = Array.from(this._toasts.values()).shift();
 
-				if (firstToast) {
-					this.unsetToast(firstToast.message);
-				}
+			if (firstToast) {
+				this.unset(firstToast.id);
 			}
-
-			this._toasts.set(props.message, {
-				...props,
-				timeout: setTimeout(() => this.unsetToast(props.message), this.duration),
-			});
 		}
+
+		const id = Date.now();
+
+		this._toasts.set(id, {
+			...props,
+			id,
+			timeout: setTimeout(() => this.unset(id), this.duration),
+		});
 	}
 
 	/**
 	 *
 	 * @param message toast message
 	 */
-	public unsetToast(message: string) {
-		const toast = this._toasts.get(message);
+	public unset(id: number) {
+		const toast = this._toasts.get(id);
 
 		if (toast) {
 			clearTimeout(toast.timeout);
-			this._toasts.delete(toast.message);
+			this._toasts.delete(toast.id);
 		}
 	}
 }
