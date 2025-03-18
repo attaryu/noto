@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { JSONContent } from '@tiptap/core';
 
-	import type { INote, INoteResponse } from '$lib/types/api/notes';
+	import type { INote, INoteResponse, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { goto } from '$app/navigation';
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import { createMutation, useQueryClient, type InfiniteData } from '@tanstack/svelte-query';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { Ellipsis, Pin, PinOff } from 'lucide-svelte';
@@ -28,7 +28,7 @@
 
 	const { data, index }: Props = $props();
 	const toastStore = getToastStoreContext();
-	const querClient = useQueryClient();
+	const queryClient = useQueryClient();
 
 	let displayElement = $state<HTMLDivElement>();
 
@@ -40,7 +40,17 @@
 		mutationKey: ['notes', 'detail', data.id],
 		mutationFn: (payload) => axiosFetch.PATCH(`/notes/${data.id}`, payload),
 		onSuccess: () => {
-			querClient.invalidateQueries({ queryKey: ['notes'] });
+			queryClient.invalidateQueries({
+				queryKey: ['notes', 'list'],
+				type: 'all',
+				refetchType: 'all',
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: ['notes', 'archive', 'list'],
+				type: 'all',
+				refetchType: 'all',
+			});
 		},
 	});
 
@@ -60,9 +70,7 @@
 						type: 'success',
 						action: {
 							title: 'Undo',
-							event: () => {
-								$noteMutation.mutate({ pinned: !response.payload.note.pinned });
-							},
+							event: () => $noteMutation.mutate({ pinned: !response.payload.note.pinned }),
 						},
 					});
 				},
@@ -80,9 +88,7 @@
 						type: 'success',
 						action: {
 							title: 'Undo',
-							event: () => {
-								$noteMutation.mutate({ archived: !response.payload.note.archived });
-							},
+							event: () => $noteMutation.mutate({ archived: !response.payload.note.archived }),
 						},
 					});
 				},
@@ -113,7 +119,10 @@
 	});
 </script>
 
-<Card class={`p-4 shadow-md ${cardShadow}`} {color}>
+<Card
+	class={`p-4 shadow-md ${!data.archived && cardShadow}`}
+	color={data.archived ? 'white' : color}
+>
 	{#snippet as(props)}
 		<div {...props}>
 			<div bind:this={displayElement}></div>
@@ -141,7 +150,7 @@
 							action: () => goto(`/app/notes/${data.id}`),
 						},
 						{
-							title: 'Archive',
+							title: data.archived ? 'Unarchive' : 'Archive',
 							action: updateArchived,
 						},
 					]}

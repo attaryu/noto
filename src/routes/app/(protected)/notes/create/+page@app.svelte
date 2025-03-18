@@ -91,6 +91,8 @@
 				},
 			);
 
+			queryClient.setQueryData(['notes', 'detail', response.payload.note.id], response);
+
 			$editor?.commands.clearContent();
 			$editor?.setEditable(true);
 

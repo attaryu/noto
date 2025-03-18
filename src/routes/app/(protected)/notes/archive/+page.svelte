@@ -28,7 +28,7 @@
 
 	const archivedNotesQuery = $derived(
 		createInfiniteQuery<INotesResponse, IErrorResponseAPI>({
-			queryKey: ['notes', 'list', 'archive', search],
+			queryKey: ['notes', 'archive', 'list', search],
 			queryFn: async ({ pageParam }) => {
 				isProcessing = true;
 
