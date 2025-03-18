@@ -4,12 +4,12 @@ import type { IGetNotes, IGetNotesFilter, INoteOutPagination } from '../GetNotes
 import { NoteError } from '$lib/server/domain/errors/Note';
 
 export class GetNotes implements IGetNotes {
+	private limit = 10;
+
 	constructor(private readonly noteRepository: INoteRepository) {}
 
 	async execute(userId: string, query: IGetNotesFilter): Promise<INoteOutPagination> {
-		const limit = 10;
-		
-		const count = await this.noteRepository.count({ ...query, userId, archived: false });
+		const count = await this.noteRepository.count({ ...query, userId });
 
 		if (query.offset && query.offset >= count) {
 			throw new NoteError.AmountExceeded();
@@ -17,9 +17,8 @@ export class GetNotes implements IGetNotes {
 
 		const notes = await this.noteRepository.findManyByFilter({
 			...query,
+			limit: this.limit,
 			userId,
-			limit,
-			archived: false,
 		});
 
 		return {

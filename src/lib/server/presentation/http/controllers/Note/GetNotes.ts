@@ -10,11 +10,13 @@ export class GetNotesController implements IController {
 		const label = request.query.get('label');
 		const offset = request.query.get('offset');
 		const search = request.query.get('search');
+		const archived = request.query.get('archived');
 
 		const result = await this.getNotesCase.execute(request.locals!.tokenPayload!.id, {
 			label: label ?? undefined,
 			offset: offset ? parseInt(offset) : undefined,
 			search: search && JSON.parse(search),
+			archived: Boolean(archived ?? false),
 		});
 
 		return {
