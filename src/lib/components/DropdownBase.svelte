@@ -1,29 +1,31 @@
 <script lang="ts" generics="Item">
-	import { onDestroy, onMount, type Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
 
 	import { ChevronRight } from 'lucide-svelte';
 
-	import mergeClass from '$lib/utils/merge';
 	import Text from './Text.svelte';
+
+	import mergeClass from '$lib/utils/merge';
 
 	type Props = {
 		items: Array<Item>;
 		itemRender: Snippet<[string, Item]>;
 		display: string | Snippet;
+		disabled?: boolean;
 		class?: string;
 	};
 
-	const { class: className, items, display, itemRender }: Props = $props();
+	const { class: className, disabled, items, display, itemRender }: Props = $props();
 
-	let dropdownRef: HTMLDivElement | undefined;
-	let buttonRef: HTMLButtonElement | undefined;
-	let itemsParentRef: HTMLUListElement | undefined = $state();
+	let dropdownRef = $state<HTMLDivElement>();
+	let buttonRef = $state<HTMLButtonElement>();
+	let itemsParentRef = $state<HTMLUListElement>();
 
 	let isOpen = $state(false);
-	let listPosition: 'above' | 'below' = $state('below');
+	let listPosition = $state<'above' | 'below'>('below');
 
 	function openDropdown() {
-		// <!--? Determine the position of the dropdown list appears --->
+		// Determine the position of the dropdown list appears
 
 		const dropdownPosition = buttonRef?.getBoundingClientRect().top;
 
@@ -36,7 +38,7 @@
 	}
 
 	function forceClose(event: MouseEvent) {
-		// <!--? Forced the dropdown close after selecting items or clicking other elements --->
+		// Forced the dropdown close after selecting items or clicking other elements
 
 		const isItem = itemsParentRef?.contains(event.target as Node);
 		const isNotDropdown = !dropdownRef?.contains(event.target as Node);
@@ -45,18 +47,18 @@
 			isOpen = false;
 		}
 	}
-
-	onMount(() => document.addEventListener('click', forceClose));
-	onDestroy(() => document.removeEventListener('click', forceClose));
 </script>
+
+<svelte:document onclick={forceClose} />
 
 <div class="relative" bind:this={dropdownRef}>
 	<!--? select button -->
 	<button
 		bind:this={buttonRef}
 		onclick={openDropdown}
+		{disabled}
 		class={mergeClass(
-			'flex min-w-24 items-center justify-center gap-2 rounded-full bg-zinc-900 px-3 py-2 text-white',
+			'flex min-w-24 items-center justify-center gap-2 rounded-full bg-zinc-900 px-3 py-2 text-white disabled:bg-zinc-800 disabled:text-zinc-500',
 			className,
 		)}
 	>

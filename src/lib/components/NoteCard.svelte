@@ -136,6 +136,7 @@
 					<Button
 						variant={isPinned ? 'primary' : 'secondary'}
 						class={`${!isPinned && 'bg-transparent'} size-10`}
+						disabled={$noteMutation.isPending}
 						onclick={updatePin}
 					>
 						<PinIcon className="rotate-24" />
@@ -144,6 +145,7 @@
 
 				<Dropdown
 					class="size-10"
+					disabled={$noteMutation.isPending}
 					items={[
 						{
 							title: 'Detail',

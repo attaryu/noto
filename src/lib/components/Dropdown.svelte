@@ -10,13 +10,14 @@
 	type Props = {
 		items: Array<Item>;
 		class?: string;
+		disabled?: boolean;
 		placeholder: string | Snippet;
 	};
 
-	const { class: className, items, placeholder }: Props = $props();
+	const { class: className, disabled, items, placeholder }: Props = $props();
 </script>
 
-<DropdownBase class="min-w-fit px-2.5 py-1.5 {className}" {items} display={placeholder}>
+<DropdownBase class="min-w-fit px-2.5 py-1.5 {className}" {disabled} {items} display={placeholder}>
 	{#snippet itemRender(className, item)}
 		<button class={className} onclick={item.action}>{item.title}</button>
 	{/snippet}
