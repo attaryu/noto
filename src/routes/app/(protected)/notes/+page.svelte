@@ -18,7 +18,8 @@
 	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import { stichSearchParam } from '$lib/utils/stichSearchParam';
 	import Button from '$lib/components/Button.svelte';
-	import { ArrowRight } from 'lucide-svelte';
+	import { ArrowRight, RefreshCcw } from 'lucide-svelte';
+	import LoadMoreInformation from '$lib/components/LoadMoreInformation.svelte';
 
 	const toastStore = getToastStoreContext();
 
@@ -45,7 +46,6 @@
 
 				return axiosFetch.GET(stichSearchParam('/notes', query));
 			},
-			refetchInterval: 30000,
 			initialPageParam: 0,
 			getNextPageParam: (lastPage) =>
 				lastPage.pagination!.offset < lastPage.pagination!.total
@@ -53,11 +53,6 @@
 					: undefined,
 		}),
 	);
-
-	const notesInformation = $derived({
-		total: $notesQuery.data?.pages[0].pagination?.total ?? 0,
-		loaded: $notesQuery.data?.pages[$notesQuery.data.pages.length - 1].pagination?.offset ?? 0,
-	});
 
 	/**
 	 * This effect will be triggered when the notes query is successful
@@ -106,34 +101,6 @@
 </Header>
 
 <main class="relative px-4 pb-24 pt-16">
-	<!-- <section>
-			<Text tag="h2" class="sr-only">Labels</Text>
-
-			<ul class="-ml-4 mt-12 flex w-dvw gap-2 overflow-x-scroll px-4">
-				<li>
-					{@render labelComponent(
-						!activeLabel,
-						`All(${notes.length})`,
-						() => (activeLabel = undefined),
-					)}
-				</li>
-
-				{#each labels as label}
-					<li>
-						{@render labelComponent(activeLabel === label, label, () => (activeLabel = label))}
-					</li>
-				{/each}
-
-				{#snippet labelComponent(isActive: boolean, content: string, onclick: () => void)}
-					{#key activeLabel}
-						<Button variant={isActive ? 'primary' : 'secondary'} class="py-2" {onclick}>
-							{content}
-						</Button>
-					{/key}
-				{/snippet}
-			</ul>
-		</section> -->
-
 	<section class="mt-4 space-y-4">
 		{#if $notesQuery.isLoading}
 			<div class="grid h-[70dvh] place-items-center">
@@ -154,33 +121,7 @@
 			</ul>
 
 			<!-- load more state information -->
-			{#if $notesQuery.hasNextPage}
-				{@const isLoading = $notesQuery.isFetchingNextPage || isProcessing}
-
-				<div class="flex h-28 flex-col items-center justify-end gap-2">
-					<Text tag="small">
-						{notesInformation.total} notes found,{' '}
-						{notesInformation.loaded} loaded.
-					</Text>
-
-					<Button
-						variant="secondary"
-						class="w-full"
-						disabled={isLoading}
-						onclick={() => $notesQuery.fetchNextPage()}
-					>
-						{isLoading ? 'Loading...' : 'Load more'}
-					</Button>
-				</div>
-			{:else}
-				<Text tag="small" class="pt-6 text-center">
-					{#if notesInformation.total === 1}
-						1 note loaded.
-					{:else}
-						All {notesInformation.total} notes loaded.
-					{/if}
-				</Text>
-			{/if}
+			<LoadMoreInformation {isProcessing} query={$notesQuery} />
 		{:else}
 			<!-- empty notes -->
 
