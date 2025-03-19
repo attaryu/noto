@@ -6,29 +6,19 @@ import { json, redirect, type RequestHandler } from '@sveltejs/kit';
 
 import { createHttpRequest } from '../../helpers/createHttpRequest';
 import { errorHandler } from '../../http/errors/errorHandler';
+import { createHttpResponse } from '../../helpers/createHttpResponse';
 
 export function svelteHttpAdapter(controller: IController): RequestHandler {
 	return async (event): Promise<Response> => {
-		let response: IResponseDTO;
+		let response: Response;
+		const httpResponse = createHttpResponse(event);
 
 		try {
-			const httpRequest: IHttpRequest = await createHttpRequest(event);
-
-			response = await controller.handler(httpRequest);
+			response = await controller.handler(await createHttpRequest(event), httpResponse);
 		} catch (error) {
-			response = errorHandler(error);
+			response = errorHandler(httpResponse, error);
 		}
 
-		const { statusCode } = response;
-
-		if (statusCode >= 300 && statusCode < 400) {
-			return redirect(statusCode, response.redirect);
-		}
-
-		if (statusCode === 204) {
-			return new Response(null, { status: statusCode });
-		}
-
-		return json(response, { status: statusCode });
+		return response;
 	};
 }

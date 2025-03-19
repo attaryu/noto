@@ -1,4 +1,5 @@
 import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
+import type { IHttpResponse } from '../../helpers/interfaces/HttpResponse';
 
 import { NoteError } from '$lib/server/domain/errors/Note';
 import { TokenError } from '$lib/server/domain/errors/Token';
@@ -9,7 +10,7 @@ import { MongoDBError } from '$lib/server/infra/errors/MongoDB';
  * A place to determine the type of domain or app layer error, then changed it to http response.
  * If you create a new error class, make sure to add it here.
  */
-export function errorHandler(error: any): IResponseDTO {
+export function errorHandler(response: IHttpResponse, error: any): Response {
 	console.error(error);
 
 	// ? place error class here
@@ -41,18 +42,18 @@ export function errorHandler(error: any): IResponseDTO {
 		// ? iteration each error class
 		for (const errorInstance of errors[errorCode]) {
 			if (error instanceof errorInstance) {
-				return {
+				return response.json({
 					success: false,
 					statusCode: parseInt(errorCode),
 					error: { message: error.message },
-				};
+				});
 			}
 		}
 	}
 
-	return {
+	return response.json({
 		statusCode: 500,
 		success: false,
 		error: { message: 'Internal server error' },
-	};
+	});
 }
