@@ -2,7 +2,7 @@ import type { ICreateNoteDTO } from '../dtos/Note/CreateNote';
 import type { IUpdateNoteDTO } from '../dtos/Note/UpdateNote';
 
 import { NoteError } from '../errors/Note';
-import { validateArray, validatePrimitive } from '../helper/validateProperty';
+import { Validation } from '../helper/validation';
 
 export interface NoteInterface {
 	id?: string;
@@ -27,59 +27,51 @@ export class NoteEntity {
 	private _pinned: boolean;
 	private readonly _deletedAt: Date | null;
 
-	constructor(props: NoteInterface) {
-		this._id = props.id;
-		this._iv = props.iv;
-		this._userId = props.userId;
-		this._index = props.index;
-		this._labels = props.labels;
-		this._content = props.content;
-		this._archived = props.archived;
-		this._pinned = props.pinned;
-		this._deletedAt = props.deletedAt;
-	}
-
 	static create(props: ICreateNoteDTO): NoteEntity {
-		validatePrimitive(props.iv, 'string', new NoteError.Entity('iv'));
-		validatePrimitive(props.content, 'string', new NoteError.Entity('content'));
-		validatePrimitive(props.userId, 'string', new NoteError.Entity('userId'));
-
-		validateArray(props.labels, {
-			errorInstance: new NoteError.Entity('labels'),
-			itemType: 'string',
-		});
-
-		validateArray(props.index, {
-			itemRequired: true,
-			errorInstance: new NoteError.Entity('index'),
-			itemType: 'string',
+		Validation.object(props, {
+			type: 'object',
+			required: true,
+			properties: {
+				iv: { type: 'string', required: true },
+				userId: { type: 'string', required: true },
+				labels: { type: 'array', items: { type: 'string' } },
+				index: { type: 'array', items: { type: 'string', required: true } },
+				content: { type: 'string', required: true },
+			},
 		});
 
 		return new NoteEntity({ ...props, archived: false, pinned: false, deletedAt: null });
 	}
 
-	public update(props: IUpdateNoteDTO): IUpdateNoteDTO {
+	public update(props: IUpdateNoteDTO): void {
+		Validation.object(props, {
+			type: 'object',
+			properties: {
+				archived: { type: 'boolean' },
+				pinned: { type: 'boolean' },
+				content: { type: 'string' },
+				index: { type: 'array', items: { type: 'string', required: true } },
+				labels: { type: 'array', items: { type: 'string' } },
+			},
+		});
+
 		// ? If one of content or index is defined, then one of them cannot be undefined
 		if ((props.content === undefined) !== (props.index === undefined)) {
 			throw new NoteError.Content();
 		}
 
 		if (props.archived !== undefined) {
-			validatePrimitive(props.archived, 'boolean', new NoteError.Entity('archived'));
+			this._archived = props.archived;
 
 			// ? If the notes are archived, pin automatically removed
 			this._pinned = false;
-			this._archived = props.archived;
 		}
 
 		if (props.content !== undefined) {
-			validatePrimitive(props.content, 'string', new NoteError.Entity('content'));
 			this._content = props.content;
 		}
 
 		if (props.pinned !== undefined) {
-			validatePrimitive(props.pinned, 'boolean', new NoteError.Entity('pinned'));
-
 			if (this._archived) {
 				throw new NoteError.Pin();
 			}
@@ -88,30 +80,25 @@ export class NoteEntity {
 		}
 
 		if (props.index !== undefined) {
-			validateArray(props.index, {
-				itemType: 'string',
-				itemRequired: true,
-				errorInstance: new NoteError.Entity('index'),
-			});
-
 			this._index = props.index;
 		}
 
 		if (props.labels !== undefined) {
-			validateArray(props.labels, {
-				itemType: 'string',
-				errorInstance: new NoteError.Entity('labels'),
-			});
-
 			this._labels = props.labels;
 		}
+	}
 
+	public toObject(): NoteInterface {
 		return {
+			id: this._id,
+			iv: this._iv,
+			userId: this._userId,
+			labels: this._labels,
+			index: this._index,
+			content: this._content,
 			archived: this._archived,
 			pinned: this._pinned,
-			content: this._content,
-			index: this._index,
-			labels: this._labels,
+			deletedAt: this._deletedAt,
 		};
 	}
 
@@ -157,5 +144,17 @@ export class NoteEntity {
 
 	get deletedAt() {
 		return this._deletedAt;
+	}
+
+	constructor(props: NoteInterface) {
+		this._id = props.id;
+		this._iv = props.iv;
+		this._userId = props.userId;
+		this._index = props.index;
+		this._labels = props.labels;
+		this._content = props.content;
+		this._archived = props.archived;
+		this._pinned = props.pinned;
+		this._deletedAt = props.deletedAt;
 	}
 }

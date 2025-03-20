@@ -1,12 +1,4 @@
-import type { TokenInterface } from '../entities/token';
-
 export namespace TokenError {
-	export class Entity extends Error {
-		constructor(property: keyof TokenInterface) {
-			super(`Property ${property} is not suitable`);
-		}
-	}
-
 	export class Invalid extends Error {
 		constructor() {
 			super('Invalid token, request cannot be processed!');

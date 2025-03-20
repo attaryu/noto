@@ -1,4 +1,3 @@
-import type { UserInterface } from '../entities/user';
 
 export namespace UserError {
 	export class PasswordIncorrect extends Error {
@@ -18,12 +17,6 @@ export namespace UserError {
 		constructor() {
 			super(`Email already exists`);
 			this.name = 'UserAlreadyExistError';
-		}
-	}
-
-	export class Entity extends Error {
-		constructor(property: keyof UserInterface) {
-			super(`Property ${property} is not suitable`);
 		}
 	}
 

@@ -1,7 +1,6 @@
 import type { ICreateLabelDTO } from '../dtos/Label/CreateLabel';
 
-import { LabelError } from '../errors/Label';
-import { validatePrimitive } from '../helper/validateProperty';
+import { Validation } from '../helper/validation';
 
 export interface LabelInterface {
 	id: string;
@@ -16,16 +15,26 @@ export class LabelEntity {
 	private readonly _userId: LabelInterface['userId'];
 	private _used: LabelInterface['used'];
 
-	constructor(props: LabelInterface) {
-		this._id = props.id;
-		this._name = props.name;
-		this._used = props.used;
-		this._userId = props.userId;
+	public static create(props: ICreateLabelDTO): LabelEntity {
+		Validation.object(props, {
+			type: 'object',
+			required: true,
+			properties: {
+				name: { type: 'string', required: true },
+				userId: { type: 'string', required: true },
+			},
+		});
+
+		return new LabelEntity({ ...props, id: '', used: 1 });
 	}
 
-	public static create(props: ICreateLabelDTO): LabelEntity {
-		validatePrimitive(props.name, 'string', new LabelError.Property('name'));
-		return new LabelEntity({ ...props, id: '', used: 1 });
+	public toObject(): LabelInterface {
+		return {
+			id: this._id,
+			name: this._name,
+			userId: this._userId,
+			used: this._used,
+		};
 	}
 
 	public increaseUsage() {
@@ -54,5 +63,12 @@ export class LabelEntity {
 
 	get used() {
 		return this._used;
+	}
+
+	constructor(props: LabelInterface) {
+		this._id = props.id;
+		this._name = props.name;
+		this._used = props.used;
+		this._userId = props.userId;
 	}
 }

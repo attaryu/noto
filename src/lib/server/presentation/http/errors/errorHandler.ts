@@ -1,9 +1,9 @@
-import type { IResponseDTO } from '$lib/server/domain/dtos/Response';
 import type { IHttpResponse } from '../../helpers/interfaces/HttpResponse';
 
 import { NoteError } from '$lib/server/domain/errors/Note';
 import { TokenError } from '$lib/server/domain/errors/Token';
 import { UserError } from '$lib/server/domain/errors/User';
+import { ValidationError } from '$lib/server/domain/errors/Validation';
 import { MongoDBError } from '$lib/server/infra/errors/MongoDB';
 
 /**
@@ -18,14 +18,13 @@ export function errorHandler(response: IHttpResponse, error: any): Response {
 		400: [
 			UserError.PasswordIncorrect,
 			TokenError.Purpose,
-			UserError.Entity,
-			NoteError.Entity,
 			NoteError.Pin,
 			NoteError.Content,
 			MongoDBError.InvalidId,
 			NoteError.AmountExceeded,
 			NoteError.AlreadyDeleted,
 			TokenError.NotIncluded,
+			ValidationError,
 		],
 		401: [TokenError.Invalid, NoteError.UnauthorizedOwner],
 		404: [

@@ -1,16 +1,8 @@
-import type { NoteInterface } from '../entities/note';
-
 export namespace NoteError {
 	export class Content extends Error {
 		constructor() {
-			super(`indexedwords and content properties are required if one of them is defined.`);
+			super(`index and content properties are required if one of them is defined.`);
 			this.name = 'NoteContentError';
-		}
-	}
-
-	export class Entity extends Error {
-		constructor(property: keyof NoteInterface) {
-			super(`Property ${property} is not suitable`);
 		}
 	}
 

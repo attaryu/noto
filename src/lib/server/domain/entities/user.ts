@@ -1,9 +1,7 @@
 import type { ICreateUserDTO } from '../dtos/User/CreateUser';
 import type { IUpdateUserDTO } from '../dtos/User/UpdateUser';
-import type { IUserOutDTO } from '../dtos/User/UserOut';
 
-import { UserError } from '../errors/User';
-import { validateArray } from '../helper/validateProperty';
+import { Validation } from '../helper/validation';
 
 export interface UserInterface {
 	id?: string;
@@ -38,115 +36,158 @@ export interface UserInterface {
 		salt: string;
 		iv: string;
 	}[];
-
-	createdAt: Date;
-	updateAt: Date;
 }
 
 export class UserEntity {
-	private readonly _fullname: string | undefined;
-	private readonly _email: string | undefined;
-	private readonly _password: UserInterface['password'] | undefined;
-	private readonly _secretKey: UserInterface['secretKey'] | undefined;
-	private readonly _recoveryKeys: UserInterface['recoveryKeys'] | undefined;
+	private _id?: string;
+	private _fullname: string;
+	private _email: string;
+	private _password: UserInterface['password'];
+	private _secretKey: UserInterface['secretKey'];
+	private _recoveryKeys: UserInterface['recoveryKeys'];
 
 	static create(props: ICreateUserDTO): UserEntity {
+		Validation.object(props, {
+			type: 'object',
+			required: true,
+			properties: {
+				email: { type: 'string', required: true },
+				password: {
+					type: 'object',
+					required: true,
+					properties: {
+						salt: { type: 'string', required: true },
+						value: { type: 'string', required: true },
+					},
+				},
+				secretKey: {
+					type: 'object',
+					required: true,
+					properties: {
+						value: { type: 'string', required: true },
+						iv: { type: 'string', required: true },
+					},
+				},
+				recoveryKeys: {
+					type: 'array',
+					required: true,
+					items: {
+						type: 'object',
+						required: true,
+						properties: {
+							code: { type: 'string', required: true },
+							iv: { type: 'string', required: true },
+							salt: { type: 'string', required: true },
+							value: { type: 'string', required: true },
+						},
+					},
+				},
+			},
+		});
+
 		return new UserEntity(props);
 	}
 
-	// ? use static updates method for a while
-	static update(props: IUpdateUserDTO): IUpdateUserDTO {
-		const { email, fullname, password, recoveryKeys, secretKey } = props;
-
-		if (email !== undefined && (!email || typeof email !== 'string')) {
-			throw new UserError.Entity('email');
-		}
-
-		if (fullname !== undefined && (!fullname || typeof fullname !== 'string')) {
-			throw new UserError.Entity('fullname');
-		}
-
-		if (secretKey !== undefined && (!secretKey || typeof secretKey !== 'object')) {
-			throw new UserError.Entity('secretKey');
-		}
-
-		if (password !== undefined) {
-			UserEntity.validatePassword(password);
-		}
-
-		if (recoveryKeys !== undefined) {
-			validateArray(recoveryKeys, {
-				errorInstance: new UserError.Entity('recoveryKeys'),
-				itemRequired: true,
-				itemType: {
-					code: 'string',
-					iv: 'string',
-					salt: 'string',
-					value: 'string',
+	public update(props: IUpdateUserDTO): void {
+		Validation.object(props, {
+			type: 'object',
+			required: true,
+			properties: {
+				email: { type: 'string' },
+				password: {
+					type: 'object',
+					properties: {
+						salt: { type: 'string', required: true },
+						value: { type: 'string', required: true },
+					},
 				},
-			});
-		}
+				secretKey: {
+					type: 'object',
+					properties: {
+						value: { type: 'string', required: true },
+						iv: { type: 'string', required: true },
+					},
+				},
+				recoveryKeys: {
+					type: 'array',
+					items: {
+						type: 'object',
+						required: true,
+						properties: {
+							code: { type: 'string', required: true },
+							iv: { type: 'string', required: true },
+							salt: { type: 'string', required: true },
+							value: { type: 'string', required: true },
+						},
+					},
+				},
+			},
+		});
 
-		return props;
-	}
-
-	static validatePassword(password: UserInterface['password']): void {
-		if (typeof password !== 'object') {
-			throw new UserError.Entity('password');
-		}
-
-		const { salt, value } = password;
-
-		if (salt !== undefined && (!salt || typeof salt !== 'string')) {
-			throw new UserError.Entity('recoveryKeys');
-		}
-
-		if (value !== undefined && (!value || typeof value !== 'string')) {
-			throw new UserError.Entity('recoveryKeys');
-		}
-	}
-
-	get fullname(): string | undefined {
-		return this._fullname;
-	}
-
-	get email(): string | undefined {
-		return this._email;
-	}
-
-	get password(): UserInterface['password'] | undefined {
-		return this._password;
-	}
-
-	get secretKey(): UserInterface['secretKey'] | undefined {
-		return this._secretKey;
-	}
-
-	get recoveryKeys(): UserInterface['recoveryKeys'] | undefined {
-		return this._recoveryKeys;
-	}
-
-	constructor(props: IUserOutDTO | IUpdateUserDTO) {
 		const { email, fullname, password, recoveryKeys, secretKey } = props;
 
-		if (email) {
+		if (email !== undefined) {
 			this._email = email;
 		}
 
-		if (fullname) {
+		if (fullname !== undefined) {
 			this._fullname = fullname;
 		}
 
-		if (password) {
-			this._password = password;
-		}
-
-		if (secretKey) {
+		if (secretKey !== undefined) {
 			this._secretKey = secretKey;
 		}
 
-		if (recoveryKeys) {
+		if (password !== undefined) {
+			this._password = password;
+		}
+
+		if (recoveryKeys !== undefined) {
 			this._recoveryKeys = recoveryKeys;
 		}
+	}
+
+	public toObject(): UserInterface {
+		return {
+			id: this._id,
+			fullname: this._fullname,
+			email: this._email,
+			password: this._password,
+			secretKey: this._secretKey,
+			recoveryKeys: this._recoveryKeys,
+		};
+	}
+
+	get id() {
+		return this._id;
+	}
+
+	get fullname() {
+		return this._fullname;
+	}
+
+	get email() {
+		return this._email;
+	}
+
+	get password() {
+		return this._password;
+	}
+
+	get secretKey() {
+		return this._secretKey;
+	}
+
+	get recoveryKeys() {
+		return this._recoveryKeys;
+	}
+
+	constructor(props: UserInterface) {
+		this._id = props.id;
+		this._email = props.email;
+		this._fullname = props.fullname;
+		this._password = props.password;
+		this._secretKey = props.secretKey;
+		this._recoveryKeys = props.recoveryKeys;
 	}
 }
