@@ -16,7 +16,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 		const payload = await tokenManager.verify(authToken);
 
 		return {
-			user: payload,
+			user: payload.user,
 		};
 	} catch {
 		cookies.delete('AUTH_TOKEN', { path: '/' });

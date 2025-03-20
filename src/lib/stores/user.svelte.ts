@@ -1,4 +1,6 @@
-import { getContext, hasContext, setContext } from 'svelte';
+import { secretKeyManagement } from '$lib/business/secretKeyManagement';
+import encryption from '$lib/utils/cryptography/encryption';
+import { getContext, setContext } from 'svelte';
 
 export interface IUserStore {
 	id: string;
@@ -7,8 +9,8 @@ export interface IUserStore {
 	image: string;
 	secretKey: {
 		iv: string;
-		key: CryptoKey;
-	}
+		value: string;
+	};
 }
 
 export type IUpdateUserStore = Partial<Omit<IUserStore, 'id'>>;

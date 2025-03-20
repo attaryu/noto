@@ -65,7 +65,7 @@ export function signInController() {
 			}
 		},
 		onError: (error) => {
-			toast.setToast({
+			toast.set({
 				message: error.error.message ?? 'An error occurred',
 				type: 'error',
 			});

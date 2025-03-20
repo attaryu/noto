@@ -9,10 +9,11 @@
 	let { children, data }: LayoutProps = $props();
 
 	setUserStore({
-		id: data.user.id,
+		id: data.user.id!,
 		fullname: data.user.fullname,
 		email: data.user.email,
 		image: makeUserImageProfile(data.user.fullname),
+		secretKey: data.user.secretKey!,
 	});
 </script>
 
