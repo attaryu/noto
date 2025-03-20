@@ -51,6 +51,7 @@ export class UserEntity {
 			type: 'object',
 			required: true,
 			properties: {
+				fullname: { type: 'string', required: true },
 				email: { type: 'string', required: true },
 				password: {
 					type: 'object',
@@ -93,6 +94,7 @@ export class UserEntity {
 			type: 'object',
 			required: true,
 			properties: {
+				fullname: { type: 'string' },
 				email: { type: 'string' },
 				password: {
 					type: 'object',
