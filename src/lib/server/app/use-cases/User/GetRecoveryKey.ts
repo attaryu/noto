@@ -7,7 +7,7 @@ export interface IGetRecoveryKeyDTO {
 	};
 	token: {
 		value: string;
-		expiredAt: Date;
+		expiredAt: string;
 	};
 }
 

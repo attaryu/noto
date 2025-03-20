@@ -1,5 +1,5 @@
 import type { ITokenManager } from '$lib/server/app/providers/TokenManager';
-import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
+import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/TokenPayload';
 
 import { SignJWT, jwtVerify } from 'jose';
 

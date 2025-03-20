@@ -9,13 +9,13 @@ export class GetNote implements IGetNote {
 	constructor(private readonly noteRepository: INoteRepository) {}
 
 	async execute(userId: string, noteId: string): Promise<INoteOutDTO> {
-		const noteFromDatabase = await this.noteRepository.findById(noteId);
+		const existingNote = await this.noteRepository.findById(noteId);
 
-		if (!noteFromDatabase) {
+		if (!existingNote) {
 			throw new NoteError.NotFound();
 		}
 
-		const noteEntity = new NoteEntity(noteFromDatabase);
+		const noteEntity = new NoteEntity(existingNote);
 
 		if (noteEntity.isDeleted) {
 			throw new NoteError.AlreadyDeleted();
@@ -25,8 +25,8 @@ export class GetNote implements IGetNote {
 			throw new NoteError.UnauthorizedOwner();
 		}
 
-		const { deletedAt, userId: _userId, ...note } = noteFromDatabase;
+		const { deletedAt, userId: _userId, id, ...note } = noteEntity.toObject();
 
-		return note;
+		return { ...note, id: id! };
 	}
 }

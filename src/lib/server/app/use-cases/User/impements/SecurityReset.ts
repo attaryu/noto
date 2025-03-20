@@ -32,34 +32,29 @@ export class SecurityReset implements ISecurityReset {
 			throw new TokenError.NotRegistered();
 		}
 
-		const existingUser = await this.userRepository.findById(tokenPayload.id);
+		const existingUser = await this.userRepository.findById(tokenPayload.user.id!);
 
 		if (!existingUser) {
 			throw new UserError.NotFound();
 		}
 
-		const userEntity = UserEntity.update(security);
+		const user = new UserEntity(existingUser);
 
-		await this.userRepository.update(existingUser.id, {
-			...userEntity,
-			password: {
-				...userEntity.password!,
-				value: await this.passwordHasher.hash(userEntity.password!.value),
-			},
-		});
+		user.update(security);
 
 		// manual transaction
 		try {
-			await this.tokenRepository.delete({ userId: existingUser.id });
+			await this.userRepository.update(user.id!, user.toObject());
+			await this.tokenRepository.delete({ userId: user.id });
 		} catch (error) {
-			await this.userRepository.update(existingUser.id, existingUser);
+			await this.userRepository.update(existingUser.id!, existingUser);
 			throw error;
 		}
 
 		return {
-			id: existingUser.id,
-			fullname: existingUser.fullname,
-			email: existingUser.email,
+			id: user.id,
+			fullname: user.fullname,
+			email: user.email,
 		};
 	}
 }

@@ -9,6 +9,7 @@ import type { ICreateSession } from '../CreateSession';
 import { TokenEntity } from '$lib/server/domain/entities/token';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 import { UserError } from '$lib/server/domain/errors/User';
+import { UserEntity } from '$lib/server/domain/entities/user';
 
 export class CreateSession implements ICreateSession {
 	constructor(
@@ -19,11 +20,13 @@ export class CreateSession implements ICreateSession {
 	) {}
 
 	async execute(data: ICreateTokenDTO): Promise<ITokenOutDTO> {
-		const user = await this.userRepository.findByEmail(data.email);
+		const existingUser = await this.userRepository.findByEmail(data.email);
 
-		if (!user) {
+		if (!existingUser) {
 			throw new UserError.NotFound();
 		}
+
+		const user = new UserEntity(existingUser).toObject();
 
 		const isPasswordCorrect = await this.passwordHasher.compare(data.password, user.password.value);
 
@@ -31,25 +34,28 @@ export class CreateSession implements ICreateSession {
 			throw new UserError.PasswordIncorrect();
 		}
 
-		const token = await this.tokenManager.sign({
-			id: user.id,
-			email: user.email,
-			fullname: user.fullname,
+		const rawToken = await this.tokenManager.sign({
 			purpose: TokenPurposeEnum.session,
+			user: {
+				id: user.id,
+				email: user.email,
+				fullname: user.fullname,
+				secretKey: user.secretKey,
+			},
 		});
 
-		const session = TokenEntity.create({
-			userId: user.id,
-			expiredAt: token.expired,
-			token: token.value,
-			purpose: token.purpose,
+		const token = TokenEntity.create({
+			userId: user.id!,
+			expiredAt: rawToken.expired.toISOString(),
+			token: rawToken.value,
+			purpose: rawToken.purpose,
 		}).toObject();
 
-		await this.tokenRepository.create(session);
+		await this.tokenRepository.create(token);
 
 		return {
-			...session,
-			user,
+			...token,
+			id: token.id!,
 		};
 	}
 }

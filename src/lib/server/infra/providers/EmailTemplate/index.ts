@@ -1,5 +1,5 @@
 import type { IEmailTemplate, TemplateList } from '$lib/server/app/providers/EmailTemplate';
-import type { ITokenDTO } from '$lib/server/domain/dtos/Token/Token';
+import type { ITokenOutDTO } from '$lib/server/domain/dtos/Token/TokenOut';
 import type { IUserInDTO } from '$lib/server/domain/dtos/User/UserIn';
 
 import dayjs from 'dayjs';
@@ -11,7 +11,7 @@ import path from 'node:path';
 import { HOST } from '$env/static/private';
 
 export class EmailTemplate implements IEmailTemplate {
-	async accountRecovery(user: IUserInDTO, token: ITokenDTO): Promise<string> {
+	async accountRecovery(user: IUserInDTO, token: ITokenOutDTO): Promise<string> {
 		const recoveryLink = `${HOST}/app/account-recovery/step-2?token=${token.token}`;
 
 		const expiredAt = dayjs(token.expiredAt).format('D MMMM YYYY, HH.mm UTCZ');

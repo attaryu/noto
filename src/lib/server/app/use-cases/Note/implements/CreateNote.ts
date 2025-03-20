@@ -23,12 +23,12 @@ export class CreateNote implements ICreateNote {
 			throw new UserError.NotFound();
 		}
 
-		const labelsFromDatabase = await this.labelRepository.finds({
+		const existingLabels = await this.labelRepository.finds({
 			userId: newNote.userId,
 			label: newNote.labels,
 		});
 
-		const noteEntity = NoteEntity.create({ ...newNote });
+		const noteEntity = NoteEntity.create(newNote);
 
 		/**
 		 * Transformed label, from name to id
@@ -38,19 +38,19 @@ export class CreateNote implements ICreateNote {
 				/**
 				 * Label data from database by name
 				 */
-				const existingLabel = labelsFromDatabase.find((label) => label.name === name);
+				const existingLabel = existingLabels.find((label) => label.name === name);
 
 				if (existingLabel) {
 					const labelEntity = new LabelEntity(existingLabel);
 					labelEntity.increaseUsage();
 
-					await this.labelRepository.update(labelEntity.id, { used: labelEntity.used });
+					await this.labelRepository.update(labelEntity.id, labelEntity.toObject());
 
 					return labelEntity.id;
 				}
 
 				const labelEntity = LabelEntity.create({ name, userId: newNote.userId });
-				const newLabel = await this.labelRepository.create({ name, userId: labelEntity.userId });
+				const newLabel = await this.labelRepository.create(labelEntity.toObject());
 
 				return newLabel.id;
 			}),
@@ -60,11 +60,8 @@ export class CreateNote implements ICreateNote {
 		noteEntity.update({ labels: newLabelIds });
 
 		const { deletedAt, userId, ...note } = await this.noteRepository.create({
-			iv: noteEntity.iv,
-			content: noteEntity.content,
-			index: noteEntity.index,
+			...noteEntity.toObject(),
 			labels: newLabelIds,
-			userId: noteEntity.userId,
 		});
 
 		return note;

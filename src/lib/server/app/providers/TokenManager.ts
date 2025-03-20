@@ -1,4 +1,4 @@
-import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
+import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/TokenPayload';
 import type { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 
 export interface ITokenManager {

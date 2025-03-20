@@ -1,6 +1,7 @@
 import type { Cookies } from '@sveltejs/kit';
 
-import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/CreateTokenPayload';
+import type { ITokenPayloadDTO } from '$lib/server/domain/dtos/Token/TokenPayload';
+
 /**
  * HTTP Request from svelte
  */

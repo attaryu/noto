@@ -13,15 +13,15 @@ export class DeleteNotes implements IDeleteNotes {
 	) {}
 
 	async execute(noteId: string[], userId: string): Promise<void> {
-		const notesFromDatabase = await this.noteRepository.findManyByFilter({ noteId });
-		const labelsFromDatabase = await this.labelRepository.finds({ userId });
+		const existingNotes = await this.noteRepository.findManyByFilter({ noteId });
+		const existingLabels = await this.labelRepository.finds({ userId });
 
-		if (!notesFromDatabase.length) {
+		if (!existingNotes.length) {
 			throw new NoteError.NotFound();
 		}
 
-		for (const _note of notesFromDatabase) {
-			const note = new NoteEntity(_note);
+		for (const existingNote of existingNotes) {
+			const note = new NoteEntity(existingNote);
 
 			if (!note.isOwnedBy(userId)) {
 				throw new NoteError.UnauthorizedOwner();
@@ -34,7 +34,7 @@ export class DeleteNotes implements IDeleteNotes {
 			// deleting or decreasing usage of labels
 			await Promise.all(
 				note.labels.map(async (labelId) => {
-					const label = labelsFromDatabase.find(({ id }) => id === labelId)!;
+					const label = existingLabels.find(({ id }) => id === labelId)!;
 					const labelEntity = new LabelEntity(label);
 
 					labelEntity.decreaseUsage();
@@ -42,7 +42,7 @@ export class DeleteNotes implements IDeleteNotes {
 					if (labelEntity.isUnused) {
 						await this.labelRepository.delete(labelEntity.id);
 					} else {
-						await this.labelRepository.update(labelEntity.id, labelEntity);
+						await this.labelRepository.update(labelEntity.id, labelEntity.toObject());
 					}
 				}),
 			);

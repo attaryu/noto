@@ -1,7 +1,7 @@
-import type { ITokenDTO } from '$lib/server/domain/dtos/Token/Token';
+import type { ITokenInDTO } from '$lib/server/domain/dtos/Token/TokenIn';
 export interface ITokenRepository {
-	create(data: ITokenDTO): Promise<ITokenDTO | null>;
-	getSessionById(id: string): Promise<ITokenDTO | null>;
-	getSessionByToken(token: string): Promise<ITokenDTO | null>;
-	delete(query: Partial<ITokenDTO>): Promise<void>;
+	create(data: ITokenInDTO): Promise<ITokenInDTO | null>;
+	getSessionById(id: string): Promise<ITokenInDTO | null>;
+	getSessionByToken(token: string): Promise<ITokenInDTO | null>;
+	delete(query: Partial<ITokenInDTO>): Promise<void>;
 }

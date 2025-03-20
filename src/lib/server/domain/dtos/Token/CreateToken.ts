@@ -1,5 +1,5 @@
 /**
- * create token shape
+ * create token shape from user input
  */
 export interface ICreateTokenDTO {
 	email: string;

@@ -8,7 +8,7 @@ export interface TokenInterface {
 	token: string;
 	userId: string;
 	purpose: TokenPurposeEnum;
-	expiredAt: Date;
+	expiredAt: string;
 }
 
 export class TokenEntity {

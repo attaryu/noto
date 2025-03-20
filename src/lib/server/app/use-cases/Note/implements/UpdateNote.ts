@@ -14,11 +14,7 @@ export class UpdateNote implements IUpdateNote {
 		private readonly labelRepository: ILabelRepository,
 	) {}
 
-	async execute(
-		userId: string,
-		noteId: string,
-		optionalNote: IUpdateNoteDTO,
-	): Promise<INoteOutDTO> {
+	async execute(userId: string, noteId: string, payload: IUpdateNoteDTO): Promise<INoteOutDTO> {
 		const existingNote = await this.noteRepository.findById(noteId);
 
 		if (!existingNote) {
@@ -36,7 +32,7 @@ export class UpdateNote implements IUpdateNote {
 		/**
 		 * Label names from request
 		 */
-		const labelsFromRequest = optionalNote.labels;
+		const labelsFromRequest = payload.labels;
 
 		/**
 		 * Label ids after processing all label names
@@ -47,32 +43,34 @@ export class UpdateNote implements IUpdateNote {
 			/**
 			 * All user labels from database
 			 */
-			const labelFromDatabase = await this.labelRepository.finds({ userId: noteEntity.userId });
+			const existingLabels = await this.labelRepository.finds({ userId: noteEntity.userId });
 
 			processedLabels = await Promise.all(
 				labelsFromRequest.map(async (name) => {
 					/**
 					 * Checking existing label from database by name
 					 */
-					const existingLabel = labelFromDatabase.find((label) => label.name === name);
+					const existingLabel = existingLabels.find((label) => label.name === name);
 
+					// new fresh label operation
 					if (!existingLabel) {
 						const labelEntity = LabelEntity.create({ name, userId: noteEntity.userId });
-						const newLabel = await this.labelRepository.create(labelEntity);
+						const newLabel = await this.labelRepository.create(labelEntity.toObject());
 
 						return newLabel.id;
 					}
 
 					/**
-					 * Determining the new label id is not in the original note label
+					 * Check if the label is new in the note but already exists in the database
 					 */
 					const isNewLabel = !noteEntity.labels.includes(existingLabel.id);
 
+					// new label in note operation
 					if (isNewLabel) {
 						const labelEntity = new LabelEntity(existingLabel);
 						labelEntity.increaseUsage();
 
-						await this.labelRepository.update(labelEntity.id, labelEntity);
+						await this.labelRepository.update(labelEntity.id, labelEntity.toObject());
 
 						return labelEntity.id;
 					}
@@ -86,10 +84,11 @@ export class UpdateNote implements IUpdateNote {
 
 			/**
 			 * The labels to be deleted from the original note.
-			 * Obtained from determining the label id is on the original note but not in the new label id
 			 */
-			const removedLabel = labelFromDatabase.filter(
-				({ id }) => noteEntity.labels.includes(id) && !processedLabels.includes(id),
+			const removedLabel = existingLabels.filter(
+				({ id }) => 
+					noteEntity.labels.includes(id) // label is in the original note
+					&& !processedLabels.includes(id), // label is not in the processed labels
 			);
 
 			await Promise.all(
@@ -100,7 +99,7 @@ export class UpdateNote implements IUpdateNote {
 					if (labelEntity.isUnused) {
 						await this.labelRepository.delete(labelEntity.id);
 					} else {
-						await this.labelRepository.update(labelEntity.id, labelEntity);
+						await this.labelRepository.update(labelEntity.id, labelEntity.toObject());
 					}
 				}),
 			);
@@ -108,8 +107,8 @@ export class UpdateNote implements IUpdateNote {
 
 		// --------------------------------------------------------------------
 
-		const noteEntityUpdate = noteEntity.update({
-			...optionalNote,
+		noteEntity.update({
+			...payload,
 			...(labelsFromRequest && { labels: processedLabels }),
 		});
 
@@ -118,7 +117,7 @@ export class UpdateNote implements IUpdateNote {
 			createdAt,
 			userId: _userId,
 			...updatedNote
-		} = await this.noteRepository.update(noteId, noteEntityUpdate);
+		} = await this.noteRepository.update(noteId, noteEntity.toObject());
 
 		return updatedNote;
 	}

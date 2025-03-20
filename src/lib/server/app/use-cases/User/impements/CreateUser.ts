@@ -28,13 +28,7 @@ export class CreateUser implements ICreateUser {
 			throw new UserError.AlreadyExist();
 		}
 
-		const user = await this.userRepository.create({
-			email: newUser.email!,
-			fullname: newUser.fullname!,
-			password: newUser.password!,
-			recoveryKeys: newUser.recoveryKeys!,
-			secretKey: newUser.secretKey!,
-		});
+		const user = await this.userRepository.create(newUser.toObject());
 
 		if (!user) {
 			throw Error('Something error');

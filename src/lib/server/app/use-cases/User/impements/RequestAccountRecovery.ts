@@ -32,16 +32,18 @@ export class RequestAccountRecovery implements IRequestAccountRecovery {
 		});
 
 		const token = await this.tokenManager.sign({
-			email: user.email,
-			id: user.id,
 			purpose: TokenPurposeEnum.recoveryEmail,
-			fullname: user.fullname,
+			user: {
+				id: user.id!,
+				email: user.email,
+				fullname: user.fullname,
+			},
 		});
 
 		const tokenEntity = TokenEntity.create({
 			userId: user.id,
 			token: token.value,
-			expiredAt: token.expired,
+			expiredAt: token.expired.toISOString(),
 			purpose: token.purpose,
 		}).toObject();
 
@@ -51,7 +53,10 @@ export class RequestAccountRecovery implements IRequestAccountRecovery {
 			await this.emailSender.send({
 				to: user.email,
 				subject: 'Request for recovery of the Notō account',
-				htmlContent: await this.emailTemplate.accountRecovery(user, tokenEntity),
+				htmlContent: await this.emailTemplate.accountRecovery(user, {
+					...tokenEntity,
+					id: tokenEntity.id!,
+				}),
 			});
 		} catch (error) {
 			await this.tokenRepository.delete({ token: tokenEntity.token });

@@ -5,10 +5,9 @@ import type { TokenPurposeEnum } from '../../enums/TokenPurpose';
  * create token output to external
  */
 export interface ITokenOutDTO {
+	id: string;
 	token: string;
-	userId: string;
 	purpose: TokenPurposeEnum;
-	expiredAt: Date;
-	createdAt?: Date;
+	expiredAt: string;
 	user?: UserInterface;
 }

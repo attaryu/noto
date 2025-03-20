@@ -4,6 +4,7 @@ import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { IGetRecoveryKey, IGetRecoveryKeyDTO } from '../GetRecoveryKey';
 
 import { TokenEntity } from '$lib/server/domain/entities/token';
+import { UserEntity } from '$lib/server/domain/entities/user';
 import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
 import { TokenError } from '$lib/server/domain/errors/Token';
 import { UserError } from '$lib/server/domain/errors/User';
@@ -28,35 +29,38 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 			throw new TokenError.NotRegistered();
 		}
 
-		const existingUser = await this.userRepository.findById(tokenPayload.id);
+		const existingUser = await this.userRepository.findById(existingToken.userId);
 
 		if (!existingUser) {
 			throw new UserError.NotFound();
 		}
 
-		const recoveryKey = existingUser.recoveryKeys.find(({ code }) => code === keyOrder);
+		const userEntity = new UserEntity(existingUser);
+		const recoveryKey = userEntity.recoveryKeys.find(({ code }) => code === keyOrder);
 
 		if (!recoveryKey) {
 			throw new UserError.RecoveryKeyIncorrect();
 		}
 
 		const resetPasswordToken = await this.tokenManager.sign({
-			email: existingUser.email,
-			id: existingUser.id,
 			purpose: TokenPurposeEnum.resetPassword,
-			fullname: existingUser.fullname,
+			user: {
+				id: userEntity.id,
+				email: userEntity.email,
+				fullname: userEntity.fullname,
+			},
 		});
 
 		const tokenEntity = TokenEntity.create({
-			userId: existingUser.id,
+			userId: userEntity.id!,
 			purpose: resetPasswordToken.purpose,
-			expiredAt: resetPasswordToken.expired,
+			expiredAt: resetPasswordToken.expired.toString(),
 			token: resetPasswordToken.value,
 		}).toObject();
 
 		// delete old reset password token if exist
 		await this.tokenRepository.delete({
-			userId: existingUser.id,
+			userId: userEntity.id!,
 			purpose: TokenPurposeEnum.resetPassword,
 		});
 
@@ -65,8 +69,8 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 
 		return {
 			token: {
-				value: resetPasswordToken.value,
-				expiredAt: resetPasswordToken.expired,
+				value: tokenEntity.token,
+				expiredAt: tokenEntity.expiredAt,
 			},
 			recoveryKey,
 		};
