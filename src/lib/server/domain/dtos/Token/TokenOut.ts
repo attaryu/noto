@@ -8,6 +8,6 @@ export interface ITokenOutDTO {
 	id: string;
 	token: string;
 	purpose: TokenPurposeEnum;
-	expiredAt: string;
+	expiredAt: Date;
 	user?: UserInterface;
 }

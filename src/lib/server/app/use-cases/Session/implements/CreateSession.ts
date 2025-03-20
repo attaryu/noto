@@ -46,7 +46,7 @@ export class CreateSession implements ICreateSession {
 
 		const token = TokenEntity.create({
 			userId: user.id!,
-			expiredAt: rawToken.expired.toISOString(),
+			expiredAt: rawToken.expired,
 			token: rawToken.value,
 			purpose: rawToken.purpose,
 		}).toObject();
@@ -55,6 +55,7 @@ export class CreateSession implements ICreateSession {
 
 		return {
 			...token,
+			user,
 			id: token.id!,
 		};
 	}

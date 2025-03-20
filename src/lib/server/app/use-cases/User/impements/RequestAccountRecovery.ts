@@ -43,7 +43,7 @@ export class RequestAccountRecovery implements IRequestAccountRecovery {
 		const tokenEntity = TokenEntity.create({
 			userId: user.id,
 			token: token.value,
-			expiredAt: token.expired.toISOString(),
+			expiredAt: token.expired,
 			purpose: token.purpose,
 		}).toObject();
 

@@ -6,6 +6,6 @@ import type { TokenPurposeEnum } from '../../enums/TokenPurpose';
 export interface ITokenInDTO {
 	userId: string;
 	token: string;
-	expiredAt: string;
+	expiredAt: Date;
 	purpose: TokenPurposeEnum;
 }

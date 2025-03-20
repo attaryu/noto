@@ -54,7 +54,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 		const tokenEntity = TokenEntity.create({
 			userId: userEntity.id!,
 			purpose: resetPasswordToken.purpose,
-			expiredAt: resetPasswordToken.expired.toString(),
+			expiredAt: resetPasswordToken.expired,
 			token: resetPasswordToken.value,
 		}).toObject();
 
