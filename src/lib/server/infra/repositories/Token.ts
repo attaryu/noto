@@ -18,7 +18,7 @@ export class TokenRepository implements ITokenRepository {
 	}
 
 	async create(data: ITokenInDTO): Promise<ITokenInDTO | null> {
-		const result = await this.database.insertOne({ ...data });
+		const result = await this.database.insertOne(data, { ignoreUndefined: true });
 		const token = await this.getSessionById(result.insertedId.toString());
 
 		return token;

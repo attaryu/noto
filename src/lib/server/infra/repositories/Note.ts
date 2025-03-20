@@ -34,14 +34,17 @@ export class NoteRepository implements INoteRepository {
 	async create(data: ICreateNoteDTO): Promise<INoteInDTO> {
 		const now = new Date();
 
-		const result = await this.database.insertOne({
-			...data,
-			pinned: false,
-			archived: false,
-			createdAt: now,
-			updatedAt: now,
-			deletedAt: null,
-		});
+		const result = await this.database.insertOne(
+			{
+				...data,
+				pinned: false,
+				archived: false,
+				createdAt: now,
+				updatedAt: now,
+				deletedAt: null,
+			},
+			{ ignoreUndefined: true },
+		);
 
 		const note = await this.findById(result.insertedId.toString());
 

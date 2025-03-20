@@ -4,11 +4,10 @@ import type { IUserRepository } from '$lib/server/app/repositories/User';
 import type { ICreateUserDTO } from '$lib/server/domain/dtos/User/CreateUser';
 import type { IUpdateUserDTO } from '$lib/server/domain/dtos/User/UpdateUser';
 import type { IUserInDTO } from '$lib/server/domain/dtos/User/UserIn';
-import type { UserInterface } from '$lib/server/domain/entities/user';
 
 import { objectId } from '../helper/objectId';
 
-type Document = Omit<UserInterface, 'id'>;
+type Document = Omit<IUserInDTO, 'id'>;
 
 export class UserRepository implements IUserRepository {
 	private readonly client: MongoClient;
@@ -22,11 +21,14 @@ export class UserRepository implements IUserRepository {
 	async create(data: ICreateUserDTO): Promise<IUserInDTO | null> {
 		const now = new Date();
 
-		const result = await this.database.insertOne({
-			createdAt: now,
-			updateAt: now,
-			...data,
-		});
+		const result = await this.database.insertOne(
+			{
+				createdAt: now,
+				updateAt: now,
+				...data,
+			},
+			{ ignoreUndefined: true },
+		);
 
 		const user = await this.findById(result.insertedId.toString());
 
@@ -37,9 +39,11 @@ export class UserRepository implements IUserRepository {
 		const data = await this.database.findOne({ _id: objectId(id) });
 
 		if (data) {
+			const { _id, ...user } = data;
+
 			return {
-				id: data._id.toString(),
-				...data,
+				id: _id.toString(),
+				...user,
 			};
 		}
 
@@ -50,9 +54,11 @@ export class UserRepository implements IUserRepository {
 		const data = await this.database.findOne({ email });
 
 		if (data) {
+			const { _id, ...user } = data;
+
 			return {
-				id: data._id.toString(),
-				...data,
+				id: _id.toString(),
+				...user,
 			};
 		}
 

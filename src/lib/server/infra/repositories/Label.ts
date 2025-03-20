@@ -6,7 +6,7 @@ import type { Collection, MongoClient } from 'mongodb';
 import { objectId } from '../helper/objectId';
 
 export type Document = Omit<ILabelInDTO, 'id'>;
-// TODO: bug label on note update action
+
 export class LabelRepository implements ILabelRepository {
 	private readonly client: MongoClient;
 	private readonly database: Collection<Document>;
@@ -17,11 +17,14 @@ export class LabelRepository implements ILabelRepository {
 	}
 
 	async create(newLabel: ICreateLabelDTO): Promise<ILabelInDTO> {
-		const { insertedId } = await this.database.insertOne({
-			name: newLabel.name,
-			userId: newLabel.userId,
-			used: 1,
-		});
+		const { insertedId } = await this.database.insertOne(
+			{
+				name: newLabel.name,
+				userId: newLabel.userId,
+				used: 1,
+			},
+			{ ignoreUndefined: true },
+		);
 
 		const label = await this.finds({
 			labelId: [insertedId.toString()],
