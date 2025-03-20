@@ -1,6 +1,6 @@
 import { ValidationError } from '../errors/Validation';
 
-type PrimitiveType = 'string' | 'boolean' | 'number';
+type PrimitiveType = 'string' | 'boolean' | 'number' | 'any';
 type Validator<T> = (value: T) => boolean | string;
 
 interface PrimitiveSchema {
@@ -34,7 +34,7 @@ export const Validation = new (class {
 			throw new ValidationError(`${path} is required`);
 		}
 
-		if (typeof value !== schema.type) {
+		if (schema.type !== 'any' && typeof value !== schema.type) {
 			throw new ValidationError(`${path} is not a ${schema.type}`);
 		}
 
