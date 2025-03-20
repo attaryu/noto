@@ -7,10 +7,10 @@ export class GetNoteController implements IController {
 	constructor(private readonly getNoteCase: IGetNote) {}
 
 	async handler(request: IHttpRequest, response: IHttpResponse): Promise<Response> {
-		const userId = request.locals!.tokenPayload!.id;
-		const noteId = request.params.noteId;
-
-		const result = await this.getNoteCase.execute(userId, noteId);
+		const result = await this.getNoteCase.execute(
+			request.locals!.tokenPayload!.user.id!,
+			request.params.noteId,
+		);
 
 		return response.json({
 			statusCode: 200,

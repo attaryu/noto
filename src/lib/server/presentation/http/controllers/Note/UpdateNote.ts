@@ -7,11 +7,11 @@ export class UpdateNoteController implements IController {
 	constructor(private readonly updateNoteCase: IUpdateNote) {}
 
 	async handler(request: IHttpRequest, response: IHttpResponse): Promise<Response> {
-		const noteId = request.params.noteId;
-		const userId = request.locals!.tokenPayload!.id;
-		const body = request.body;
-
-		const result = await this.updateNoteCase.execute(userId, noteId, body);
+		const result = await this.updateNoteCase.execute(
+			request.locals!.tokenPayload!.user.id!,
+			request.params.noteId,
+			request.body,
+		);
 
 		return response.json({
 			statusCode: 200,

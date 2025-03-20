@@ -12,7 +12,7 @@ export class GetNotesController implements IController {
 		const search = request.query.get('search');
 		const archived = request.query.get('archived');
 
-		const result = await this.getNotesCase.execute(request.locals!.tokenPayload!.id, {
+		const result = await this.getNotesCase.execute(request.locals!.tokenPayload!.user.id!, {
 			label: label ?? undefined,
 			offset: offset ? parseInt(offset) : undefined,
 			search: search && JSON.parse(search),

@@ -8,7 +8,6 @@ export class DeleteNotesController implements IController {
 
 	async handler(request: IHttpRequest, response: IHttpResponse): Promise<Response> {
 		const noteId = JSON.parse(request.query.get('noteId') ?? '[]');
-		const userId = request.locals!.tokenPayload!.id;
 
 		if (!noteId.length) {
 			return response.json({
@@ -18,7 +17,7 @@ export class DeleteNotesController implements IController {
 			});
 		}
 
-		await this.deleteNotesCase.execute(noteId, userId);
+		await this.deleteNotesCase.execute(noteId, request.locals!.tokenPayload!.user.id!);
 
 		return response.json(null, { status: 204 });
 	}
