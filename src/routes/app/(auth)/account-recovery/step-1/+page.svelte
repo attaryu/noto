@@ -37,13 +37,13 @@
 	>({
 		mutationFn: (payload) => axiosFetch.POST('/auth/recover-email', payload),
 		onSuccess: () => {
-			toast.setToast({
+			toast.set({
 				message: 'Success, please check your email',
 				type: 'success',
 			});
 		},
 		onError: (error) => {
-			toast.setToast({
+			toast.set({
 				message: error.error.message ?? 'An error occurred',
 				type: 'error',
 			});

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import {
 		ArrowRight,
 		CloudUpload,
@@ -9,7 +10,7 @@
 		Shield,
 		SunMoon,
 	} from 'lucide-svelte';
-	import { goto } from '$app/navigation';
+	import { createMutation } from '@tanstack/svelte-query';
 
 	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
@@ -19,13 +20,19 @@
 	import Select from '$lib/components/Select.svelte';
 	import Text from '$lib/components/Text.svelte';
 
-	import { getUserStore } from '$lib/stores/user.svelte';
-	import { profileController } from './Controller.svelte';
-	import { createMutation } from '@tanstack/svelte-query';
+	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getUserStore } from '$lib/stores/user.svelte';
 
-	const controller = profileController();
 	const user = getUserStore();
+
+	const logOutMutation = createMutation({
+		mutationFn: async () => axiosFetch.DELETE('/auth/sign-out'),
+		onSettled: async () => {
+			await secretKeyManagement.removeSecretKey();
+			goto('/app/sign-in');
+		},
+	});
 </script>
 
 <svelte:head>
@@ -186,8 +193,8 @@
 				<li>
 					<MenuItem
 						text="Logout"
-						action={controller.logOutMutation.mutate}
-						disabled={controller.logOutMutation.isPending}
+						action={$logOutMutation.mutate}
+						disabled={$logOutMutation.isPending}
 					/>
 				</li>
 			</ul>

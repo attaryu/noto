@@ -1,17 +1,66 @@
 <script lang="ts">
+	import type { z } from 'zod';
+
+	import type { IErrorResponseAPI } from '$lib/types/response';
+	import type { ISignupPayload, ISignupResponse } from '$lib/types/api/auth/sign-up';
+
+	import { createMutation } from '@tanstack/svelte-query';
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 	import Mail from 'lucide-svelte/icons/mail';
+	import { goto } from '$app/navigation';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import FieldError from '$lib/components/FieldError.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
-	import { signUpController } from './Controller.svelte';
+
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
+	import { createValidation } from '$lib/hooks/createValidation.svelte';
+	import { signupUserValidator } from '$lib/validator/user';
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { userCryptography } from '$lib/business/userCrytography';
 
 	const formId = 'sign-up';
+	const toast = getToastStoreContext();
 
-	const controller = signUpController();
+	let recoveryKeys = $state.raw<string[]>([]);
+
+	const form = createValidation<z.infer<typeof signupUserValidator>>(signupUserValidator, {
+		fullname: '',
+		email: '',
+		password: '',
+		repeatPassword: '',
+	});
+
+	const isPasswordNotSame = $derived(form.fields.password !== form.fields.repeatPassword);
+
+	const signupMutation = createMutation<ISignupResponse, IErrorResponseAPI, ISignupPayload>({
+		mutationFn: (payload) => axiosFetch.POST('/auth/sign-up', payload),
+		onSuccess: () => {
+			goto('/app/recovery-key', { state: { recoveryKeys } });
+		},
+		onError: (error) => {
+			toast.set({
+				message: error.error.message ?? 'An error occurred',
+				type: 'error',
+			});
+		},
+	});
+
+	const signUpHandler = form.submitHandler(async (fields) => {
+		const { encryptedRecoveryKeys, ...cryptographyKeys } =
+			await userCryptography.generateCryptoKeys(fields.password);
+
+		recoveryKeys = cryptographyKeys.recoveryKeys;
+
+		$signupMutation.mutate({
+			...cryptographyKeys,
+			fullname: fields.fullname,
+			email: fields.email,
+			recoveryKeys: encryptedRecoveryKeys,
+		});
+	});
 </script>
 
 <svelte:head>
@@ -36,46 +85,50 @@
 			Register and access notes from anywhere! Or skip it and save the notes in local.
 		</Text>
 
-		<form id={formId} class="mt-8 w-full space-y-2" onsubmit={controller.signUpHandler}>
+		<form id={formId} class="mt-8 w-full space-y-2" onsubmit={signUpHandler}>
 			<Input
 				type="fullname"
 				placeholder="Fullname"
 				name="fullname"
-				bind:value={controller.form.fields.fullname}
+				bind:value={form.fields.fullname}
 				class="w-full"
+				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{controller.form.errors.fullname}</FieldError>
+			<FieldError>{form.errors.fullname}</FieldError>
 
 			<Input
 				type="email"
 				placeholder="Email"
 				name="email"
-				bind:value={controller.form.fields.email}
+				bind:value={form.fields.email}
 				class="w-full"
+				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{controller.form.errors.email}</FieldError>
+			<FieldError>{form.errors.email}</FieldError>
 
 			<Input
 				type="password"
 				placeholder="Password"
 				name="password"
-				bind:value={controller.form.fields.password}
-				class="w-full {controller.isPasswordNotSame && 'border-red-500'}"
+				bind:value={form.fields.password}
+				class="w-full {isPasswordNotSame && 'border-red-500'}"
+				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{controller.form.errors.password}</FieldError>
+			<FieldError>{form.errors.password}</FieldError>
 
 			<Input
 				type="password"
 				placeholder="Repeat Password"
 				name="repeat-password"
-				bind:value={controller.form.fields.repeatPassword}
-				class="w-full {controller.isPasswordNotSame && 'border-red-500'}"
+				bind:value={form.fields.repeatPassword}
+				class="w-full {isPasswordNotSame && 'border-red-500'}"
+				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{controller.form.errors.repeatPassword}</FieldError>
+			<FieldError>{form.errors.repeatPassword}</FieldError>
 		</form>
 
 		<Text tag="small" class="mt-8">
@@ -83,13 +136,8 @@
 		</Text>
 	</div>
 
-	<Button
-		form={formId}
-		disabled={controller.signupMutation.isPending}
-		type="submit"
-		class="mt-auto w-full"
-	>
-		{#if controller.signupMutation.isPending}
+	<Button form={formId} disabled={$signupMutation.isPending} type="submit" class="mt-auto w-full">
+		{#if $signupMutation.isPending}
 			Loading...
 		{:else}
 			<Mail /> Sign Up

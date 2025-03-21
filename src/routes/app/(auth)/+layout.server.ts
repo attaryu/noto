@@ -15,7 +15,9 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 
 	try {
 		await tokenManager.verify(token);
-	} catch {}
+	} catch {
+		return;
+	}
 
 	return redirect(302, '/app/notes');
 };
