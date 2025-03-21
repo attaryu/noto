@@ -98,12 +98,18 @@ export const Validation = new (class {
 		}
 
 		for (const key in value) {
+			if (!Object.hasOwn(schema.properties, key)) {
+				throw new ValidationError(`${path}.${key} is not allowed`);
+			}
+		}
+
+		for (const key in schema.properties) {
 			const newPath = `${path === 'value' ? 'root' : path}.${key}`;
 			const propertySchema = schema.properties[key];
 			const propertyValue = value[key];
 
-			if (!Object.hasOwn(schema.properties, key)) {
-				throw new ValidationError(`${newPath} is not allowed`);
+			if (!Object.hasOwn(value, key)) {
+				throw new ValidationError(`${newPath} is required`);
 			}
 
 			if (propertySchema.type === 'array') {
