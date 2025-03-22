@@ -25,40 +25,47 @@ interface ObjectSchema {
 
 export type Schema = PrimitiveSchema | ArraySchema | ObjectSchema;
 
+/**
+ * Schema validation helper class
+ */
 export const Validation = new (class {
 	/**
 	 * useful for validating primitive value data type
 	 */
 	public primitive(value: unknown, schema: PrimitiveSchema, path: string = 'value') {
-		if (schema.required && value === undefined) {
-			throw new ValidationError(`${path} is required`);
+		if (!this.isDefined(value)) {
+			if (schema.required) {
+				throw new ValidationError(`${path} is required`);
+			}
+
+			return;
 		}
 
 		if (schema.type !== 'any' && typeof value !== schema.type) {
 			throw new ValidationError(`${path} is not a ${schema.type}`);
 		}
 
-		if (schema.custom) {
-			const custom = schema.custom(value);
-
-			if (typeof custom === 'string') {
-				throw new ValidationError(custom);
-			} else if (!custom) {
-				throw new ValidationError(`${path} is invalid`);
-			}
-		}
+		this.customHandling(value, schema, `${path} is invalid`);
 	}
 
 	/**
 	 * useful for validating array and the items inside
 	 */
 	public array(value: unknown[], schema: ArraySchema, path: string = 'value') {
+		if (!this.isDefined(value)) {
+			if (schema.required) {
+				throw new ValidationError(`${path} is required`);
+			}
+
+			return;
+		}
+
 		if (!Array.isArray(value)) {
 			throw new ValidationError(`${path} is not an array`);
 		}
 
-		if (schema.required && !value.length) {
-			throw new ValidationError(`${path} at least has one item`);
+		if (schema.items.required && !value.length) {
+			throw new ValidationError(`${path} cannot be empty`);
 		}
 
 		value.forEach((item, index) => {
@@ -74,27 +81,19 @@ export const Validation = new (class {
 			}
 		});
 
-		if (schema.custom) {
-			const custom = schema.custom(value);
-
-			if (typeof custom === 'string') {
-				throw new ValidationError(custom);
-			} else if (!custom) {
-				throw new ValidationError(`${path} is invalid array`);
-			}
-		}
+		this.customHandling(value, schema, `${path} is invalid array`);
 	}
 
 	/**
 	 * useful for validating object and the properties inside
 	 */
 	public object(value: any, schema: ObjectSchema, path: string = 'value') {
-		if (typeof value !== 'object' || value === null) {
-			throw new ValidationError(`${path} is not an object`);
-		}
+		if (!this.isDefined(value)) {
+			if (schema.required && Object.keys(value).length) {
+				throw new ValidationError(`${path} is required`);
+			}
 
-		if (schema.required && Object.keys(value).length === 0) {
-			throw new ValidationError(`${path} is required`);
+			return;
 		}
 
 		for (const key in value) {
@@ -108,7 +107,7 @@ export const Validation = new (class {
 			const propertySchema = schema.properties[key];
 			const propertyValue = value[key];
 
-			if (!Object.hasOwn(value, key)) {
+			if (propertySchema.required && !Object.hasOwn(value, key)) {
 				throw new ValidationError(`${newPath} is required`);
 			}
 
@@ -121,13 +120,21 @@ export const Validation = new (class {
 			}
 		}
 
-		if (schema.custom) {
-			const custom = schema.custom(value);
+		this.customHandling(value, schema, `${path} is invalid object`);
+	}
+
+	private isDefined(value: unknown): boolean {
+		return value !== undefined && value !== null;
+	}
+
+	private customHandling(value: unknown, schema: Schema, defaultMessage: string) {
+		if (this.isDefined(value) && schema.custom) {
+			const custom = schema.custom(value as any);
 
 			if (typeof custom === 'string') {
 				throw new ValidationError(custom);
 			} else if (!custom) {
-				throw new ValidationError(`${path} is invalid object`);
+				throw new ValidationError(defaultMessage);
 			}
 		}
 	}

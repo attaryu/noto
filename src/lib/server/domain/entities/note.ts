@@ -34,8 +34,8 @@ export class NoteEntity {
 			properties: {
 				iv: { type: 'string', required: true },
 				userId: { type: 'string', required: true },
-				labels: { type: 'array', items: { type: 'string' } },
-				index: { type: 'array', items: { type: 'string', required: true } },
+				labels: { type: 'array', items: { type: 'string' }, required: true },
+				index: { type: 'array', items: { type: 'string', required: true }, required: true },
 				content: { type: 'string', required: true },
 			},
 		});
