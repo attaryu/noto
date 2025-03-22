@@ -12,7 +12,6 @@ export interface INote {
 }
 
 export interface INotePayload {
-	iv: string;
 	index: string[];
 	labels: string[];
 	content: string;

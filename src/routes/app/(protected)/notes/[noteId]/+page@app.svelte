@@ -18,7 +18,6 @@
 
 	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import createEditor from '$lib/utils/editor';
-	import { schemaComparison } from '$lib/utils/schemaComparison';
 
 	const { data }: PageProps = $props();
 	const toastStore = getToastStoreContext();
@@ -58,10 +57,6 @@
 			return;
 		}
 
-		if (originalData && schemaComparison(originalData, $editor.getJSON())) {
-			return;
-		}
-
 		const secretKey = await secretKeyManagement.getSecretKey();
 
 		if (!secretKey) {
@@ -74,44 +69,41 @@
 		}
 
 		const rawSecretKey = await keyManagement.importKey(secretKey);
-		const processNote = await noteManagement.processContent(
+		const { iv, ...processNote } = await noteManagement.processContent(
 			$editor.getJSON(),
 			rawSecretKey,
 			$noteQuery.data!.payload.note.iv,
 		);
 
-		$noteMutation.mutate({
-			...$noteQuery.data!.payload.note,
-			...processNote,
-		});
+		$noteMutation.mutate(processNote);
 	}
 
 	/**
 	 * Set the content to the editor after receiving the note data
 	 */
-	async function setContent(encryptedContent: string, iv: string) {
-		const secretKey = await secretKeyManagement.getSecretKey();
-
-		if (!secretKey) {
-			toastStore.set({
-				message: 'Secret key not found. Please sign in again!',
-				type: 'error',
-			});
-
-			return;
-		}
-
-		const rawSecretKey = await keyManagement.importKey(secretKey);
-		const content = await noteManagement.decrypt(encryptedContent, rawSecretKey, iv);
-
-		originalData = content;
-		$editor?.commands.setContent(content);
-	}
-
 	$effect(() => {
 		if ($noteQuery.isSuccess) {
-			const { content, iv } = $noteQuery.data.payload.note;
-			setContent(content, iv);
+			secretKeyManagement.getSecretKey().then(async (secretKey) => {
+				if (!secretKey) {
+					toastStore.set({
+						message: 'Secret key not found. Please sign in again!',
+						type: 'error',
+					});
+
+					return;
+				}
+
+				const rawSecretKey = await keyManagement.importKey(secretKey);
+
+				const content = await noteManagement.decrypt(
+					$noteQuery.data.payload.note.content,
+					rawSecretKey,
+					$noteQuery.data.payload.note.iv,
+				);
+
+				originalData = content;
+				$editor?.commands.setContent(content);
+			});
 		}
 	});
 
@@ -143,7 +135,14 @@
 
 <main class="px-5 pb-24 pt-24">
 	{#if $editor}
-		<Header title="Take notes" editorInstance={$editor} {onsave} {originalData} />
+		<Header
+			title="Take notes"
+			editorInstance={$editor}
+			mode="edit"
+			disabled={$noteMutation.isPending || $noteQuery.isPending}
+			{onsave}
+			{originalData}
+		/>
 	{/if}
 
 	<div bind:this={editorElement}></div>

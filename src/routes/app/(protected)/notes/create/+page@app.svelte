@@ -112,7 +112,7 @@
 					type: 'error',
 					action: {
 						title: 'Retry',
-						event: submitHandler,
+						event: onsave,
 					},
 				});
 
@@ -126,7 +126,7 @@
 		},
 	});
 
-	async function submitHandler() {
+	async function onsave() {
 		if (!$editor || $editor.isEmpty) {
 			toastStore.set({
 				message: 'Note cannot be empty',
@@ -182,7 +182,13 @@
 
 <main class="px-5 pb-24 pt-24">
 	{#if $editor}
-		<Header editorInstance={$editor} title="Take notes" onsave={submitHandler} />
+		<Header
+			mode="create"
+			title="Take notes"
+			editorInstance={$editor}
+			disabled={$noteMutation.isPending}
+			{onsave}
+		/>
 	{/if}
 
 	<div bind:this={editorElement}></div>

@@ -1,59 +1,79 @@
-<script lang="ts">
+<script lang="ts" generics="IResponse, IPayload">
 	import type { Editor, JSONContent } from '@tiptap/core';
 
-	import _ from 'lodash';
-	import { ArrowLeft, Check, Pencil, X, RotateCcw } from 'lucide-svelte';
+	import { ArrowLeft, Check, Pencil, RotateCcw, X } from 'lucide-svelte';
 
 	import Button from '../Button.svelte';
 	import Header from '../Header.svelte';
 	import Text from '../Text.svelte';
+
 	import { schemaComparison } from '$lib/utils/schemaComparison';
 
 	interface Props {
+		mode: 'create' | 'edit';
 		title: string;
 		editorInstance: Editor;
+		disabled?: boolean;
+		onsave: () => void;
 		originalData?: JSONContent;
-		onsave?: () => void;
 	}
 
-	const { title, editorInstance, originalData, onsave }: Props = $props();
-
+	const { title, editorInstance, originalData, disabled, mode, onsave }: Props = $props();
 	const firstSchema = editorInstance.getJSON();
 
-	const controlButtons = $derived([
-		{
-			id: 'cancel',
-			disabled:
-				!editorInstance.isEditable ||
-				schemaComparison(editorInstance.getJSON(), originalData ?? firstSchema),
-			icon: originalData ? RotateCcw : X,
-			onclick: () => {
-				if (originalData) {
+	const controlButtons = $derived.by(() => {
+		if (mode === 'create') {
+			return [
+				{
+					id: 'reset',
+					disabled: !editorInstance.isEditable,
+					icon: X,
+					onclick: () =>
+						editorInstance.chain().focus('end', { scrollIntoView: false }).clearContent().run(),
+				},
+				{
+					id: 'save',
+					disabled: editorInstance.isEmpty || disabled,
+					icon: Check,
+					onclick: () => {
+						editorInstance.setEditable(!editorInstance.isEditable);
+						onsave();
+					},
+				},
+			];
+		}
+
+		const isSameSchema = schemaComparison(editorInstance.getJSON(), originalData ?? firstSchema);
+
+		return [
+			{
+				id: 'cancel',
+				disabled: !editorInstance.isEditable || disabled || isSameSchema,
+				icon: RotateCcw,
+				onclick: () => {
 					editorInstance
 						.chain()
 						.focus('end', { scrollIntoView: false })
-						.setContent(originalData)
+						.setContent(originalData!)
 						.run();
-				} else {
-					editorInstance.chain().focus('end', { scrollIntoView: false }).clearContent().run();
-				}
+				},
 			},
-		},
-		{
-			id: 'edit',
-			disabled: editorInstance.isEmpty,
-			icon: editorInstance.isEditable ? Check : Pencil,
-			onclick: () => {
-				editorInstance.setEditable(!editorInstance.isEditable);
+			{
+				id: 'edit',
+				disabled: disabled,
+				icon: editorInstance.isEditable ? Check : Pencil,
+				onclick: () => {
+					editorInstance.setEditable(!editorInstance.isEditable);
 
-				if (editorInstance.isEditable) {
-					editorInstance.commands.focus('end', { scrollIntoView: false });
-				} else {
-					onsave?.();
-				}
+					if (editorInstance.isEditable) {
+						editorInstance.commands.focus('end', { scrollIntoView: false });
+					} else if (!isSameSchema) {
+						onsave();
+					}
+				},
 			},
-		},
-	]);
+		];
+	});
 </script>
 
 <Header class="flex items-center bg-zinc-900 p-1">
