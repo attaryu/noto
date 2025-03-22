@@ -74,21 +74,23 @@
 		},
 	});
 
-	const submitHandler = form.submitHandler(async (fields) => {
-		if ($passwordQuery.isSuccess) {
-			const passwordKey = await userCryptography.generatePasswordKey(
-				fields.password,
-				$passwordQuery.data.payload.salt,
-			);
+	const submitHandler = $derived(
+		form.submitHandler(async (fields) => {
+			if ($passwordQuery.isSuccess) {
+				const passwordKey = await userCryptography.generatePasswordKey(
+					fields.password,
+					$passwordQuery.data.payload.salt,
+				);
 
-			passwordCryptoKey = passwordKey.key;
+				passwordCryptoKey = passwordKey.key;
 
-			$signinMutation.mutate({
-				...fields,
-				password: passwordKey.hashedKey,
-			});
-		}
-	});
+				$signinMutation.mutate({
+					...fields,
+					password: passwordKey.hashedKey,
+				});
+			}
+		}),
+	);
 
 	const emailErrorMessage = $derived(
 		$passwordQuery.isError && form.fields.email
