@@ -9,7 +9,6 @@
 
 	const { recoveryKeys } = page.state;
 
-	let isDownloaded = $state(false);
 	let aggreement = $state(false);
 
 	if (!recoveryKeys) {
@@ -17,12 +16,12 @@
 	}
 
 	/**
-	 * download the recovery key as a file
+	 * download the recovery key as a txt file
 	 *
 	 * @see https://flexiple.com/javascript/download-flle-using-javascript/
 	 */
 	function downloadAsFile() {
-		if (recoveryKeys && !isDownloaded) {
+		if (recoveryKeys) {
 			const blob = new Blob([recoveryKeys.join('\n')], { type: 'text/plain' });
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement('a');
@@ -33,7 +32,6 @@
 
 			URL.revokeObjectURL(url);
 			a.remove();
-			isDownloaded = true;
 		}
 	}
 </script>
@@ -79,7 +77,6 @@
 				variant="secondary"
 				class="w-full"
 				onclick={downloadAsFile}
-				disabled={isDownloaded}
 			>
 				<Download />
 

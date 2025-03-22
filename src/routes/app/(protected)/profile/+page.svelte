@@ -6,6 +6,7 @@
 		Globe,
 		HeartHandshake,
 		Info,
+		Key,
 		Pen,
 		Shield,
 		SunMoon,
@@ -73,7 +74,7 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<MenuItem text="Backup" action={() => goto('/app/backup')}>
+						<MenuItem type="link" text="Backup" action="/app/backup">
 							{#snippet icon()}
 								<CloudUpload />
 							{/snippet}
@@ -84,7 +85,7 @@
 					</li>
 
 					<li>
-						<MenuItem text="Theme">
+						<MenuItem type="container" text="Theme">
 							{#snippet icon()}
 								<SunMoon />
 							{/snippet}
@@ -115,7 +116,7 @@
 					</li>
 
 					<li>
-						<MenuItem text="Language">
+						<MenuItem type="container" text="Language">
 							{#snippet icon()}
 								<Globe />
 							{/snippet}
@@ -153,7 +154,18 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<MenuItem text="Privacy and Policy">
+						<MenuItem type="link" text="Account Recovery" action="/app/account-recovery/step-1">
+							{#snippet icon()}
+								<Key />
+							{/snippet}
+							{#snippet rightElement()}
+								<ArrowRight />
+							{/snippet}
+						</MenuItem>
+					</li>
+
+					<li>
+						<MenuItem type="container" text="Privacy and Policy">
 							{#snippet icon()}
 								<Shield />
 							{/snippet}
@@ -162,8 +174,9 @@
 							{/snippet}
 						</MenuItem>
 					</li>
+
 					<li>
-						<MenuItem text="Support">
+						<MenuItem type="container" text="Support">
 							{#snippet icon()}
 								<HeartHandshake />
 							{/snippet}
@@ -172,8 +185,9 @@
 							{/snippet}
 						</MenuItem>
 					</li>
+
 					<li>
-						<MenuItem text="About">
+						<MenuItem type="container" text="About">
 							{#snippet icon()}
 								<Info />
 							{/snippet}
@@ -192,6 +206,7 @@
 			<ul {...props}>
 				<li>
 					<MenuItem
+						type="button"
 						text="Logout"
 						action={$logOutMutation.mutate}
 						disabled={$logOutMutation.isPending}
