@@ -1,53 +1,51 @@
 <script lang="ts">
+	import type { ISigninPayload, ISigninResponse } from '$lib/types/api/auth/sign-in';
+	import type { IPasswordSaltResponse } from '$lib/types/api/users/password-salt';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
+	import { goto } from '$app/navigation';
+	import { createMutation, createQuery } from '@tanstack/svelte-query';
+	import _ from 'lodash';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import Mail from 'lucide-svelte/icons/mail';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import FieldError from '$lib/components/FieldError.svelte';
-	import { goto } from '$app/navigation';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
-	import { getToastStoreContext } from '$lib/stores/toast.svelte';
-	import type { z } from 'zod';
-	import { createValidation } from '$lib/hooks/createValidation.svelte';
-	import { signinUserValidator } from '$lib/validator/user';
-	import { createMutation, createQuery } from '@tanstack/svelte-query';
-	import type { IErrorResponseAPI } from '$lib/types/response';
-	import type { IPasswordSaltResponse } from '$lib/types/api/users/password-salt';
-	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import _ from 'lodash';
-	import type { ISigninPayload, ISigninResponse } from '$lib/types/api/auth/sign-in';
-	import encryption from '$lib/utils/cryptography/encryption';
+
 	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { userCryptography } from '$lib/business/userCrytography';
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
+	import encryption from '$lib/utils/cryptography/encryption';
+	import { signinUserValidator } from '$lib/validator/user';
 
 	const formId = 'sign-in';
 	const toast = getToastStoreContext();
 
-	const form = createValidation<z.infer<typeof signinUserValidator>>(signinUserValidator, {
-		email: '',
-		password: '',
-	});
+	let salt = $state<string>();
+	let passwordCryptoKey = $state<CryptoKey | undefined>();
 
 	const passwordQuery = createQuery<IPasswordSaltResponse, IErrorResponseAPI>({
 		queryKey: ['users', 'password'],
-		queryFn: () => axiosFetch.GET(`/users/password-salt?email=${form.fields.email}`),
+		queryFn: () => axiosFetch.GET(`/users/password-salt?email=${$form.email}`),
 		enabled: false,
 		retry: false,
+	});
+
+	$effect(() => {
+		if ($passwordQuery.isSuccess) {
+			salt = $passwordQuery.data.payload.salt;
+		}
 	});
 
 	const refetchPasswordQuery = _.debounce(() => {
 		$passwordQuery.refetch();
 	}, 500);
-
-	$effect(() => {
-		if (form.fields.email) {
-			refetchPasswordQuery();
-		}
-	});
-
-	let passwordCryptoKey = $state<CryptoKey | undefined>();
 
 	const signinMutation = createMutation<ISigninResponse, IErrorResponseAPI, ISigninPayload>({
 		mutationFn: (payload) => axiosFetch.POST('/auth/sign-in', payload),
@@ -62,6 +60,7 @@
 				);
 
 				await secretKeyManagement.storeSecretKey(secretKey);
+				reset();
 
 				goto('/app/notes');
 			}
@@ -74,29 +73,32 @@
 		},
 	});
 
-	const submitHandler = $derived(
-		form.submitHandler(async (fields) => {
-			if ($passwordQuery.isSuccess) {
-				const passwordKey = await userCryptography.generatePasswordKey(
-					fields.password,
-					$passwordQuery.data.payload.salt,
-				);
+	const { form, errors, reset, enhance } = superForm(defaults(zod(signinUserValidator)), {
+		SPA: true,
+		validators: zodClient(signinUserValidator),
+		resetForm: false,
+		onUpdate: async ({ form }) => {
+			if (salt && form.valid) {
+				const passwordKey = await userCryptography.generatePasswordKey(form.data.password, salt);
 
 				passwordCryptoKey = passwordKey.key;
 
-				$signinMutation.mutate({
-					...fields,
-					password: passwordKey.hashedKey,
-				});
+				$signinMutation.mutate({ ...form.data, password: passwordKey.hashedKey });
 			}
-		}),
-	);
+		},
+	});
 
-	const emailErrorMessage = $derived(
-		$passwordQuery.isError && form.fields.email
-			? $passwordQuery.error?.error.message
-			: form.errors?.email,
-	);
+	$effect(() => {
+		if ($form.email) {
+			refetchPasswordQuery();
+		}
+	});
+
+	$effect(() => {
+		if ($passwordQuery.isError && !$errors.email?.length) {
+			$errors.email = [$passwordQuery.error?.error.message];
+		}
+	});
 </script>
 
 <svelte:head>
@@ -118,27 +120,26 @@
 		<Text tag="h1" class="mt-auto text-center">Welcome back!</Text>
 		<Text class="mt-4 text-center">I'm glad you're back! It's your time to note everything</Text>
 
-		<form id={formId} class="mt-8 w-full space-y-2" onsubmit={submitHandler}>
+		<form id={formId} class="mt-8 w-full space-y-2" use:enhance method="POST">
 			<Input
 				type="email"
 				placeholder="Email"
 				name="email"
 				class="w-full"
-				value={form.fields.email}
-				oninput={({ currentTarget }) => (form.fields.email = currentTarget.value ?? '')}
+				bind:value={$form.email}
 			/>
 
-			<FieldError>{emailErrorMessage}</FieldError>
+			<FieldError message={$errors.email} />
 
 			<Input
 				type="password"
 				placeholder="Password"
 				name="password"
 				class="w-full"
-				bind:value={form.fields.password}
+				bind:value={$form.password}
 			/>
 
-			<FieldError>{form.errors?.password}</FieldError>
+			<FieldError message={$errors.password} />
 		</form>
 
 		<Text tag="small" class="mt-8">
@@ -152,12 +153,7 @@
 		</Text>
 	</div>
 
-	<Button
-		form={formId}
-		type="submit"
-		class="mt-auto w-full"
-		disabled={$signinMutation.isPending || !form.isValid}
-	>
+	<Button form={formId} type="submit" class="mt-auto w-full" disabled={$signinMutation.isPending}>
 		{#if $signinMutation.isPending}
 			Loading...
 		{:else}

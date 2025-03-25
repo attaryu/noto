@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { z } from 'zod';
-
-	import type { IErrorResponseAPI } from '$lib/types/response';
 	import type { ISignupPayload, ISignupResponse } from '$lib/types/api/auth/sign-up';
+	import type { IErrorResponseAPI } from '$lib/types/response';
 
+	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 	import Mail from 'lucide-svelte/icons/mail';
-	import { goto } from '$app/navigation';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
@@ -15,29 +15,20 @@
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
 
-	import { getToastStoreContext } from '$lib/stores/toast.svelte';
-	import { createValidation } from '$lib/hooks/createValidation.svelte';
-	import { signupUserValidator } from '$lib/validator/user';
-	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { userCryptography } from '$lib/business/userCrytography';
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
+	import { getToastStoreContext } from '$lib/stores/toast.svelte';
+	import { signupUserValidator } from '$lib/validator/user';
 
 	const formId = 'sign-up';
 	const toast = getToastStoreContext();
 
 	let recoveryKeys = $state.raw<string[]>([]);
 
-	const form = createValidation<z.infer<typeof signupUserValidator>>(signupUserValidator, {
-		fullname: '',
-		email: '',
-		password: '',
-		repeatPassword: '',
-	});
-
-	const isPasswordNotSame = $derived(form.fields.password !== form.fields.repeatPassword);
-
 	const signupMutation = createMutation<ISignupResponse, IErrorResponseAPI, ISignupPayload>({
 		mutationFn: (payload) => axiosFetch.POST('/auth/sign-up', payload),
 		onSuccess: () => {
+			reset();
 			goto('/app/recovery-key', { state: { recoveryKeys } });
 		},
 		onError: (error) => {
@@ -48,19 +39,28 @@
 		},
 	});
 
-	const signUpHandler = form.submitHandler(async (fields) => {
-		const { encryptedRecoveryKeys, ...cryptographyKeys } =
-			await userCryptography.generateCryptoKeys(fields.password);
+	const { form, errors, enhance, reset } = superForm(defaults(zod(signupUserValidator)), {
+		SPA: true,
+		validators: zodClient(signupUserValidator),
+		resetForm: false,
+		onUpdate: async ({ form }) => {
+			if (form.valid) {
+				const { encryptedRecoveryKeys, ...cryptographyKeys } =
+					await userCryptography.generateCryptoKeys(form.data.password);
 
-		recoveryKeys = cryptographyKeys.recoveryKeys;
+				recoveryKeys = cryptographyKeys.recoveryKeys;
 
-		$signupMutation.mutate({
-			...cryptographyKeys,
-			fullname: fields.fullname,
-			email: fields.email,
-			recoveryKeys: encryptedRecoveryKeys,
-		});
+				$signupMutation.mutate({
+					...cryptographyKeys,
+					fullname: form.data.fullname,
+					email: form.data.email,
+					recoveryKeys: encryptedRecoveryKeys,
+				});
+			}
+		},
 	});
+
+	const isPasswordNotSame = $derived($form.password !== $form.repeatPassword);
 </script>
 
 <svelte:head>
@@ -85,50 +85,50 @@
 			Register and access notes from anywhere! Or skip it and save the notes in local.
 		</Text>
 
-		<form id={formId} class="mt-8 w-full space-y-2" onsubmit={signUpHandler}>
+		<form id={formId} class="mt-8 w-full space-y-2" use:enhance method="POST">
 			<Input
 				type="fullname"
 				placeholder="Fullname"
 				name="fullname"
-				bind:value={form.fields.fullname}
+				bind:value={$form.fullname}
 				class="w-full"
 				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{form.errors.fullname}</FieldError>
+			<FieldError message={$errors.fullname} />
 
 			<Input
 				type="email"
 				placeholder="Email"
 				name="email"
-				bind:value={form.fields.email}
+				bind:value={$form.email}
 				class="w-full"
 				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{form.errors.email}</FieldError>
+			<FieldError message={$errors.email} />
 
 			<Input
 				type="password"
 				placeholder="Password"
 				name="password"
-				bind:value={form.fields.password}
+				bind:value={$form.password}
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
 				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{form.errors.password}</FieldError>
+			<FieldError message={$errors.password} />
 
 			<Input
 				type="password"
 				placeholder="Repeat Password"
 				name="repeat-password"
-				bind:value={form.fields.repeatPassword}
+				bind:value={$form.repeatPassword}
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
 				disabled={$signupMutation.isPending}
 			/>
 
-			<FieldError>{form.errors.repeatPassword}</FieldError>
+			<FieldError message={$errors.repeatPassword} />
 		</form>
 
 		<Text tag="small" class="mt-8">

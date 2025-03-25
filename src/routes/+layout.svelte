@@ -63,7 +63,7 @@
 		{/if}
 	{/if}
 
-	<SvelteQueryDevtools buttonPosition="bottom-left" />
+	<!-- <SvelteQueryDevtools buttonPosition="bottom-left" /> -->
 </QueryClientProvider>
 
 {#if ReloadPrompt}

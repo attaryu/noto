@@ -7,19 +7,21 @@
 	interface Props {
 		children?: Snippet;
 		class?: string;
-		message?: string | null;
+		message?: string | string[] | null;
 	}
 
 	const { children, message, class: className }: Props = $props();
+
+	const _message = $derived(Array.isArray(message) ? message[0] : message);
 </script>
 
-{#if message}
+{#if _message}
 	<Text tag="small" class={mergeClass('text-center text-red-500', className)}>
-		{message}
+		{_message}
 	</Text>
 {:else if children}
 	<!-- deprecated, use message property instead -->
 	<Text tag="small" class={mergeClass('text-center text-red-500', className)}>
-		{@render children()}
+		{_message}
 	</Text>
 {/if}

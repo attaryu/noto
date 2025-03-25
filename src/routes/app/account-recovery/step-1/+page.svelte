@@ -1,34 +1,28 @@
 <script lang="ts">
-	import type { z } from 'zod';
-
 	import type {
 		IRecoverEmailPayload,
 		IRecoverEmailResponse,
 	} from '$lib/types/api/auth/recover-email';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
+	import { createMutation } from '@tanstack/svelte-query';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import Send from 'lucide-svelte/icons/send';
-	import { createMutation } from '@tanstack/svelte-query';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
+	import FieldError from '$lib/components/FieldError.svelte';
 
-	import { createValidation } from '$lib/hooks/createValidation.svelte';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
-
 	import { accountRecoveryValidator } from '$lib/validator/user';
 
 	const formId = 'account-recovery-step-1';
 	const toast = getToastStoreContext();
-
-	const form = createValidation<z.infer<typeof accountRecoveryValidator>>(
-		accountRecoveryValidator,
-		{ email: '' },
-	);
 
 	const recoverEmailMutation = createMutation<
 		IRecoverEmailResponse,
@@ -41,6 +35,8 @@
 				message: 'Success, please check your email',
 				type: 'success',
 			});
+
+			reset();
 		},
 		onError: (error) => {
 			toast.set({
@@ -50,8 +46,14 @@
 		},
 	});
 
-	const submitHandler = form.submitHandler((data) => {
-		$recoverEmailMutation.mutate(data);
+	const { form, errors, enhance, reset } = superForm(defaults(zod(accountRecoveryValidator)), {
+		SPA: true,
+		resetForm: false,
+		onUpdate: ({ form }) => {
+			if (form.valid) {
+				$recoverEmailMutation.mutate(form.data);
+			}
+		},
 	});
 </script>
 
@@ -71,15 +73,16 @@
 			We will send an email message along with a link to enter the recovery key
 		</Text>
 
-		<form action="" id={formId} class="mt-8 w-full" onsubmit={submitHandler}>
+		<form method="POST" id={formId} class="mt-8 w-full" use:enhance>
 			<Input
 				type="email"
 				name="email"
 				placeholder="Email"
 				class="w-full"
-				value={form.fields.email}
-				oninput={({ currentTarget }) => (form.fields.email = currentTarget.value ?? '')}
+				bind:value={$form.email}
 			/>
+
+			<FieldError message={$errors.email} />
 		</form>
 	</div>
 

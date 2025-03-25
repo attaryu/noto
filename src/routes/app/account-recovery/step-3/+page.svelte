@@ -21,6 +21,8 @@
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import { resetPasswordValidator } from '$lib/validator/user';
+	import { defaults, superForm } from 'sveltekit-superforms';
+	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 
 	const formId = 'account-recovery-step-3';
 	const toastStore = getToastStoreContext();
@@ -35,7 +37,8 @@
 			 */
 			secretKeyManagement.getSecretKey().then((key) => {
 				if (key) {
-					return (secretKey = key);
+					secretKey = key;
+					return;
 				}
 
 				goto('/app/account-recovery/step-1', { replaceState: true });
@@ -51,6 +54,8 @@
 		mutationFn: (data) => axiosFetch.PUT('/users/security', data),
 		onSuccess: () => {
 			secretKeyManagement.removeSecretKey();
+			reset();
+
 			goto('/app/recovery-key', { replaceState: true, state: { recoveryKeys } });
 		},
 		onError: (error) => {
@@ -61,30 +66,33 @@
 		},
 	});
 
-	const form = createValidation<z.infer<typeof resetPasswordValidator>>(resetPasswordValidator, {
-		password: '',
-		repeatPassword: '',
+	const { form, errors, enhance, reset } = superForm(defaults(zod(resetPasswordValidator)), {
+		SPA: true,
+		resetForm: false,
+		validators: zodClient(resetPasswordValidator),
+		onUpdate: async ({ form }) => {
+			if (form.valid && secretKey) {
+				const cryptoKeys = await userCryptography.regenerateCryptoKeys(
+					form.data.password,
+					secretKey,
+				);
+
+				recoveryKeys = cryptoKeys.recoveryKeys;
+
+				$userSecurityMutation.mutate({
+					password: cryptoKeys.password,
+					secretKey: cryptoKeys.secretKey,
+					recoveryKeys: cryptoKeys.encryptedRecoveryKeys,
+				});
+			}
+		},
 	});
 
 	const repeatPasswordError = $derived(
-		form.fields.repeatPassword && form.fields.password !== form.fields.repeatPassword
+		$form.repeatPassword && $form.password !== $form.repeatPassword
 			? 'Repeat password do not match'
-			: form.errors.repeatPassword,
+			: $errors.repeatPassword,
 	);
-
-	const submitHandler = form.submitHandler(async (fields) => {
-		if (secretKey) {
-			const cryptoKeys = await userCryptography.regenerateCryptoKeys(fields.password, secretKey);
-
-			recoveryKeys = cryptoKeys.recoveryKeys;
-
-			$userSecurityMutation.mutate({
-				password: cryptoKeys.password,
-				secretKey: cryptoKeys.secretKey,
-				recoveryKeys: cryptoKeys.encryptedRecoveryKeys,
-			});
-		}
-	});
 </script>
 
 {#if secretKey}
@@ -97,22 +105,22 @@
 				be automatically logged out
 			</Text>
 
-			<form action="" id={formId} class="mt-8 w-full space-y-2" onsubmit={submitHandler}>
+			<form method="POST" id={formId} class="mt-8 w-full space-y-2" use:enhance>
 				<Input
 					type="password"
 					name="password"
 					placeholder="Password"
 					class="w-full"
-					bind:value={form.fields.password}
+					bind:value={$form.password}
 				/>
-				<FieldError message={form.errors.password} />
+				<FieldError message={$errors.password} />
 
 				<Input
 					type="password"
 					name="repeatPassword"
 					placeholder="Repeat password"
 					class="w-full"
-					bind:value={form.fields.repeatPassword}
+					bind:value={$form.repeatPassword}
 				/>
 				<FieldError message={repeatPasswordError} />
 			</form>

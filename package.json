@@ -54,8 +54,7 @@
     "mustache": "^4.2.0",
     "nodemailer": "^6.9.16",
     "stopword": "^3.1.4",
-    "tailwind-merge": "^2.6.0",
-    "zod": "^3.24.1"
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
@@ -74,6 +73,7 @@
     "prettier-plugin-tailwindcss": "^0.6.10",
     "svelte": "^5.19.0",
     "svelte-check": "^4.1.4",
+    "sveltekit-superforms": "^2.24.0",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
@@ -84,6 +84,7 @@
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
     "workbox-strategies": "^7.3.0",
-    "workbox-window": "^7.3.0"
+    "workbox-window": "^7.3.0",
+    "zod": "^3.24.2"
   }
 }

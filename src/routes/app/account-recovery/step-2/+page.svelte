@@ -100,7 +100,7 @@
 				bind:value={recoveryKeyFromUser}
 			/>
 
-			<FieldError class="mt-4">{$recoveryKeyQuery.error?.error.message}</FieldError>
+			<FieldError class="mt-4" message={$recoveryKeyQuery.error?.error.message} />
 		</form>
 	</div>
 
