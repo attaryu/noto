@@ -19,9 +19,10 @@
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import { signupUserValidator } from '$lib/validator/user';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const formId = 'sign-up';
-	const toast = getToastStoreContext();
+	const toastStore = getToastStoreContext();
 
 	let recoveryKeys = $state.raw<string[]>([]);
 
@@ -29,17 +30,17 @@
 		mutationFn: (payload) => axiosFetch.POST('/auth/sign-up', payload),
 		onSuccess: () => {
 			reset();
+
+			toastStore.setSuccess({ message: 'Sign up successful!' });
+
 			goto('/app/recovery-key', { state: { recoveryKeys } });
 		},
 		onError: (error) => {
-			toast.set({
-				message: error.error.message ?? 'An error occurred',
-				type: 'error',
-			});
+			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
 		},
 	});
 
-	const { form, errors, enhance, reset } = superForm(defaults(zod(signupUserValidator)), {
+	const { form, errors, enhance, reset, submit } = superForm(defaults(zod(signupUserValidator)), {
 		SPA: true,
 		validators: zodClient(signupUserValidator),
 		resetForm: false,

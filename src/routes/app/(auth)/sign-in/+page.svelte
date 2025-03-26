@@ -23,9 +23,10 @@
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import encryption from '$lib/utils/cryptography/encryption';
 	import { signinUserValidator } from '$lib/validator/user';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const formId = 'sign-in';
-	const toast = getToastStoreContext();
+	const toastStore = getToastStoreContext();
 
 	let salt = $state<string>();
 	let passwordCryptoKey = $state<CryptoKey | undefined>();
@@ -52,28 +53,34 @@
 		onSuccess: async (data) => {
 			const { user } = data.payload;
 
-			if (passwordCryptoKey) {
-				const secretKey = await encryption.decrypt(
-					user.secretKey.value,
-					user.secretKey.iv,
-					passwordCryptoKey,
-				);
+			if (!passwordCryptoKey) {
+				toastStore.setError({
+					message: 'Submit cannot be processed',
+					action: { title: 'Send again', event: submit },
+				});
 
-				await secretKeyManagement.storeSecretKey(secretKey);
-				reset();
-
-				goto('/app/notes');
+				return;
 			}
+
+			const secretKey = await encryption.decrypt(
+				user.secretKey.value,
+				user.secretKey.iv,
+				passwordCryptoKey,
+			);
+
+			await secretKeyManagement.storeSecretKey(secretKey);
+			reset();
+
+			toastStore.setSuccess({ message: 'Sign in successful!' });
+
+			goto('/app/notes');
 		},
 		onError: (error) => {
-			toast.set({
-				message: error.error.message ?? 'An error occurred',
-				type: 'error',
-			});
+			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
 		},
 	});
 
-	const { form, errors, reset, enhance } = superForm(defaults(zod(signinUserValidator)), {
+	const { form, errors, reset, enhance, submit } = superForm(defaults(zod(signinUserValidator)), {
 		SPA: true,
 		validators: zodClient(signinUserValidator),
 		resetForm: false,

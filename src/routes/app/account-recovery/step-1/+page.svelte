@@ -20,9 +20,10 @@
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import { accountRecoveryValidator } from '$lib/validator/user';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const formId = 'account-recovery-step-1';
-	const toast = getToastStoreContext();
+	const toastStore = getToastStoreContext();
 
 	const recoverEmailMutation = createMutation<
 		IRecoverEmailResponse,
@@ -31,22 +32,15 @@
 	>({
 		mutationFn: (payload) => axiosFetch.POST('/auth/recover-email', payload),
 		onSuccess: () => {
-			toast.set({
-				message: 'Success, please check your email',
-				type: 'success',
-			});
-
+			toastStore.setSuccess({ message: 'Success, please check your email' });
 			reset();
 		},
 		onError: (error) => {
-			toast.set({
-				message: error.error.message ?? 'An error occurred',
-				type: 'error',
-			});
+			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
 		},
 	});
 
-	const { form, errors, enhance, reset } = superForm(defaults(zod(accountRecoveryValidator)), {
+	const { form, errors, enhance, reset, submit } = superForm(defaults(zod(accountRecoveryValidator)), {
 		SPA: true,
 		resetForm: false,
 		onUpdate: ({ form }) => {
