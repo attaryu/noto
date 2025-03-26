@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { PageProps } from './$types';
+
 	import type { INote, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
-	import type { PageProps } from './$types';
 
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
 	import { ArrowRight } from 'lucide-svelte';

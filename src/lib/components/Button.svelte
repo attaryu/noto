@@ -1,7 +1,8 @@
 <script lang="ts">
-	import type { SvelteHTMLElements } from 'svelte/elements';
 	import type { VariantProps } from 'class-variance-authority';
 	import type { Snippet } from 'svelte';
+	import type { SvelteHTMLElements } from 'svelte/elements';
+
 	import { cva } from 'class-variance-authority';
 
 	import mergeClass from '$lib/utils/merge';

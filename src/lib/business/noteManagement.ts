@@ -1,14 +1,12 @@
 import type { JSONContent } from '@tiptap/core';
 
-import type { INotePayload } from '$lib/types/api/notes';
-
 import { generateText } from '@tiptap/core';
 import { removeStopwords } from 'stopword';
 
 import encryption from '$lib/utils/cryptography/encryption';
 import { generateRandomChar } from '$lib/utils/cryptography/generateRandomChar';
-import { extensions } from '$lib/utils/editor';
 import { hashing } from '$lib/utils/cryptography/hashing';
+import { extensions } from '$lib/utils/editor';
 
 async function encrypt(note: JSONContent, secretKey: CryptoKey, iv: string): Promise<string> {
 	return encryption.encrypt(JSON.stringify(note), iv, secretKey);

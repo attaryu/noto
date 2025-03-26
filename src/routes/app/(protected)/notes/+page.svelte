@@ -1,25 +1,23 @@
 <script lang="ts">
-	import type { INote, INotesResponse } from '$lib/types/api/notes';
-	import type { IErrorResponseAPI } from '$lib/types/response';
 	import type { PageProps } from './$types';
 
+	import type { INote, INotesResponse } from '$lib/types/api/notes';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
+	import { ArrowRight } from 'lucide-svelte';
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
 
 	import Header from '$lib/components/Header.svelte';
 	import NoteCard from '$lib/components/NoteCard.svelte';
 	import Searchbar from '$lib/components/Searchbar.svelte';
+	import Text from '$lib/components/Text.svelte';
+	import LoadMoreInformation from '$lib/components/LoadMoreInformation.svelte';
 
 	import noteManagement from '$lib/business/noteManagement';
-	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
-	import Text from '$lib/components/Text.svelte';
-	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import { stichSearchParam } from '$lib/utils/stichSearchParam';
-	import Button from '$lib/components/Button.svelte';
-	import { ArrowRight, RefreshCcw } from 'lucide-svelte';
-	import LoadMoreInformation from '$lib/components/LoadMoreInformation.svelte';
+	import keyManagement from '$lib/utils/cryptography/keyManagement';
 
 	const { data }: PageProps = $props();
 

@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { JSONContent } from '@tiptap/core';
+	import type{  InfiniteData } from '@tanstack/svelte-query';
 
 	import type { INote, INoteResponse, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
-
+	
 	import { goto } from '$app/navigation';
-	import { createMutation, useQueryClient, type InfiniteData } from '@tanstack/svelte-query';
+	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { Ellipsis, Pin, PinOff } from 'lucide-svelte';
@@ -17,6 +18,7 @@
 
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
+	
 	import createEditor from '$lib/utils/editor';
 	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 

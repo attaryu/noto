@@ -2,7 +2,7 @@ import _ from 'lodash';
 import type { ZodObject } from 'zod';
 
 /**
- * createValidation hook to validate form fields
+ * createValidation hook to validate form fields. Using svelte 5 uninversal states.
  *
  * @param initialValue initial form fields value
  * @param validation zod object schema to validate form fields

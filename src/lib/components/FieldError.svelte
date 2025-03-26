@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-
 	import mergeClass from '$lib/utils/merge';
 	import Text from './Text.svelte';
 

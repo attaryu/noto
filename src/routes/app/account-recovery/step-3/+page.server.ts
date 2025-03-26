@@ -1,8 +1,9 @@
-import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
-import { TokenManager } from '$lib/server/infra/providers/TokenManager';
 import type { PageServerLoad } from './$types';
 
 import { redirect } from '@sveltejs/kit';
+
+import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
+import { TokenManager } from '$lib/server/infra/providers/TokenManager';
 
 /**
  * This load function is checking the token reset in the cookies
@@ -23,7 +24,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 			throw new Error('Invalid token purpose');
 		}
 
-    return;
+		return;
 	} catch {
 		return redirect(302, '/app/account-recovery/step-1');
 	}

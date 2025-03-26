@@ -19,6 +19,7 @@
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import { signupUserValidator } from '$lib/validator/user';
+
 	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const formId = 'sign-up';

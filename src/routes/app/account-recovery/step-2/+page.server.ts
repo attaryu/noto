@@ -1,8 +1,9 @@
-import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
-import { TokenManager } from '$lib/server/infra/providers/TokenManager';
 import type { PageServerLoad } from './$types';
 
 import { redirect } from '@sveltejs/kit';
+
+import { TokenPurposeEnum } from '$lib/server/domain/enums/TokenPurpose';
+import { TokenManager } from '$lib/server/infra/providers/TokenManager';
 
 export const load: PageServerLoad = async ({ url }) => {
 	// get token from query params, this token received in the user email
