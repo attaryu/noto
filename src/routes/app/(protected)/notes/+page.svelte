@@ -62,10 +62,7 @@
 		if ($notesQuery.isSuccess) {
 			secretKeyManagement.getSecretKey().then(async (secretKey) => {
 				if (!secretKey) {
-					toastStore.set({
-						message: 'Secret key is not found, please sign in again',
-						type: 'error',
-					});
+					toastStore.setError({ message: 'Secret key is not found, please sign in again' });
 
 					return;
 				}

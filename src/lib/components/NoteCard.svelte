@@ -18,6 +18,7 @@
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 	import createEditor from '$lib/utils/editor';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	type Props = {
 		data: INote;
@@ -65,14 +66,16 @@
 			{ pinned: !data.pinned },
 			{
 				onSuccess: (response) => {
-					toastStore.set({
+					toastStore.setSuccess({
 						message: `Note ${response.payload.note.pinned ? 'pinned' : 'unpinned'}`,
-						type: 'success',
 						action: {
 							title: 'Undo',
 							event: () => $noteMutation.mutate({ pinned: !response.payload.note.pinned }),
 						},
 					});
+				},
+				onError: (error) => {
+					toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: updatePin }));
 				},
 			},
 		);
@@ -83,14 +86,18 @@
 			{ archived: !data.archived },
 			{
 				onSuccess: (response) => {
-					toastStore.set({
+					toastStore.setSuccess({
 						message: `Note ${response.payload.note.archived ? 'archived' : 'unarchived'}`,
-						type: 'success',
 						action: {
 							title: 'Undo',
 							event: () => $noteMutation.mutate({ archived: !response.payload.note.archived }),
 						},
 					});
+				},
+				onError: (error) => {
+					toastStore.setError(
+						generateToastHTTPError(error, { title: 'Retry', event: updateArchived }),
+					);
 				},
 			},
 		);

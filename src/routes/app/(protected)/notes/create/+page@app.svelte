@@ -1,7 +1,7 @@
 <script lang="ts">
+	import type { InfiniteData } from '@tanstack/svelte-query';
 	import type { Editor } from '@tiptap/core';
 	import type { Readable } from 'svelte/store';
-	import type { InfiniteData } from '@tanstack/svelte-query';
 
 	import type { INotePayload, INoteResponse, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
@@ -19,6 +19,7 @@
 
 	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import createEditor from '$lib/utils/editor';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const toastStore = getToastStoreContext();
 	const queryClient = useQueryClient();
@@ -96,9 +97,8 @@
 			$editor?.commands.clearContent();
 			$editor?.setEditable(true);
 
-			toastStore.set({
+			toastStore.setSuccess({
 				message: 'Note saved',
-				type: 'success',
 				action: {
 					title: 'View note',
 					event: () => goto(`/app/notes/${response.payload.note.id}`),
@@ -106,32 +106,13 @@
 			});
 		},
 		onError: (error) => {
-			if (error.statusCode >= 500) {
-				toastStore.set({
-					message: 'Server error',
-					type: 'error',
-					action: {
-						title: 'Retry',
-						event: onsave,
-					},
-				});
-
-				return;
-			}
-
-			toastStore.set({
-				message: error.error.message ?? 'An error occured',
-				type: 'error',
-			});
+			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: onsave }));
 		},
 	});
 
 	async function onsave() {
 		if (!$editor || $editor.isEmpty) {
-			toastStore.set({
-				message: 'Note cannot be empty',
-				type: 'error',
-			});
+			toastStore.setError({ message: 'Note cannot be empty' });
 
 			return;
 		}
@@ -139,10 +120,7 @@
 		const secretKey = await secretKeyManagement.getSecretKey();
 
 		if (!secretKey) {
-			toastStore.set({
-				message: 'Secret key not found. Please sign in again!',
-				type: 'error',
-			});
+			toastStore.setError({ message: 'Secret key not found. Please sign in again!' });
 
 			return;
 		}

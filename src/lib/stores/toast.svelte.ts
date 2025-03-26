@@ -1,7 +1,7 @@
 import { getContext, hasContext, setContext } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
-interface Toast {
+export interface IToast {
 	id: number;
 	message: string;
 	type: 'error' | 'success' | 'info';
@@ -16,20 +16,18 @@ interface Toast {
  * ToastStore for managing toast messages data
  */
 class ToastStore {
+	private _toasts = new SvelteMap<number, IToast>();
+	
 	/**
-	 * Duration of the toast message in milliseconds
+	 * message duration in milliseconds
 	 */
 	private duration = 4000;
 
 	/**
-	 * Maximum number of toast messages
+	 * maximum toast
 	 */
 	private MAX = 3;
 
-	/**
-	 * Toast list
-	 */
-	private _toasts = new SvelteMap<number, Toast>();
 
 	get toasts() {
 		return this._toasts.values();
@@ -39,14 +37,7 @@ class ToastStore {
 		return this._toasts.size;
 	}
 
-	/**
-	 * Set toast message
-	 *
-	 * @param message toast message to display
-	 * @param type toast type (error, success, info)
-	 * @param action toast action (optional)
-	 */
-	public set(props: Omit<Toast, 'timeout' | 'id'>) {
+	public set(props: Omit<IToast, 'timeout' | 'id'>) {
 		if (this._toasts.size >= this.MAX) {
 			const firstToast = Array.from(this._toasts.values()).shift();
 
@@ -64,10 +55,6 @@ class ToastStore {
 		});
 	}
 
-	/**
-	 *
-	 * @param message toast message
-	 */
 	public unset(id: number) {
 		const toast = this._toasts.get(id);
 
@@ -75,6 +62,29 @@ class ToastStore {
 			clearTimeout(toast.timeout);
 			this._toasts.delete(toast.id);
 		}
+	}
+
+	public setSuccess(prop: { message?: string; action?: IToast['action'] }): void {
+		this.set({
+			type: 'success',
+			message: 'Success',
+			...prop,
+		});
+	}
+
+	public setInfo(prop: { message: string; action?: IToast['action'] }): void {
+		this.set({
+			type: 'info',
+			...prop,
+		});
+	}
+
+	public setError(prop: { message?: string; action?: IToast['action'] }): void {
+		this.set({
+			type: 'success',
+			message: 'Error',
+			...prop,
+		});
 	}
 }
 

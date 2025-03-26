@@ -23,6 +23,7 @@
 	import { resetPasswordValidator } from '$lib/validator/user';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const formId = 'account-recovery-step-3';
 	const toastStore = getToastStoreContext();
@@ -59,34 +60,34 @@
 			goto('/app/recovery-key', { replaceState: true, state: { recoveryKeys } });
 		},
 		onError: (error) => {
-			toastStore.set({
-				message: error.error.message ?? 'An error occured',
-				type: 'error',
-			});
+			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
 		},
 	});
 
-	const { form, errors, enhance, reset } = superForm(defaults(zod(resetPasswordValidator)), {
-		SPA: true,
-		resetForm: false,
-		validators: zodClient(resetPasswordValidator),
-		onUpdate: async ({ form }) => {
-			if (form.valid && secretKey) {
-				const cryptoKeys = await userCryptography.regenerateCryptoKeys(
-					form.data.password,
-					secretKey,
-				);
+	const { form, errors, enhance, reset, submit } = superForm(
+		defaults(zod(resetPasswordValidator)),
+		{
+			SPA: true,
+			resetForm: false,
+			validators: zodClient(resetPasswordValidator),
+			onUpdate: async ({ form }) => {
+				if (form.valid && secretKey) {
+					const cryptoKeys = await userCryptography.regenerateCryptoKeys(
+						form.data.password,
+						secretKey,
+					);
 
-				recoveryKeys = cryptoKeys.recoveryKeys;
+					recoveryKeys = cryptoKeys.recoveryKeys;
 
-				$userSecurityMutation.mutate({
-					password: cryptoKeys.password,
-					secretKey: cryptoKeys.secretKey,
-					recoveryKeys: cryptoKeys.encryptedRecoveryKeys,
-				});
-			}
+					$userSecurityMutation.mutate({
+						password: cryptoKeys.password,
+						secretKey: cryptoKeys.secretKey,
+						recoveryKeys: cryptoKeys.encryptedRecoveryKeys,
+					});
+				}
+			},
 		},
-	});
+	);
 
 	const repeatPasswordError = $derived(
 		$form.repeatPassword && $form.password !== $form.repeatPassword

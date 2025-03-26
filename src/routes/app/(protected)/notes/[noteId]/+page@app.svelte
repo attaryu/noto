@@ -18,6 +18,7 @@
 
 	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import createEditor from '$lib/utils/editor';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const { data }: PageProps = $props();
 	const toastStore = getToastStoreContext();
@@ -29,16 +30,10 @@
 	const noteMutation = createMutation<INoteResponse, IErrorResponseAPI, INoteUpdate>({
 		mutationFn: (payload) => axiosFetch.PATCH(`/notes/${data.noteId}`, payload),
 		onSuccess: () => {
-			toastStore.set({
-				message: 'Saved successfully',
-				type: 'success',
-			});
+			toastStore.setSuccess({ message: 'Saved successfully' });
 		},
 		onError: (error) => {
-			toastStore.set({
-				message: error.error.message ?? 'An error occured',
-				type: 'error',
-			});
+			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: onsave }));
 		},
 	});
 
@@ -49,10 +44,7 @@
 
 	async function onsave() {
 		if (!$editor || $editor.isEmpty) {
-			toastStore.set({
-				message: 'Note cannot be empty',
-				type: 'error',
-			});
+			toastStore.setError({ message: 'Note cannot be empty' });
 
 			return;
 		}
@@ -60,10 +52,7 @@
 		const secretKey = await secretKeyManagement.getSecretKey();
 
 		if (!secretKey) {
-			toastStore.set({
-				message: 'Secret key not found. Please sign in again!',
-				type: 'error',
-			});
+			toastStore.setError({ message: 'Secret key not found. Please sign in again!' });
 
 			return;
 		}
@@ -85,10 +74,7 @@
 		if ($noteQuery.isSuccess) {
 			secretKeyManagement.getSecretKey().then(async (secretKey) => {
 				if (!secretKey) {
-					toastStore.set({
-						message: 'Secret key not found. Please sign in again!',
-						type: 'error',
-					});
+					toastStore.setError({ message: 'Secret key not found. Please sign in again!' });
 
 					return;
 				}
