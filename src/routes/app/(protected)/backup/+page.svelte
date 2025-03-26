@@ -29,11 +29,11 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<MenuItem text="Export" action={() => {}} />
+						<MenuItem text="Export" type="button" action={() => {}} />
 					</li>
 
 					<li>
-						<MenuItem text="Import" action={() => {}} />
+						<MenuItem text="Import" type="button" action={() => {}} />
 					</li>
 				</ul>
 			{/snippet}

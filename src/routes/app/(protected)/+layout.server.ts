@@ -19,7 +19,6 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 			user: payload.user,
 		};
 	} catch {
-		cookies.delete('AUTH_TOKEN', { path: '/' });
-		redirect(302, '/app/sign-in');
+		redirect(302, '/app/sign-in?action=sign-out');
 	}
 };

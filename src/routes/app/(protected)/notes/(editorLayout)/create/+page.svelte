@@ -2,6 +2,7 @@
 	import type { InfiniteData } from '@tanstack/svelte-query';
 	import type { Editor } from '@tiptap/core';
 	import type { Readable } from 'svelte/store';
+	import type { PageProps } from './$types';
 
 	import type { INotePayload, INoteResponse, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
@@ -13,7 +14,6 @@
 	import Header from '$lib/components/Editor/Header.svelte';
 
 	import noteManagement from '$lib/business/noteManagement';
-	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
@@ -21,10 +21,12 @@
 	import createEditor from '$lib/utils/editor';
 	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
+	const { data }: PageProps = $props();
+
 	const toastStore = getToastStoreContext();
 	const queryClient = useQueryClient();
 
-	let editorElement: HTMLDivElement;
+	let editorElement = $state<HTMLDivElement>();
 	let editor = $state.raw<Readable<Editor>>();
 
 	const noteMutation = createMutation<INoteResponse, IErrorResponseAPI, INotePayload>({
@@ -117,21 +119,15 @@
 			return;
 		}
 
-		const secretKey = await secretKeyManagement.getSecretKey();
+		if (data.secretKey) {
+			const rawSecretKey = await keyManagement.importKey(data.secretKey);
+			const payload = await noteManagement.processContent($editor.getJSON(), rawSecretKey);
 
-		if (!secretKey) {
-			toastStore.setError({ message: 'Secret key not found. Please sign in again!' });
-
-			return;
+			$noteMutation.mutate({
+				...payload,
+				labels: [], // label feature not implemented yet
+			});
 		}
-
-		const rawSecretKey = await keyManagement.importKey(secretKey);
-		const payload = await noteManagement.processContent($editor.getJSON(), rawSecretKey);
-
-		$noteMutation.mutate({
-			...payload,
-			labels: [], // label feature not implemented yet
-		});
 	}
 
 	$effect(() => {

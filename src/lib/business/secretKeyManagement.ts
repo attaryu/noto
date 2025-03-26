@@ -1,3 +1,5 @@
+import { goto } from '$app/navigation';
+
 import { PUBLIC_IV, PUBLIC_SALT, PUBLIC_SECRET_KEY } from '$env/static/public';
 
 import encryption from '$lib/utils/cryptography/encryption';
@@ -24,8 +26,6 @@ async function getSecretKey() {
 
 		return userSecretKey;
 	}
-
-	return null;
 }
 
 async function removeSecretKey() {

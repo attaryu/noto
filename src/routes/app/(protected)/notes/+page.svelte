@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { INote, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
+	import type { PageProps } from './$types';
 
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
-	import { goto } from '$app/navigation';
 
 	import Header from '$lib/components/Header.svelte';
 	import NoteCard from '$lib/components/NoteCard.svelte';
@@ -21,7 +21,7 @@
 	import { ArrowRight, RefreshCcw } from 'lucide-svelte';
 	import LoadMoreInformation from '$lib/components/LoadMoreInformation.svelte';
 
-	const toastStore = getToastStoreContext();
+	const { data }: PageProps = $props();
 
 	let notes = $state.raw<INote[] | null>();
 	let isProcessing = $state(true);
@@ -59,23 +59,15 @@
 	 * It will decrypt the notes content
 	 */
 	$effect(() => {
-		if ($notesQuery.isSuccess) {
-			secretKeyManagement.getSecretKey().then(async (secretKey) => {
-				if (!secretKey) {
-					toastStore.setError({ message: 'Secret key is not found, please sign in again' });
-
-					return;
-				}
-
-				const userSecretKey = await keyManagement.importKey(secretKey);
-
+		if ($notesQuery.isSuccess && data.secretKey) {
+			keyManagement.importKey(data.secretKey).then(async (secretKey) => {
 				const processedNotes = await Promise.all(
 					$notesQuery.data.pages.map((page) =>
 						Promise.all(
 							page.payload.notes.map(async (note) => ({
 								...note,
 								content: JSON.stringify(
-									await noteManagement.decrypt(note.content, userSecretKey, note.iv),
+									await noteManagement.decrypt(note.content, secretKey, note.iv),
 								),
 							})),
 						),

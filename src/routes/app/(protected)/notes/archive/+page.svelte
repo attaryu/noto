@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { INote, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
+	import type { PageProps } from './$types';
 
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
-	import { ArrowRight, RefreshCw } from 'lucide-svelte';
+	import { ArrowRight } from 'lucide-svelte';
 
-	import Button from '$lib/components/Button.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import LoadMoreInformation from '$lib/components/LoadMoreInformation.svelte';
 	import NoteCard from '$lib/components/NoteCard.svelte';
@@ -13,14 +13,12 @@
 	import Text from '$lib/components/Text.svelte';
 
 	import noteManagement from '$lib/business/noteManagement';
-	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
 	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import { stichSearchParam } from '$lib/utils/stichSearchParam';
 
-	const toastStore = getToastStoreContext();
+	const { data }: PageProps = $props();
 
 	let notes = $state.raw<INote[] | null>();
 	let isProcessing = $state(true);
@@ -60,23 +58,15 @@
 	 * It will decrypt the notes content
 	 */
 	$effect(() => {
-		if ($archivedNotesQuery.isSuccess) {
-			secretKeyManagement.getSecretKey().then(async (secretKey) => {
-				if (!secretKey) {
-					toastStore.setError({ message: 'Secret key is not found, please sign in again' });
-
-					return;
-				}
-
-				const userSecretKey = await keyManagement.importKey(secretKey);
-
+		if ($archivedNotesQuery.isSuccess && data.secretKey) {
+			keyManagement.importKey(data.secretKey).then(async (secretKey) => {
 				const processedNotes = await Promise.all(
 					$archivedNotesQuery.data.pages.map((page) =>
 						Promise.all(
 							page.payload.notes.map(async (note) => ({
 								...note,
 								content: JSON.stringify(
-									await noteManagement.decrypt(note.content, userSecretKey, note.iv),
+									await noteManagement.decrypt(note.content, secretKey, note.iv),
 								),
 							})),
 						),

@@ -12,7 +12,6 @@
 	import Header from '$lib/components/Editor/Header.svelte';
 
 	import noteManagement from '$lib/business/noteManagement';
-	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
 
@@ -49,41 +48,27 @@
 			return;
 		}
 
-		const secretKey = await secretKeyManagement.getSecretKey();
+		if (data.secretKey) {
+			const rawSecretKey = await keyManagement.importKey(data.secretKey);
+			const { iv, ...processNote } = await noteManagement.processContent(
+				$editor.getJSON(),
+				rawSecretKey,
+				$noteQuery.data!.payload.note.iv,
+			);
 
-		if (!secretKey) {
-			toastStore.setError({ message: 'Secret key not found. Please sign in again!' });
-
-			return;
+			$noteMutation.mutate(processNote);
 		}
-
-		const rawSecretKey = await keyManagement.importKey(secretKey);
-		const { iv, ...processNote } = await noteManagement.processContent(
-			$editor.getJSON(),
-			rawSecretKey,
-			$noteQuery.data!.payload.note.iv,
-		);
-
-		$noteMutation.mutate(processNote);
 	}
 
 	/**
 	 * Set the content to the editor after receiving the note data
 	 */
 	$effect(() => {
-		if ($noteQuery.isSuccess) {
-			secretKeyManagement.getSecretKey().then(async (secretKey) => {
-				if (!secretKey) {
-					toastStore.setError({ message: 'Secret key not found. Please sign in again!' });
-
-					return;
-				}
-
-				const rawSecretKey = await keyManagement.importKey(secretKey);
-
+		if ($noteQuery.isSuccess && data.secretKey) {
+			keyManagement.importKey(data.secretKey).then(async (secretKey) => {
 				const content = await noteManagement.decrypt(
 					$noteQuery.data.payload.note.content,
-					rawSecretKey,
+					secretKey,
 					$noteQuery.data.payload.note.iv,
 				);
 
