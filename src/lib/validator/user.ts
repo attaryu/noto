@@ -34,3 +34,8 @@ export const resetPasswordValidator = z.object({
 	password,
 	repeatPassword: password,
 });
+
+export const updateUserValidator = z.object({
+	fullname,
+	email,
+});

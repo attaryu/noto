@@ -97,13 +97,13 @@
 	});
 
 	$effect(() => {
-		if ($form.email) {
+		if ($form.email && !$errors.email) {
 			refetchPasswordQuery();
 		}
 	});
 
 	$effect(() => {
-		if ($passwordQuery.isError && !$errors.email?.length) {
+		if ($passwordQuery.isError && !$errors.email) {
 			$errors.email = [$passwordQuery.error?.error.message];
 		}
 	});

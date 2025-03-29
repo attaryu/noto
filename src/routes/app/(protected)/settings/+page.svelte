@@ -1,19 +1,18 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { createMutation } from '@tanstack/svelte-query';
 	import {
 		ArrowRight,
+		CircleUserRound,
 		CloudUpload,
 		Globe,
 		HeartHandshake,
 		Info,
 		Key,
-		Pen,
 		Shield,
 		SunMoon,
 	} from 'lucide-svelte';
-	import { createMutation } from '@tanstack/svelte-query';
 
-	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import Header from '$lib/components/Header.svelte';
@@ -23,11 +22,8 @@
 
 	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
-	import { getUserStore } from '$lib/stores/user.svelte';
 
-	const user = getUserStore();
-
-	const logOutMutation = createMutation({
+	const signOutMutation = createMutation({
 		mutationFn: async () => axiosFetch.DELETE('/auth/sign-out'),
 		onSettled: async () => {
 			await secretKeyManagement.removeSecretKey();
@@ -40,41 +36,29 @@
 	<title>Profile</title>
 </svelte:head>
 
-<main class="flex flex-col gap-8 px-4 pb-24 pt-56">
-	<Header class="border border-zinc-900 bg-white p-3">
-		<Text tag="p" class="text-center font-medium text-xl text-zinc-900">Profile</Text>
+<main class="flex flex-col gap-8 px-4 pb-24 pt-24">
+	<Header class="border border-zinc-900 bg-white py-3">
+		<Text tag="p" styling="h3">Settings</Text>
 	</Header>
 
-	<!--? profile section -->
-	<Card color="green">
-		<div class="relative mx-auto w-fit">
-			<img
-				src={user.image}
-				alt="{user.fullname}'s photo"
-				class="-mt-28 size-40 rounded-full border border-zinc-900 object-cover"
-			/>
-
-			<Button class="absolute bottom-0 right-0 border border-tertiary-2">
-				<Pen size={20} />
-			</Button>
-		</div>
-
-		<div class="mx-auto mt-6 flex w-fit flex-col items-center gap-2">
-			<Text tag="h1" class="px-4 text-3xl">{user.fullname}</Text>
-			<hr class="w-full border-zinc-500" />
-			<Text tag="small" class="px-4">{user.email}</Text>
-		</div>
-	</Card>
-
-	<!--? preference section -->
+	<!-- data settings -->
 	<section class="space-y-2">
-		<Text tag="h2">Preferences</Text>
-
-		<Card color="yellow" class="p-2">
+		<Card color="green" class="p-2">
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<MenuItem type="link" text="Backup" action="/app/backup">
+						<MenuItem type="link" text="Account" action="/app/settings/account">
+							{#snippet icon()}
+								<CircleUserRound />
+							{/snippet}
+							{#snippet rightElement()}
+								<ArrowRight />
+							{/snippet}
+						</MenuItem>
+					</li>
+
+					<li>
+						<MenuItem type="link" text="Backup" action="/app/settings/backup">
 							{#snippet icon()}
 								<CloudUpload />
 							{/snippet}
@@ -84,6 +68,28 @@
 						</MenuItem>
 					</li>
 
+					<li>
+						<MenuItem type="link" text="Account Recovery" action="/app/account-recovery/step-1">
+							{#snippet icon()}
+								<Key />
+							{/snippet}
+							{#snippet rightElement()}
+								<ArrowRight />
+							{/snippet}
+						</MenuItem>
+					</li>
+				</ul>
+			{/snippet}
+		</Card>
+	</section>
+
+	<!-- interface settings -->
+	<section class="space-y-2">
+		<Text tag="h2">Interface</Text>
+
+		<Card color="yellow" class="p-2">
+			{#snippet as(props)}
+				<ul {...props}>
 					<li>
 						<MenuItem type="container" text="Theme">
 							{#snippet icon()}
@@ -146,24 +152,13 @@
 		</Card>
 	</section>
 
-	<!--? other section -->
+	<!-- other section -->
 	<section class="space-y-2">
 		<Text tag="h2">Other</Text>
 
 		<Card color="green" class="p-2">
 			{#snippet as(props)}
 				<ul {...props}>
-					<li>
-						<MenuItem type="link" text="Account Recovery" action="/app/account-recovery/step-1">
-							{#snippet icon()}
-								<Key />
-							{/snippet}
-							{#snippet rightElement()}
-								<ArrowRight />
-							{/snippet}
-						</MenuItem>
-					</li>
-
 					<li>
 						<MenuItem type="container" text="Privacy and Policy">
 							{#snippet icon()}
@@ -208,8 +203,8 @@
 					<MenuItem
 						type="button"
 						text="Logout"
-						action={$logOutMutation.mutate}
-						disabled={$logOutMutation.isPending}
+						action={$signOutMutation.mutate}
+						disabled={$signOutMutation.isPending}
 					/>
 				</li>
 			</ul>

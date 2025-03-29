@@ -19,7 +19,7 @@
 			<ArrowLeft />
 		</Button>
 
-		<Text tag="p" class="text-center font-medium text-xl text-zinc-900">Backup</Text>
+		<Text tag="p" styling="h3" class="text-center">Backup</Text>
 	</Header>
 
 	<section class="space-y-2">

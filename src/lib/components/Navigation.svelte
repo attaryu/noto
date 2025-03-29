@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Archive, CircleUserRound, Plus, StickyNote } from 'lucide-svelte';
+	import { Archive, Settings, Plus, StickyNote } from 'lucide-svelte';
 
 	import Button from '$lib/components/Button.svelte';
 
@@ -14,8 +14,8 @@
 			pathname: '/app/notes/archive',
 		},
 		{
-			icon: CircleUserRound,
-			pathname: '/app/profile',
+			icon: Settings,
+			pathname: '/app/settings',
 		},
 	];
 </script>
