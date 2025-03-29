@@ -1,16 +1,6 @@
-export interface IUpdateUserDTO {
+export interface IUpdateUserSecurityDTO {
 	/**
-	 * User fullname
-	 */
-	fullname?: string;
-
-	/**
-	 * User email
-	 */
-	email?: string;
-
-	/**
-	 * Hashed password
+	 * User password
 	 */
 	password?: {
 		salt: string;
@@ -29,9 +19,6 @@ export interface IUpdateUserDTO {
 	 * Encrypted secret key by recovery keys
 	 */
 	recoveryKeys?: {
-		/**
-		 * first 4 digits on recovery keys for easy
-		 */
 		code: string;
 		value: string;
 		salt: string;

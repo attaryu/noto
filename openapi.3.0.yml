@@ -1,7 +1,7 @@
 openapi: '3.0.3'
 info:
   title: Noto Api
-  version: '1.1.3'
+  version: '1'
 servers:
   - url: https://localhost:5173/api/v1
 paths:
@@ -140,7 +140,33 @@ paths:
                 statusCode: 200
                 success: true
 
-  /users/password-salt:
+  /user:
+    patch:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              fullname: John Doe
+              email: johndoe@gmail.com
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 200
+                user:
+                  id: 1
+                  email: 'johndoe@gmail.com'
+                  fullname: 'John Doe'
+
+  /user/password-salt:
     get:
       parameters:
         - in: query
@@ -161,7 +187,7 @@ paths:
                 payload:
                   salt: '[RANDOM 16 BIT]'
 
-  /users/recovery-key:
+  /user/recovery-key:
     get:
       parameters:
         - in: query
@@ -197,7 +223,7 @@ paths:
                   iv: xxxxxx
                   salt: xxxxxxxxxxxx
 
-  /users/security:
+  /user/security:
     put:
       parameters:
         - in: header

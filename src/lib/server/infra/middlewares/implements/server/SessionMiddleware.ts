@@ -21,7 +21,8 @@ export class SessionMiddleware implements IMiddleware {
 		if (
 			pathname.startsWith(`${basePathname}/notes`) ||
 			pathname.startsWith(`${basePathname}/note`) ||
-			pathname === `${basePathname}/auth/sign-out`
+			pathname === `${basePathname}/auth/sign-out` ||
+			pathname === `${basePathname}/user`
 		) {
 			const token = request.cookies.get('AUTH_TOKEN');
 
