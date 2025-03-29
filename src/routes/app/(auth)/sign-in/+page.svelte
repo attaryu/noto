@@ -34,7 +34,7 @@
 
 	const passwordQuery = createQuery<IPasswordSaltResponse, IErrorResponseAPI>({
 		queryKey: ['users', 'password'],
-		queryFn: () => axiosFetch.GET(`/users/password-salt?email=${$form.email}`),
+		queryFn: () => axiosFetch.GET(`/user/password-salt?email=${$form.email}`),
 		enabled: false,
 		retry: false,
 	});

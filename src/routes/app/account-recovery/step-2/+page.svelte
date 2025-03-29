@@ -39,7 +39,7 @@
 			queryKey: ['recovery-key', firstRecoveryKeyPair],
 			queryFn: () =>
 				axiosFetch.GET(
-					`/users/recovery-key?key-order=${firstRecoveryKeyPair}&recovery-token=${data.token}`,
+					`/user/recovery-key?key-order=${firstRecoveryKeyPair}&recovery-token=${data.token}`,
 				),
 			retry: false,
 			enabled: firstRecoveryKeyPair.length === 4,

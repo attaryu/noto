@@ -52,7 +52,7 @@
 		IErrorResponseAPI,
 		IUserSecurityPayload
 	>({
-		mutationFn: (data) => axiosFetch.PUT('/users/security', data),
+		mutationFn: (data) => axiosFetch.PUT('/user/security', data),
 		onSuccess: () => {
 			secretKeyManagement.removeSecretKey();
 			reset();
