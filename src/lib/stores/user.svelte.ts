@@ -4,22 +4,20 @@ export interface IUserStore {
 	id: string;
 	fullname: string;
 	email: string;
-	image: string;
-	secretKey: {
-		iv: string;
-		value: string;
-	};
 }
 
 export type IUpdateUserStore = Partial<Omit<IUserStore, 'id'>>;
 
 class UserStore {
-	constructor(
-		private _id: string,
-		private _fullname: string,
-		private _email: string,
-		private _image: string,
-	) {}
+	private _id: string = $state('');
+	private _fullname: string = $state('');
+	private _email: string = $state('');
+	
+	constructor(id: string, fullname: string, email: string) {
+		this._id = id;
+		this._fullname = fullname;
+		this._email = email;
+	}
 
 	get id() {
 		return this._id;
@@ -33,15 +31,16 @@ class UserStore {
 		return this._email;
 	}
 
-	get image() {
-		return this._image;
+	update(data: IUpdateUserStore) {
+		this._fullname = data.fullname || this._fullname;
+		this._email = data.email || this._email;
 	}
 }
 
 const key = Symbol('user');
 
 export function setUserStore(data: IUserStore) {
-	return setContext(key, new UserStore(data.id, data.fullname, data.email, data.image));
+	return setContext(key, new UserStore(data.id, data.fullname, data.email));
 }
 
 export function getUserStore() {

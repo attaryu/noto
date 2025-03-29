@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 
-	import type { IRecoveryKeyResponse } from '$lib/types/api/users/recovery-key';
+	import type { IRecoveryKeyResponse } from '$lib/types/api/user/recovery-key';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { goto } from '$app/navigation';

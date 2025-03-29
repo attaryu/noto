@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { z } from 'zod';
 
-	import type { IUserSecurityPayload, IUserSecurityResponse } from '$lib/types/api/users/security';
+	import type { IUserSecurityPayload, IUserSecurityResponse } from '$lib/types/api/user/security';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { goto } from '$app/navigation';

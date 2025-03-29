@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ISigninPayload, ISigninResponse } from '$lib/types/api/auth/sign-in';
-	import type { IPasswordSaltResponse } from '$lib/types/api/users/password-salt';
+	import type { IPasswordSaltResponse } from '$lib/types/api/user/password-salt';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { goto } from '$app/navigation';
