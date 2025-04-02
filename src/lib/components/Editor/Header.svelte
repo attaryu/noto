@@ -77,7 +77,7 @@
 </script>
 
 <Header class="flex items-center bg-zinc-900 p-1">
-	<Button variant="secondary">
+	<Button variant="secondary" class="bg-white">
 		{#snippet as(props)}
 			<a href="/app/notes" {...props}>
 				<ArrowLeft />

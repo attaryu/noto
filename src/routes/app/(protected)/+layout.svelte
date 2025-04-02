@@ -1,20 +1,36 @@
 <script lang="ts">
-	import type { LayoutProps } from './$types';
+	import type { Snippet } from 'svelte';
+
+	import type { IGetUserResponse } from '$lib/types/api/user';
+	import type { IErrorResponseAPI } from '$lib/types/response';
+
+	import { createQuery } from '@tanstack/svelte-query';
 
 	import Navigation from '$lib/components/Navigation.svelte';
 
+	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { setUserStore } from '$lib/stores/user.svelte';
-	import { makeUserImageProfile } from '$lib/utils/makeUserImageProfile';
 
-	let { children, data }: LayoutProps = $props();
+	const { children }: { children?: Snippet } = $props();
 
-	setUserStore({
-		id: data.user.id!,
-		fullname: data.user.fullname,
-		email: data.user.email,
+	const userQuery = createQuery<IGetUserResponse, IErrorResponseAPI>({
+		queryKey: ['user', 'detail'],
+		queryFn: () => axiosFetch.GET('/user'),
+	});
+
+	$effect(() => {
+		if ($userQuery.isSuccess) {
+			setUserStore({
+				id: $userQuery.data.payload.user.id,
+				fullname: $userQuery.data.payload.user.fullname,
+				email: $userQuery.data.payload.user.email,
+			});
+		}
 	});
 </script>
 
-{@render children?.()}
+{#if $userQuery.isSuccess}
+	{@render children?.()}
+{/if}
 
 <Navigation />

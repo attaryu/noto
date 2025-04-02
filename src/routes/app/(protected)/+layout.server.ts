@@ -12,12 +12,9 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 			throw new Error('No token found');
 		}
 
-		const tokenManager = new TokenManager();
-		const payload = await tokenManager.verify(authToken);
+		await new TokenManager().verify(authToken);
 
-		return {
-			user: payload.user,
-		};
+		return;
 	} catch {
 		redirect(302, '/app/sign-in?action=sign-out');
 	}
