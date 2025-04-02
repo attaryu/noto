@@ -7,7 +7,7 @@ export class GetLabelsController implements IController {
 	constructor(private readonly getLabelsCase: IGetLabels) {}
 
 	async handler(request: IHttpRequest, response: IHttpResponse): Promise<Response> {
-		const data = await this.getLabelsCase.execute(request.locals!.tokenPayload!.user.id!);
+		const data = await this.getLabelsCase.execute(request.locals!.tokenPayload!.userId);
 
 		return response.json({
 			statusCode: 200,

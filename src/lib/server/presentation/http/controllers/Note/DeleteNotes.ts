@@ -17,7 +17,7 @@ export class DeleteNotesController implements IController {
 			});
 		}
 
-		await this.deleteNotesCase.execute(noteId, request.locals!.tokenPayload!.user.id!);
+		await this.deleteNotesCase.execute(noteId, request.locals!.tokenPayload!.userId);
 
 		return response.json(null, { status: 204 });
 	}

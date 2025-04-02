@@ -9,7 +9,7 @@ export class CreateNoteController implements IController {
 	async handler(request: IHttpRequest, response: IHttpResponse): Promise<Response> {
 		const result = await this.createNoteCase.execute({
 			...request.body,
-			userId: request.locals!.tokenPayload!.user.id!,
+			userId: request.locals!.tokenPayload!.userId,
 		});
 
 		return response.json({

@@ -8,7 +8,7 @@ export class UpdateBasicInfoController implements IController {
 
 	async handler(request: IHttpRequest, response: IHttpResponse): Promise<Response> {
 		const result = await this.updateBasicInfoUseCase.execute(
-			request.locals!.tokenPayload!.user.id!,
+			request.locals!.tokenPayload!.userId,
 			request.body,
 		);
 

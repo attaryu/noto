@@ -8,7 +8,7 @@ export class GetNoteController implements IController {
 
 	async handler(request: IHttpRequest, response: IHttpResponse): Promise<Response> {
 		const result = await this.getNoteCase.execute(
-			request.locals!.tokenPayload!.user.id!,
+			request.locals!.tokenPayload!.userId,
 			request.params.noteId,
 		);
 

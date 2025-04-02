@@ -36,12 +36,7 @@ export class CreateSession implements ICreateSession {
 
 		const rawToken = await this.tokenManager.sign({
 			purpose: TokenPurposeEnum.session,
-			user: {
-				id: user.id,
-				email: user.email,
-				fullname: user.fullname,
-				secretKey: user.secretKey,
-			},
+			userId: user.id!,
 		});
 
 		const token = TokenEntity.create({
