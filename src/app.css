@@ -1,3 +1,119 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	body {
+		@apply font-regular;
+	}
+
+	@font-face {
+		font-family: 'NeueMontrealLight';
+		src: url('/fonts/NeueMontreal-Light.otf');
+		font-weight: 300;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'NeueMontrealRegular';
+		src: url('/fonts/NeueMontreal-Regular.otf');
+		font-weight: 400;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'NeueMontrealMedium';
+		src: url('/fonts/NeueMontreal-Medium.otf');
+		font-weight: 500;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'NeueMontrealBold';
+		src: url('/fonts/NeueMontreal-Bold.otf');
+		font-weight: 700;
+		font-style: normal;
+	}
+}
+
+@layer components {
+	.debug {
+		@apply outline outline-1 outline-red-500;
+	}
+
+	.tiptap {
+		--before-heading-spacing: 24px;
+		--after-heading-spacing: 16px;
+
+		--after-p-spacing: 8px;
+
+		--list-y-spacing: 16px;
+
+		@apply text-zinc-900;
+
+		:first-child {
+			@apply mt-0;
+		}
+
+		/* heading */
+
+		:is(h1, h2, h3) {
+			@apply font-bold tracking-tight;
+
+			&:has(+ h1, + h2, + h3) {
+				@apply mb-4;
+			}
+
+			&:has(+ p, + ul, + ol) {
+				@apply mb-2 mt-6;
+			}
+		}
+
+		h1 {
+			@apply text-2xl;
+		}
+
+		h2 {
+			@apply text-xl;
+		}
+
+		h3 {
+			@apply text-lg;
+		}
+
+		/* paragraph */
+
+		p {
+			@apply text-base opacity-90;
+
+			&:has(+ p) {
+				@apply mb-2;
+			}
+		}
+
+		/* bold */
+
+		strong {
+			@apply font-bold;
+		}
+
+		/* order and unorder list */
+
+		:is(ul, ol) {
+			@apply my-2 space-y-1 ml-6;
+		}
+
+		ol {
+			@apply list-decimal;
+		}
+
+		ul {
+			@apply list-disc;
+		}
+
+		/* placeholder */
+		p.is-editor-empty:first-child::before {
+			@apply pointer-events-none float-left h-0 text-xl text-zinc-900 opacity-50 content-[attr(data-placeholder)];
+		}
+	}
+}

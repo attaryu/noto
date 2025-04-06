@@ -1,0 +1,631 @@
+openapi: '3.0.3'
+info:
+  title: Noto Api
+  version: '1'
+servers:
+  - url: https://localhost:5173/api/v1
+paths:
+  /auth/sign-up:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              fullname: John Doe
+              email: johndoe@gmail.com
+              password:
+                value: '[HASHED]'
+                salt: '[RANDOM]'
+              secretKey:
+                value: '[ENCRYPTED]'
+                iv: '[RANDOM]'
+              recoveryKeys:
+                - code: '001'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '002'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '003'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '004'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '005'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '006'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '007'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+                - code: '008'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+      responses:
+        201:
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                statusCode: 201
+                success: true
+                payload:
+                  user:
+                    id: 1
+                    email: 'johndoe@gmail.com'
+                    fullname: 'John Doe'
+
+  /auth/sign-in:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              email: johndoe@gmail.com
+              password: '[ENCRYPTED]'
+      responses:
+        201:
+          description: CREATED
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: AUTH_TOKEN=[JWT TOKEN]
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                statusCode: 201
+                success: true
+                payload:
+                  user:
+                    id: '123'
+                    fullname: John Doe
+                    email: johndoe@gmail.com
+                    secretKey: '[ENCRYPTED]'
+
+  /auth/sign-out:
+    delete:
+      parameters:
+        - in: header
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+      responses:
+        204:
+          description: No Content
+          content:
+            application/json:
+              example: {}
+
+  /auth/recover-email:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              email: johndoe@gmail.com
+      responses:
+        200:
+          description: Sending email to user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                statusCode: 200
+                success: true
+
+  /user:
+    get:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                statusCode: 200
+                success: true
+                payload:
+                  user:
+                    id: 1
+                    email: 'johndoe@gmail.com'
+                    fullname: 'John Doe'
+                    secretKey:
+                      value: '[ENCRYPTED]'
+                      iv: '[RANDOM]'
+
+    patch:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              fullname: John Doe
+              email: johndoe@gmail.com
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 200
+                user:
+                  id: 1
+                  email: 'johndoe@gmail.com'
+                  fullname: 'John Doe'
+
+  /user/password-salt:
+    get:
+      parameters:
+        - in: query
+          required: true
+          name: email
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                message: Ok
+                payload:
+                  salt: '[RANDOM 16 BIT]'
+
+  /user/recovery-key:
+    get:
+      parameters:
+        - in: query
+          required: true
+          name: recovery-token
+          description: Send token that achived from email
+          schema:
+            type: string
+        - in: query
+          required: true
+          name: key-order
+          description: Recovery encryption key order
+          schema:
+            type: number
+      responses:
+        200:
+          description: Ok
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: RESET_TOKEN=[JWT TOKEN]
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 200
+                payload:
+                  code: 001
+                  value: '[ENCRYPTED_VALUE]'
+                  iv: xxxxxx
+                  salt: xxxxxxxxxxxx
+
+  /user/security:
+    put:
+      parameters:
+        - in: header
+          required: true
+          name: RESET_TOKEN
+          description: Token that achived belong with recovery key
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              password:
+                value: '[HASHED]'
+                salt: '[RANDOM]'
+              secretKey:
+                value: '[ENCRYPTED]'
+                iv: '[RANDOM]'
+              recoveryKeys:
+                - code: '001'
+                  value: '[ENCRYPTED]'
+                  salt: '[RANDOM]'
+                  iv: '[RANDOM]'
+      responses:
+        201:
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 201
+                user:
+                  id: 1
+                  email: 'johndoe@gmail.com'
+                  fullname: 'John Doe'
+
+  /notes:
+    get:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+        - in: query
+          required: false
+          name: search
+          description: search shape is array of encrypted string and convert to JSON format
+          schema:
+            type: string
+        - in: query
+          required: false
+          name: offset
+          description: last offset number from metadata request
+          schema:
+            type: number
+        - in: query
+          required: false
+          name: label
+          description: note label
+          schema:
+            type: string
+        - in: query
+          required: false
+          name: archived
+          description: note archived
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 200
+                payload:
+                  notes:
+                    - id: '123'
+                      iv: '[RANDOM]'
+                      pinned: false
+                      archived: false
+                      labels:
+                        - Label 1
+                        - Label 2
+                      content: '[ENCRYPTED]'
+                      createdAt: 2023-10-27T07:00:00.000Z
+                      updatedAt: 2023-10-27T07:00:00.000Z
+
+    post:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+            example:
+              iv: '[RANDOM]'
+              pinned: false
+              archived: false
+              index:
+                - '[ENCRYPTED]'
+                - '[ENCRYPTED]'
+              labels:
+                - Label 1
+                - Label 2
+              content: '[ENCRYPTED]'
+      responses:
+        201:
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 201
+                payload:
+                  note:
+                    id: '123'
+                    pinned: false
+                    archived: false
+                    labels:
+                      - Label 1
+                      - Label 2
+                    content: '[ENCRYPTED]'
+                    createdAt: 2023-10-27T07:00:00.000Z
+                    updatedAt: 2023-10-27T07:00:00.000Z
+
+    delete:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              nodeIds:
+                - '19'
+                - '89'
+                - '51'
+      responses:
+        204:
+          description: No Content
+          content:
+            application/json:
+              example: {}
+
+  /notes/{note_id}:
+    get:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+        - in: path
+          required: true
+          name: note_id
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 200
+                payload:
+                  note:
+                    id: '123'
+                    iv: '[RANDOM]'
+                    pinned: false
+                    archived: false
+                    labels:
+                      - Label 1
+                      - Label 2
+                    content: '[ENCRYPTED]'
+                    createdAt: 2023-10-27T07:00:00.000Z
+                    updatedAt: 2023-10-27T07:00:00.000Z
+
+    patch:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+        - in: path
+          required: true
+          name: note_id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+            example:
+              pinned: false
+              archived: false
+              index:
+                - '[ENCRYPTED]'
+                - '[ENCRYPTED]'
+              labels:
+                - Label 1
+                - Label 2
+              content: '[ENCRYPTED]'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 200
+                payload:
+                  note:
+                    id: '123'
+                    pinned: false
+                    archived: false
+                    labels:
+                      - Label 1
+                      - Label 2
+                    content: '[ENCRYPTED]'
+                    createdAt: 2023-10-27T07:00:00.000Z
+                    updatedAt: 2023-10-27T07:00:00.000Z
+
+    delete:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+        - in: path
+          required: true
+          name: note_id
+          schema:
+            type: string
+      responses:
+        204:
+          description: No content
+          content:
+            application/json:
+              example: {}
+
+  /notes/labels:
+    get:
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Labels'
+              example:
+                success: true
+                statusCode: 200
+                payload:
+                  labels:
+                    - id: '123'
+                      label: 'label 1'
+
+components:
+  schemas:
+    Responses:
+      type: object
+      anyOf:
+        - properties:
+            success:
+              type: boolean
+            statusCode:
+              type: number
+        - properties:
+            payload: {}
+
+    Note:
+      type: object
+      required:
+        - label
+        - content
+      properties:
+        iv:
+          type: string
+        labels:
+          type: array
+          items:
+            type: string
+        index:
+          type: array
+          items:
+            type: string
+        content:
+          type: string
+      anyOf:
+        - properties:
+            id:
+              type: string
+            pinned:
+              type: boolean
+            archived:
+              type: boolean
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        fullname:
+          type: string
+        email:
+          type: string
+        secretKey:
+          type: object
+          properties:
+            value:
+              type: string
+            iv:
+              type: string
+        recoveryKeys:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              value:
+                type: string
+              salt:
+                type: string
+              iv:
+                type: string
+        password:
+          type: object
+          properties:
+            value:
+              type: string
+            salt:
+              type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    Labels:
+      type: object
+      properties:
+        id:
+          type: string
+        labels:
+          type: string

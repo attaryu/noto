@@ -1,0 +1,123 @@
+<mjml lang="en">
+	<mj-head>
+		<mj-font name="PPNeueMontreal" href="https://fonts.cdnfonts.com/css/pp-neue-montreal" />
+		<mj-style inline="inline">
+			.body {
+				--radius: 16px;
+				--border: 1px solid black;
+				--horizontal-padding: 32px;
+			}
+
+			.header {
+				padding: 16px var(--horizontal-padding);
+				border-top: var(--border);
+				border-left: var(--border);
+				border-right: var(--border);
+				border-radius: var(--radius) var(--radius) 0 0;
+				background-color: #ffdda4;
+			}
+
+			.main { 
+				padding: var(--horizontal-padding);
+				border: var(--border);
+				background-color: #ffffff;
+			}
+
+			.footer {
+				padding: 16px var(--horizontal-padding);
+				border-left: var(--border);
+				border-right: var(--border);
+				border-bottom: var(--border);
+				border-radius: 0 0 var(--radius) var(--radius);
+				background-color: #eff8b1;
+			}
+
+			.logo div {
+				font-size: 24px !important;
+				font-weight: 700;
+			}
+
+			.heading div {
+				font-size: 27.888px !important;
+				font-weight: 600;
+			}
+
+			.paragraph div {
+				font-size: 16px !important;
+        opacity: 0.9;
+				font-weight: 300;
+			}
+
+			.small div {
+				font-size: 12px !important;
+				opacity: 0.6;
+			}
+		</mj-style>
+
+		<mj-attributes>
+			<mj-all padding="0px" />
+			<mj-text font-family="PPNeueMontreal, sans-serif" padding="0px" line-height="1.5" letter-spacing="-0.4px" color="rgb(10, 10, 10)" />
+		</mj-attributes>
+	</mj-head>
+
+	<mj-body css-class="body">
+		<mj-wrapper css-class="background" background-url="https://ucarecdn.com/29e2bc2a-d05e-4c61-93f4-f2dd41bd90af/-/preview/612x829" background-size="cover" padding="30px">
+			<!-- header -->
+			<mj-section css-class="header">
+				<mj-column>
+					<mj-text css-class="logo">Notō</mj-text>
+				</mj-column>
+			</mj-section>
+
+			<!-- main content -->
+			<mj-section css-class="main">
+				<mj-column>
+					<mj-text css-class="heading" padding-top="16px">
+						Hi, {{fullname}}!
+					</mj-text>
+
+					<mj-text css-class="paragraph" padding-top="16px">
+						We accept requests for recover your account. If this is you, please click the button below to go to the recovery page.
+					</mj-text>
+
+					<mj-button
+						align="left"
+						padding-top="40px"
+						padding-bottom="40px"
+						css-class="button"
+						border-radius="9999px"
+						background-color="rgb(20, 20, 20)"
+						href="{{recoveryLink}}"
+					>
+						Recover
+					</mj-button>
+
+					<mj-text css-class="paragraph">
+						If the button doesn't work, you can copy and paste the link below into your browser.
+					</mj-text>
+
+					<mj-text padding-top="32px" padding-bottom="32px">
+						{{recoveryLink}}
+					</mj-text>
+
+					<mj-text css-class="paragraph">
+						This link is valid until <strong>{{expiredAt}}</strong>. If you did not request account recovery, you can safely ignore this email.
+					</mj-text>
+					
+					<mj-text css-class="paragraph" padding-top="40px">
+						Thank you, <br />The Notō Team
+					</mj-text>
+
+					<mj-text css-class="small" padding-top="16px" color="red">*dont reply this email</mj-text>
+				</mj-column>
+			</mj-section>
+
+			<!-- footer -->
+			<mj-section css-class="footer">
+				<mj-column>
+					<mj-text align="right" css-class="logo">Notō</mj-text>
+				</mj-column>
+			</mj-section>
+		</mj-wrapper>
+	</mj-body>
+</mjml>
