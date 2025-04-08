@@ -1,34 +1,31 @@
 import type { ILabelRepository } from '$lib/server/app/repositories/Label';
 import type { INoteRepository } from '$lib/server/app/repositories/Note';
 import type { IUserRepository } from '$lib/server/app/repositories/User';
-import type { IExportBackup, IExportBackupReturn } from '../ExportNotes';
+import type { IExportBackupReturn } from '../ExportNotes';
+import type { IImportBackup } from '../ImportNotes';
 
 import { UserError } from '$lib/server/domain/errors/User';
 
-export class ExportNotes implements IExportBackup {
+export class ImportNotes implements IImportBackup {
 	constructor(
 		private readonly noteRepository: INoteRepository,
 		private readonly labelRepository: ILabelRepository,
 		private readonly userRepository: IUserRepository,
 	) {}
 
-	async execute(userId: string): Promise<IExportBackupReturn> {
+	async execute(backup: IExportBackupReturn, userId: string): Promise<void> {
 		const existingUser = await this.userRepository.findById(userId);
 
 		if (!existingUser) {
 			throw new UserError.NotFound();
 		}
 
-		const labels = await this.labelRepository.finds({ userId });
+		if (backup.notes.length) {
+			await this.noteRepository.replaceAll(backup.notes, userId);
+		}
 
-		const notes = await this.noteRepository.findManyByFilter({
-			userId,
-			deleted: false,
-		});
-
-		return {
-			notes: notes.map(({ userId, deletedAt, ...note }) => note),
-			labels: labels.map(({ userId, ...label }) => label),
-		};
+		if (backup.labels.length) {
+			await this.labelRepository.replaceAll(backup.labels, userId);
+		}
 	}
 }

@@ -13,6 +13,7 @@ export interface NoteInterface {
 	content: string;
 	archived: boolean;
 	pinned: boolean;
+	updatedAt: Date;
 	deletedAt: Date | null;
 }
 
@@ -25,6 +26,7 @@ export class NoteEntity {
 	private _content: string;
 	private _archived: boolean;
 	private _pinned: boolean;
+	private readonly _updatedAt: Date;
 	private readonly _deletedAt: Date | null;
 
 	static create(props: ICreateNoteDTO): NoteEntity {
@@ -40,7 +42,13 @@ export class NoteEntity {
 			},
 		});
 
-		return new NoteEntity({ ...props, archived: false, pinned: false, deletedAt: null });
+		return new NoteEntity({
+			...props,
+			archived: false,
+			pinned: false,
+			deletedAt: null,
+			updatedAt: new Date(),
+		});
 	}
 
 	public update(props: IUpdateNoteDTO): void {
@@ -98,6 +106,7 @@ export class NoteEntity {
 			content: this._content,
 			archived: this._archived,
 			pinned: this._pinned,
+			updatedAt: this._updatedAt,
 			deletedAt: this._deletedAt,
 		};
 	}
@@ -142,6 +151,10 @@ export class NoteEntity {
 		return this._pinned;
 	}
 
+	get updatedAt() {
+		return this._updatedAt;
+	}
+
 	get deletedAt() {
 		return this._deletedAt;
 	}
@@ -156,5 +169,6 @@ export class NoteEntity {
 		this._archived = props.archived;
 		this._pinned = props.pinned;
 		this._deletedAt = props.deletedAt;
+		this._updatedAt = props.updatedAt;
 	}
 }

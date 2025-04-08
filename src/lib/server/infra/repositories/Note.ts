@@ -5,6 +5,7 @@ import type { ICreateNoteDTO } from '$lib/server/domain/dtos/Note/CreateNote';
 import type { INoteInDTO } from '$lib/server/domain/dtos/Note/NoteIn';
 import type { IUpdateNoteDTO } from '$lib/server/domain/dtos/Note/UpdateNote';
 
+import type { INoteOutDTO } from '$lib/server/domain/dtos/Note/NoteOut';
 import { objectId } from '../helper/objectId';
 
 export type Document = Omit<INoteInDTO, 'id'>;
@@ -111,5 +112,19 @@ export class NoteRepository implements INoteRepository {
 			_id: { $in: noteId.map((id) => objectId(id)) },
 			userId,
 		});
+	}
+
+	async replaceAll(data: INoteOutDTO[], userId: string): Promise<void> {
+		const processedData = data.map(({ id, ...note }) => ({
+			...note,
+			_id: objectId(id),
+			userId,
+			createdAt: new Date(note.createdAt!),
+			updatedAt: new Date(note.updatedAt!),
+			deletedAt: null,
+		}));
+
+		await this.database.deleteMany({ userId });
+		await this.database.insertMany(processedData);
 	}
 }

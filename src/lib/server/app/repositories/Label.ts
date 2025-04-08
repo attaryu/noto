@@ -1,5 +1,6 @@
 import type { ICreateLabelDTO } from '$lib/server/domain/dtos/Label/CreateLabel';
 import type { ILabelInDTO } from '$lib/server/domain/dtos/Label/LabelIn';
+import type { ILabelOutDTO } from '$lib/server/domain/dtos/Label/LabelOut';
 import type { IUpdateLabelDTO } from '$lib/server/domain/dtos/Label/UpdateLabel';
 
 export interface ILabelFilter {
@@ -13,4 +14,5 @@ export interface ILabelRepository {
 	update(noteId: string, label: IUpdateLabelDTO): Promise<ILabelInDTO | null>;
 	finds(filter: ILabelFilter): Promise<ILabelInDTO[]>;
 	delete(labelId: string): Promise<void>;
+	replaceAll(data: ILabelOutDTO[], userId: string): Promise<void>;
 }
