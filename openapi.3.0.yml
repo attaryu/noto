@@ -409,6 +409,86 @@ paths:
             application/json:
               example: {}
 
+  /notes/backup:
+    get:
+      description: Export all notes from database to client
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 200
+                payload:
+                  notes:
+                    - id: '123'
+                      iv: '[RANDOM]'
+                      pinned: false
+                      archived: false
+                      labels:
+                        - Label 1
+                        - Label 2
+                      content: '[ENCRYPTED]'
+                      index:
+                        - '[ENCRYPTED]'
+                        - '[ENCRYPTED]'
+                      createdAt: 2023-10-27T07:00:00.000Z
+                      updatedAt: 2023-10-27T07:00:00.000Z
+
+    post:
+      description: Import all notes from client to database
+      parameters:
+        - in: cookie
+          required: true
+          name: AUTH_TOKEN
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+            example:
+              notes:
+                - id: '123'
+                  iv: '[RANDOM]'
+                  pinned: false
+                  archived: false
+                  labels:
+                    - Label 1
+                    - Label 2
+                  content: '[ENCRYPTED]'
+                  index:
+                    - '[ENCRYPTED]'
+                    - '[ENCRYPTED]'
+                  createdAt: 2023-10-27T07:00:00.000Z
+                  updatedAt: 2023-10-27T07:00:00.000Z
+              label:
+                - id: '123'
+                  label: 'label 1'
+                - id: '124'
+                  label: 'label 2'
+      responses:
+        201:
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Responses'
+              example:
+                success: true
+                statusCode: 201
+
   /notes/{note_id}:
     get:
       parameters:
