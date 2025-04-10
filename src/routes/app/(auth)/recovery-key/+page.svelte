@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { Download, MoveRight } from 'lucide-svelte';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
 	import Text from '$lib/components/Text.svelte';
+
+	import { downloadAsTextFile } from '$lib/utils/downloadAsTextFile';
 
 	const { recoveryKeys } = page.state;
 
@@ -15,23 +17,9 @@
 		goto('/app/sign-up');
 	}
 
-	/**
-	 * download the recovery key as a txt file
-	 *
-	 * @see https://flexiple.com/javascript/download-flle-using-javascript/
-	 */
 	function downloadAsFile() {
 		if (recoveryKeys) {
-			const blob = new Blob([recoveryKeys.join('\n')], { type: 'text/plain' });
-			const url = URL.createObjectURL(blob);
-			const a = document.createElement('a');
-
-			a.href = url;
-			a.download = 'noto-account-recovery-key.txt';
-			a.click();
-
-			URL.revokeObjectURL(url);
-			a.remove();
+			downloadAsTextFile(recoveryKeys.join('\n'), 'noto-account-recovery-key.txt', 'text/plain');
 		}
 	}
 </script>
@@ -73,11 +61,7 @@
 		</div>
 
 		<div class="mt-auto w-full space-y-2">
-			<Button
-				variant="secondary"
-				class="w-full"
-				onclick={downloadAsFile}
-			>
+			<Button variant="secondary" class="w-full" onclick={downloadAsFile}>
 				<Download />
 
 				Download recovery key
