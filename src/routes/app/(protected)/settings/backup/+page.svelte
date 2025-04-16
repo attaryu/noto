@@ -13,6 +13,7 @@
 	import { defaults, fileProxy, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 	import { z } from 'zod';
+	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
@@ -36,14 +37,14 @@
 
 	const notesBackupValidator = z.object({
 		backup: z
-			.instanceof(File, { message: 'Input must be a file' })
+			.instanceof(File, { message: m['backup_setting_page.validation.file_type']() })
 			.refine((file) => file.name.endsWith('.json'), {
-				message: 'File must be a JSON extension',
+				message: m['backup_setting_page.validation.extension'](),
 			}),
 	});
 
 	let isLoading = $state(false);
-	let isBackupTermDialogOpen = $state(true);
+	let isBackupTermDialogOpen = $state(false);
 	let isBackupDialogOpen = $state(false);
 
 	const importNotesMutation = createMutation<
@@ -53,17 +54,19 @@
 	>({
 		mutationFn: (payload) => axiosFetch.POST('/notes/backup', payload),
 		onSuccess: () => {
-			toastStore.setSuccess({ message: 'Notes imported successfully' });
+			toastStore.setSuccess({ message: m['backup_setting_page.state.import_success']() });
 			isLoading = false;
 			isBackupDialogOpen = false;
 		},
 		onError: (error) => {
-			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
+			toastStore.setError(
+				generateToastHTTPError(error, { title: m['common.toast.retry'](), event: submit }),
+			);
 			isLoading = false;
 		},
 	});
 
-	let customBackupError = $state<string[]>([]);
+	let backupFileError = $state<string[]>([]);
 
 	const { form, enhance, submit, reset, errors } = superForm(defaults(zod(notesBackupValidator)), {
 		SPA: true,
@@ -80,10 +83,10 @@
 							const backup: IImportNotesPayload = JSON.parse(e.target.result as string);
 
 							if (!backup.notes || !backup.labels) {
-								throw new Error('Invalid backup file');
+								throw new Error(m['backup_setting_page.state.invalid_backup']());
 							}
 
-							customBackupError = [];
+							backupFileError = [];
 
 							const cryptographyKey = await keyManagement.importKey(data.secretKey);
 
@@ -103,7 +106,7 @@
 								labels: backup.labels,
 							});
 						} catch (error) {
-							customBackupError.push((error as Error).message);
+							backupFileError.push((error as Error).message);
 							isLoading = false;
 						}
 					}
@@ -114,9 +117,12 @@
 		},
 	});
 
-	const combinedBackupError = $derived([...($errors.backup ?? []), ...customBackupError]);
+	const combinedBackupError = $derived([...($errors.backup ?? []), ...backupFileError]);
 	const formBackupInputProxy = fileProxy(form, 'backup');
 
+	/**
+	 * auto reset the form when the dialog is closed
+	 */
 	$effect(() => {
 		if (!isBackupDialogOpen) {
 			reset();
@@ -129,11 +135,15 @@
 		enabled: false,
 	});
 
+	/**
+	 * export notes query result processing
+	 */
 	$effect(() => {
 		if ($exportNotesQuery.isSuccess && data.secretKey) {
 			isLoading = true;
 
 			keyManagement.importKey(data.secretKey).then(async (secretKey) => {
+				// decrypt note content
 				const notes = await Promise.all(
 					$exportNotesQuery.data.payload.backup.notes.map(async (note) => ({
 						...note,
@@ -164,27 +174,31 @@
 </script>
 
 <svelte:head>
-	<title>Backup</title>
+	<title>{m['backup_setting_page.title']()}</title>
 </svelte:head>
 
 <main class="flex flex-col gap-8 px-4 pb-24 pt-24">
 	<Header class="grid grid-cols-3 grid-rows-1 items-center border border-zinc-900 bg-white p-1">
-		<Button onclick={() => history.back()}>
-			<ArrowLeft />
+		<Button>
+			{#snippet as(props)}
+				<a href="/app/settings" {...props}>
+					<ArrowLeft />
+				</a>
+			{/snippet}
 		</Button>
 
-		<Text tag="p" styling="h3" class="text-center">Backup</Text>
+		<Text tag="p" styling="h3" class="text-center">{m['backup_setting_page.title']()}</Text>
 	</Header>
 
 	<section class="space-y-2">
-		<Text tag="h2">As File</Text>
+		<Text tag="h2">{m['backup_setting_page.menu.title']()}</Text>
 
 		<Card color="green" class="p-2">
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
 						<MenuItem
-							text="Export"
+							text={m['backup_setting_page.menu.item.export']()}
 							type="button"
 							action={$exportNotesQuery.refetch}
 							disabled={isLoading}
@@ -193,7 +207,7 @@
 
 					<li>
 						<MenuItem
-							text="Import"
+							text={m['backup_setting_page.menu.item.import']()}
 							type="button"
 							action={() => (isBackupTermDialogOpen = true)}
 							disabled={isLoading}
@@ -206,14 +220,17 @@
 </main>
 
 <!-- import backup term confirmation dialog  -->
-<Dialog bind:open={isBackupTermDialogOpen} title="Import backup notes">
+<Dialog
+	bind:open={isBackupTermDialogOpen}
+	title={m['backup_setting_page.confirmation_dialog.title']()}
+>
 	<Text tag="p">
-		Are you sure you want to import backup notes? This action will overwrite your current notes.
+		{m['backup_setting_page.confirmation_dialog.description']()}
 	</Text>
 
 	<div class="mt-6 flex justify-end gap-2">
 		<Button type="button" class="px-2 py-1.5" onclick={() => (isBackupTermDialogOpen = false)}>
-			Cancel
+			{m['common.cancel']()}
 		</Button>
 
 		<Button
@@ -225,20 +242,24 @@
 				isBackupDialogOpen = true;
 			}}
 		>
-			Continue
+			{m['common.continue']()}
 		</Button>
 	</div>
 </Dialog>
 
 <!-- import backup file dialog -->
-<Dialog bind:open={isBackupDialogOpen} preventClose={isLoading} title="Import backup file">
+<Dialog
+	bind:open={isBackupDialogOpen}
+	preventClose={isLoading}
+	title={m['backup_setting_page.import_dialog.title']()}
+>
 	<form class="flex flex-col" use:enhance enctype="multipart/form-data" method="POST">
 		<input
 			id="backup"
 			name="backup"
 			type="file"
 			accept=".json"
-			placeholder="Upload backup file here"
+			placeholder={m['backup_setting_page.import_dialog.form.fields.file']()}
 			disabled={isLoading}
 			bind:files={$formBackupInputProxy}
 			required

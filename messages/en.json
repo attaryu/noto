@@ -1,0 +1,236 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "common": {
+    "loading": "Loading",
+    "search": "Search by keyword",
+    "toast": {
+      "retry": "Retry",
+      "undo": "Undo"
+    },
+    "fields": {
+      "fullname": "Fullname",
+      "email": "Email",
+      "password": "Password",
+      "repeat_password": "Repeat password"
+    },
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "validation": {
+      "min_length": "{field} must be at least {length} characters long",
+      "max_length": "{field} must be at most {length} characters long"
+    }
+  },
+  "user_validation": {
+    "email": {
+      "invalid": "Invalid email address"
+    },
+    "password": {
+      "not_match": "Passwords don't match"
+    }
+  },
+  "loadmore_component": {
+    "cta": "Load more",
+    "have_next_page": "{loaded} of {total} notes loaded.",
+    "dont_have_next_page": [
+      {
+        "match": {
+          "total=1": "Note loaded.",
+          "total=*": "All notes loaded."
+        }
+      }
+    ]
+  },
+  "select_component": {
+    "default_display": "Select an item"
+  },
+  "search_component": {
+    "placholder": "Search"
+  },
+  "note_card_component": {
+    "toast": {
+      "pinned_success": [
+        {
+          "match": {
+            "pinned=true": "Note pinned",
+            "pinned=false": "Note unpinned"
+          }
+        }
+      ],
+      "archived_success": [
+        {
+          "match": {
+            "archived=true": "Note archived",
+            "archived=false": "Note unarchived"
+          }
+        }
+      ]
+    },
+    "dropdown": {
+      "detail": "Detail",
+      "archive": [
+        {
+          "match": {
+            "archived=true": "Unarchive",
+            "archived=false": "Archive"
+          }
+        }
+      ],
+      "delete": "Delete"
+    }
+  },
+  "sign_in_page": {
+    "greeting": "Welcome back!",
+    "description": "I'm glad you're back! It's your time to note everything",
+    "form": {
+      "submit": "Sign in"
+    },
+    "state": {
+      "sign_in_success": "Sign in successful!",
+      "password_crypto_key_error": {
+        "text": "Sign in cannot be processed",
+        "cta": "Send again"
+      }
+    },
+    "forgot_password": {
+      "text": "Forgot password?",
+      "cta": "Recover here"
+    },
+    "sign_up_link": {
+      "text": "Don't have an account?",
+      "cta": "Create one here"
+    }
+  },
+  "sign_up_page": {
+    "greeting": "Welcome!",
+    "description": "Register now as a new account!",
+    "form": {
+      "submit": "Sign up"
+    },
+    "state": {
+      "sign_up_success": "Sign up successful!"
+    },
+    "sign_in_link": {
+      "text": "Already have an account?",
+      "cta": "Sign in here"
+    }
+  },
+  "recovery_key_page": {
+    "heading": "Recovery Key",
+    "description": "Save the recovery key to recover your account if you forget your password in the future.",
+    "agreement": "Take note! If you lose your recovery key, you will lose access to your account forever. Unless you have remembered your password again.",
+    "download_as_file_cta": "Download recovery key",
+    "continue_cta": "Continue to sign in"
+  },
+  "account_recovery_step_1_page": {
+    "heading": "Account Recovery",
+    "description": "We will send an email message along with a link to enter the recovery key",
+    "form": {
+      "submit": "Send now"
+    },
+    "state": {
+      "email_sent_success": "Success, please check your email!"
+    }
+  },
+  "account_recovery_step_2_page": {
+    "heading": "Input Recovery Key",
+    "description": "Use one of the recovery keys that you saved. If you lose it, there is no way out and there is automatic loss of access",
+    "form": {
+      "fields": {
+        "recovery_key": "Recovery Key"
+      },
+      "submit": "Verify"
+    },
+    "state": {
+      "incorrect_recovery_key": "Last 4 digits of the recovery key are incorrect!"
+    }
+  },
+  "account_recovery_step_3_page": {
+    "heading": "Reset Password",
+    "description": "Please enter a new password. After you submit, all devices logged in with this account will be automatically logged out",
+    "form": {
+      "submit": "Reset"
+    }
+  },
+  "notes_pages": {
+    "empty_note": {
+      "message": "No notes have been created yet",
+      "cta": "Let's create a new one"
+    }
+  },
+  "archived_notes_pages": {
+    "empty_note": {
+      "message": "There are no archived notes yet",
+      "cta": "Archive other note"
+    }
+  },
+  "settings_page": {
+    "title": "Settings",
+    "main_menu": {
+      "item": {
+        "account": "Account",
+        "backup": "Note Backup",
+        "account_recovery": "Account Recovery"
+      }
+    },
+    "interface_menu": {
+      "title": "Interface",
+      "item": {
+        "language": "Language",
+        "language_value": {
+          "en": "English",
+          "id": "Indonesian"
+        }
+      }
+    },
+    "other_menu": {
+      "title": "Other",
+      "item": {
+        "about": "About",
+        "privacy_policy": "Privacy and Policy",
+        "support": "Support"
+      }
+    },
+    "sign_out": "Sign out"
+  },
+  "account_setting_page": {
+    "title": "Account",
+    "form": {
+      "cancel": "Cancel",
+      "save": "Save",
+      "edit": "Edit"
+    },
+    "state": {
+      "update_success": "Account updated successfully!"
+    }
+  },
+  "backup_setting_page": {
+    "validation": {
+      "file_type": "Input must be a file",
+      "extension": "File must be a JSON extension"
+    },
+    "state": {
+      "import_success": "Notes imported successfully!",
+      "invalid_backup": "Invalid backup file"
+    },
+    "title": "Backup",
+    "menu": {
+      "title": "As File",
+      "item": {
+        "export": "Export",
+        "import": "Import"
+      }
+    },
+    "confirmation_dialog": {
+      "title": "Import backup notes",
+      "description": "Are you sure you want to import backup notes? This action will overwrite your current notes."
+    },
+    "import_dialog": {
+      "title": "Import backup file",
+      "form": {
+        "fields": {
+          "file": "Upload backup file here"
+        }
+      }
+    }
+  }
+}

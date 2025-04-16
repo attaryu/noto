@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Search } from 'lucide-svelte';
+	import { m } from 'paraglide/messages';
 
 	import Input from './Input.svelte';
 
@@ -9,7 +10,11 @@
 		value?: string;
 	}
 
-	let { class: className, value = $bindable(), placeholder = 'Search' }: Props = $props();
+	let {
+		class: className,
+		value = $bindable(),
+		placeholder = m['search_component.placholder'](),
+	}: Props = $props();
 </script>
 
 <Input {placeholder} type="text" class={className} bind:value>

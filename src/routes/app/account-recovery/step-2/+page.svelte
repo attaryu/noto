@@ -7,6 +7,7 @@
 	import { goto } from '$app/navigation';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { KeyRound } from 'lucide-svelte';
+	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
@@ -73,24 +74,27 @@
 
 			goto(`/app/account-recovery/step-3`, { replaceState: true });
 		} catch {
-			toastStore.setError({ message: 'Last 4 digits of the recovery key are incorrect' });
+			toastStore.setError({
+				message: m['account_recovery_step_2_page.state.incorrect_recovery_key'](),
+			});
 		}
 	}
 </script>
 
 <main class="flex h-screen flex-col p-4">
 	<div class="mt-20 flex flex-col items-center">
-		<Text tag="h1" class="text-center">Input Recovery Key</Text>
+		<Text tag="h1" class="text-center">
+			{m['account_recovery_step_2_page.heading']()}
+		</Text>
 
 		<Text tag="p" class="mt-4 text-center">
-			Use one of the recovery keys that you saved. If you lose it, there is no way out and there is
-			automatic loss of access
+			{m['account_recovery_step_2_page.description']()}
 		</Text>
 
 		<form action="" id={formId} class="mt-8 w-full" onsubmit={submitHandler}>
 			<Input
 				type="text"
-				placeholder="Recovery key"
+				placeholder={m['account_recovery_step_2_page.form.fields.recovery_key']()}
 				class="w-full text-center uppercase placeholder:normal-case"
 				required
 				maxlength={8}
@@ -107,7 +111,8 @@
 		class="mt-auto w-full"
 		disabled={$recoveryKeyQuery.isLoading || !$recoveryKeyQuery.data}
 	>
-		<KeyRound /> Verify
+		<KeyRound />
+		{m['account_recovery_step_2_page.form.submit']()}
 	</Button>
 </main>
 

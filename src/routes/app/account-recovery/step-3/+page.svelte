@@ -8,6 +8,7 @@
 	import { createMutation } from '@tanstack/svelte-query';
 	import Send from 'lucide-svelte/icons/send';
 	import { onMount } from 'svelte';
+	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
@@ -60,7 +61,9 @@
 			goto('/app/recovery-key', { replaceState: true, state: { recoveryKeys } });
 		},
 		onError: (error) => {
-			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
+			toastStore.setError(
+				generateToastHTTPError(error, { title: m['common.toast.retry'](), event: submit }),
+			);
 		},
 	});
 
@@ -88,29 +91,24 @@
 			},
 		},
 	);
-
-	const repeatPasswordError = $derived(
-		$form.repeatPassword && $form.password !== $form.repeatPassword
-			? 'Repeat password do not match'
-			: $errors.repeatPassword,
-	);
 </script>
 
 {#if secretKey}
 	<main class="flex h-screen flex-col p-4">
 		<div class="mt-20 flex flex-col items-center">
-			<Text tag="h1" class="text-center">Reset Password</Text>
+			<Text tag="h1" class="text-center">
+				{m['account_recovery_step_3_page.heading']()}
+			</Text>
 
 			<Text tag="p" class="mt-4 text-center">
-				Please enter a new password. After you submit, all devices logged in with this account will
-				be automatically logged out
+				{m['account_recovery_step_3_page.description']()}
 			</Text>
 
 			<form method="POST" id={formId} class="mt-8 w-full space-y-2" use:enhance>
 				<Input
 					type="password"
 					name="password"
-					placeholder="Password"
+					placeholder={m['common.fields.password']()}
 					class="w-full"
 					bind:value={$form.password}
 				/>
@@ -119,15 +117,18 @@
 				<Input
 					type="password"
 					name="repeatPassword"
-					placeholder="Repeat password"
+					placeholder={m['common.fields.repeat_password']()}
 					class="w-full"
 					bind:value={$form.repeatPassword}
 				/>
-				<FieldError message={repeatPasswordError} />
+				<FieldError message={$errors.repeatPassword} />
 			</form>
 		</div>
 
-		<Button form={formId} type="submit" class="mt-auto w-full"><Send /> Submit</Button>
+		<Button form={formId} type="submit" class="mt-auto w-full">
+			<Send />
+			{m['account_recovery_step_3_page.form.submit']()}
+		</Button>
 	</main>
 {/if}
 

@@ -18,6 +18,7 @@
 
 	import keyManagement from '$lib/utils/cryptography/keyManagement';
 	import { stichSearchParam } from '$lib/utils/stichSearchParam';
+	import { m } from 'paraglide/messages';
 
 	const { data }: PageProps = $props();
 
@@ -86,14 +87,14 @@
 </svelte:head>
 
 <Header>
-	<Searchbar class="w-full rounded-full" bind:value={search} />
+	<Searchbar class="w-full rounded-full" bind:value={search} placeholder={m['common.search']()} />
 </Header>
 
 <main class="relative px-4 pb-24 pt-16">
 	<section class="mt-4">
 		{#if $archivedNotesQuery.isPending}
 			<div class="grid h-[70dvh] place-items-center">
-				<Text tag="p">Loading...</Text>
+				<Text tag="p">{m['common.loading']()}...</Text>
 			</div>
 		{:else if $archivedNotesQuery.isError}
 			<div class="grid h-[70dvh] place-items-center">
@@ -110,15 +111,18 @@
 			</ul>
 
 			<!-- load more state information -->
-			<LoadMoreInformation {isProcessing} query={$archivedNotesQuery} archivedNotes />
+			<LoadMoreInformation {isProcessing} query={$archivedNotesQuery} />
 		{:else}
 			<!-- empty notes -->
 
 			<div class="flex h-[70dvh] flex-col items-center justify-center gap-2">
-				<Text tag="h1" styling="h3">You haven't made any archived notes</Text>
+				<Text tag="h1" styling="h3">
+					{m['archived_notes_pages.empty_note.message']()}
+				</Text>
 
 				<a href="/app/notes" class="flex items-center gap-1 underline opacity-60">
-					Archive a new one <ArrowRight size={16} />
+					{m['archived_notes_pages.empty_note.cta']()}
+					<ArrowRight size={16} />
 				</a>
 			</div>
 		{/if}

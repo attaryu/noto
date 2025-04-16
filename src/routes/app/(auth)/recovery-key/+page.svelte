@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { Download, MoveRight } from 'lucide-svelte';
+	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
@@ -27,10 +28,12 @@
 <main class="flex h-screen flex-col items-center p-4">
 	{#if recoveryKeys}
 		<div class="mt-20">
-			<Text tag="h1" class="text-center">Recovery Key</Text>
+			<Text tag="h1" class="text-center">
+				{m['recovery_key_page.heading']()}
+			</Text>
 
 			<Text tag="p" class="mt-4 text-center">
-				Save the recovery key to recover your account if you forget your password in the future.
+				{m['recovery_key_page.description']()}
 			</Text>
 
 			<ul
@@ -52,8 +55,7 @@
 				<Text tag="small">
 					{#snippet as(props)}
 						<label for="agreement" {...props}>
-							Take note! If you lose your recovery key, you will lose access to your account
-							forever. Unless you have remembered your password again.
+							{m['recovery_key_page.agreement']()}
 						</label>
 					{/snippet}
 				</Text>
@@ -63,17 +65,12 @@
 		<div class="mt-auto w-full space-y-2">
 			<Button variant="secondary" class="w-full" onclick={downloadAsFile}>
 				<Download />
-
-				Download recovery key
+				{m['recovery_key_page.download_as_file_cta']()}
 			</Button>
 
-			<Button class="w-full" disabled={!aggreement}>
-				{#snippet as(props)}
-					<a href="/app/sign-in" {...props}>
-						Continue to Sign In
-						<MoveRight />
-					</a>
-				{/snippet}
+			<Button class="w-full" disabled={!aggreement} onclick={() => goto('/app/sign-in')}>
+				{m['recovery_key_page.continue_cta']()}
+				<MoveRight />
 			</Button>
 		</div>
 	{/if}

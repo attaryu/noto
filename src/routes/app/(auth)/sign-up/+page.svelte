@@ -4,10 +4,11 @@
 
 	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
+	import { ArrowLeft } from 'lucide-svelte';
 	import Mail from 'lucide-svelte/icons/mail';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
+	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
@@ -32,12 +33,14 @@
 		onSuccess: () => {
 			reset();
 
-			toastStore.setSuccess({ message: 'Sign up successful!' });
+			toastStore.setSuccess({ message: m['sign_up_page.state.sign_up_success']() });
 
 			goto('/app/recovery-key', { state: { recoveryKeys } });
 		},
 		onError: (error) => {
-			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
+			toastStore.setError(
+				generateToastHTTPError(error, { title: m['common.toast.retry'](), event: submit }),
+			);
 		},
 	});
 
@@ -71,26 +74,28 @@
 
 <main class="flex h-screen flex-col p-4">
 	<header class="flex h-12 items-center">
-		<Button variant="secondary" class="ml-auto py-2">
+		<Button>
 			{#snippet as(props?: any)}
-				<a href="/app" {...props}>
-					Skip <ArrowRight />
+				<a href="/app/sign-in" {...props}>
+					<ArrowLeft />
 				</a>
 			{/snippet}
 		</Button>
 	</header>
 
 	<div class="mt-20 flex flex-col items-center">
-		<Text tag="h1" class="text-center">Welcome note taker!</Text>
+		<Text tag="h1" class="text-center">
+			{m['sign_up_page.greeting']()}
+		</Text>
 
 		<Text class="mt-4 text-center">
-			Register and access notes from anywhere! Or skip it and save the notes in local.
+			{m['sign_up_page.description']()}
 		</Text>
 
 		<form id={formId} class="mt-8 w-full space-y-2" use:enhance method="POST">
 			<Input
 				type="fullname"
-				placeholder="Fullname"
+				placeholder={m['common.fields.fullname']()}
 				name="fullname"
 				bind:value={$form.fullname}
 				class="w-full"
@@ -101,7 +106,7 @@
 
 			<Input
 				type="email"
-				placeholder="Email"
+				placeholder={m['common.fields.email']()}
 				name="email"
 				bind:value={$form.email}
 				class="w-full"
@@ -112,7 +117,7 @@
 
 			<Input
 				type="password"
-				placeholder="Password"
+				placeholder={m['common.fields.password']()}
 				name="password"
 				bind:value={$form.password}
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
@@ -123,7 +128,7 @@
 
 			<Input
 				type="password"
-				placeholder="Repeat Password"
+				placeholder={m['common.fields.repeat_password']()}
 				name="repeat-password"
 				bind:value={$form.repeatPassword}
 				class="w-full {isPasswordNotSame && 'border-red-500'}"
@@ -134,15 +139,19 @@
 		</form>
 
 		<Text tag="small" class="mt-8">
-			Already have an account? <a href="/app/sign-in" class="text-sky-500">Sign in now!</a>
+			{m['sign_up_page.sign_in_link.text']()}{' '}
+
+			<a href="/app/sign-in" class="text-sky-500">
+				{m['sign_up_page.sign_in_link.cta']()}
+			</a>
 		</Text>
 	</div>
 
 	<Button form={formId} disabled={$signupMutation.isPending} type="submit" class="mt-auto w-full">
 		{#if $signupMutation.isPending}
-			Loading...
+			{m['common.loading']()}...
 		{:else}
-			<Mail /> Sign Up
+			<Mail /> {m['sign_up_page.form.submit']()}
 		{/if}
 	</Button>
 </main>

@@ -1,9 +1,15 @@
+import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 import { defineConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
 	plugins: [
+		paraglideVitePlugin({
+			project: './project.inlang',
+			outdir: './src/paraglide',
+			strategy: ['cookie', 'preferredLanguage', 'baseLocale']
+		}),
 		sveltekit(),
 		SvelteKitPWA({
 			strategies: 'injectManifest',
