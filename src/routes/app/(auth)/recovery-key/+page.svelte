@@ -75,7 +75,3 @@
 		</div>
 	{/if}
 </main>
-
-<Decorator size="normal" color="yellow" class="top-0" />
-<Decorator size="normal" color="green" class="-right-1/3 top-1/3" />
-<Decorator size="large" color="yellow" class="-bottom-1/4 left-1/4" />

@@ -232,7 +232,3 @@
 		{/snippet}
 	</Card>
 </main>
-
-<Decorator color="green" class="-left-0 -top-8" />
-<Decorator color="yellow" class="-right-1/2 top-1/4" size="large" />
-<Decorator color="yellow" class="-left-1/2 top-1/2" size="large" />

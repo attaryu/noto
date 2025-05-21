@@ -26,7 +26,7 @@
 
 <div class={mergeClass(headerCVA({ gradientColor }))}>
 	<header
-		class={mergeClass('flex min-h-12 items-center justify-center rounded-full', className)}
+		class={mergeClass('flex min-h-12 max-w-[440px] mx-auto items-center justify-center rounded-full', className)}
 		{...props}
 	>
 		{@render children?.()}

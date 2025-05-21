@@ -115,7 +115,3 @@
 		{m['account_recovery_step_2_page.form.submit']()}
 	</Button>
 </main>
-
-<Decorator color="green" class="-left-6 top-0" />
-<Decorator color="yellow" class="-right-6 top-[15%]" />
-<Decorator color="yellow" class="-bottom-10 -left-5" size="large" />

@@ -19,7 +19,9 @@
 	dayjs.locale(getLocale());
 </script>
 
-{@render children()}
+<div class="mx-auto max-w-[440px]">
+	{@render children()}
+</div>
 
 <Toast />
 
