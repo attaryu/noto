@@ -10,7 +10,7 @@
 
 	const { children, gradientColor, class: className, ...props }: Props = $props();
 
-	const headerCVA = cva('fixed z-50 inset-x-0 top-0 p-4 bg-gradient-to-b to-transparent', {
+	const headerCVA = cva('fixed z-50 inset-x-0 top-0 p-4 bg-linear-to-b to-transparent', {
 		variants: {
 			gradientColor: {
 				white: 'from-white',

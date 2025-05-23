@@ -20,7 +20,7 @@
 	];
 </script>
 
-<div class="fixed inset-x-0 bottom-0 bg-gradient-to-b from-transparent to-white px-4 pb-4">
+<div class="fixed inset-x-0 bottom-0 bg-linear-to-b from-transparent to-white px-4 pb-4">
 	<nav class="flex max-w-[440px] mx-auto min-h-12 items-center justify-between">
 		<div class="flex h-full w-56 items-center gap-2 rounded-full bg-zinc-900 p-1">
 			{#each links as link (link.pathname)}
@@ -28,7 +28,7 @@
 				{@const isActive = link.pathname === page.url.pathname}
 
 				<Button class="transition-all {isActive && 'w-full bg-tertiary-1 text-zinc-900'}">
-					{#snippet as(props)}
+					{#snippet as(props: any)}
 						<a href={link.pathname} {...props}>
 							<Icon size={26} />
 						</a>
@@ -38,7 +38,7 @@
 		</div>
 
 		<Button>
-			{#snippet as(props)}
+			{#snippet as(props: any)}
 				<a href="/app/notes/create" {...props}>
 					<Plus size={26} />
 				</a>

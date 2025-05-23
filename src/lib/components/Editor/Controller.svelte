@@ -204,7 +204,7 @@
 						<Icon />
 					</Button>
 				{:else}
-					<div class="h-8 w-[1px] shrink-0 rounded-full bg-zinc-700"></div>
+					<div class="h-8 w-px shrink-0 rounded-full bg-zinc-700"></div>
 				{/if}
 			{/each}
 		</div>
