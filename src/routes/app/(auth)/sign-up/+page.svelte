@@ -147,7 +147,7 @@
 		</Text>
 	</div>
 
-	<Button form={formId} disabled={$signupMutation.isPending} type="submit" class="mt-auto w-full">
+	<Button form={formId} disabled={$signupMutation.isPending} size="lg" type="submit" class="mt-auto w-full">
 		{#if $signupMutation.isPending}
 			{m['common.loading']()}...
 		{:else}

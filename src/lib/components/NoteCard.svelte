@@ -154,16 +154,17 @@
 				{#if !data.archived}
 					<Button
 						variant={isPinned ? 'primary' : 'secondary'}
-						class={`${!isPinned && 'bg-transparent'} size-10`}
+						size="icon"
+						class={`${!isPinned && 'bg-transparent'} p-2.5`}
 						disabled={$noteMutation.isPending}
 						onclick={updatePin}
 					>
-						<PinIcon className="rotate-24" />
+						<PinIcon className="rotate-24" size={20} />
 					</Button>
 				{/if}
 
 				<Dropdown
-					class="size-10"
+					class="p-2.5"
 					disabled={$noteMutation.isPending}
 					items={[
 						{

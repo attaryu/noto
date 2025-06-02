@@ -5,7 +5,6 @@
 	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
-	import Decorator from '$lib/components/Decorator.svelte';
 	import Text from '$lib/components/Text.svelte';
 
 	import { downloadAsTextFile } from '$lib/utils/downloadAsTextFile';
@@ -63,12 +62,12 @@
 		</div>
 
 		<div class="mt-auto w-full space-y-2">
-			<Button variant="secondary" class="w-full" onclick={downloadAsFile}>
+			<Button variant="secondary" size="lg" class="w-full" onclick={downloadAsFile}>
 				<Download />
 				{m['recovery_key_page.download_as_file_cta']()}
 			</Button>
 
-			<Button class="w-full" disabled={!aggreement} onclick={() => goto('/app/sign-in')}>
+			<Button class="w-full" size="lg" disabled={!aggreement} onclick={() => goto('/app/sign-in')}>
 				{m['recovery_key_page.continue_cta']()}
 				<MoveRight />
 			</Button>

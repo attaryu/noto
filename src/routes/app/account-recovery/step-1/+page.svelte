@@ -61,9 +61,9 @@
 
 <main class="flex h-screen flex-col p-4">
 	<header class="h-12">
-		<Button>
+		<Button size="icon" class="p-3">
 			{#snippet as(prop: any)}
-				<a href="/app/settings" {...prop}><ArrowLeft /></a>
+				<a href="/app/settings" {...prop}><ArrowLeft size={26} /></a>
 			{/snippet}
 		</Button>
 	</header>
@@ -94,6 +94,7 @@
 		form={formId}
 		type="submit"
 		class="mt-auto w-full"
+		size="lg"
 		disabled={$recoverEmailMutation.isPending}
 	>
 		{#if $recoverEmailMutation.isPending}

@@ -4,6 +4,8 @@
 
 	import Input from './Input.svelte';
 
+	import mergeClass from '$lib/utils/merge';
+
 	interface Props {
 		class?: string;
 		placeholder?: string;
@@ -17,7 +19,7 @@
 	}: Props = $props();
 </script>
 
-<Input {placeholder} type="text" class={className} bind:value>
+<Input {placeholder} type="text" class={mergeClass('p-3', className)} bind:value>
 	{#snippet icon(props)}
 		<Search {...props} />
 	{/snippet}

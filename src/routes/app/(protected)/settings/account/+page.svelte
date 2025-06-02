@@ -84,10 +84,10 @@
 
 <main class="flex flex-col gap-8 px-4 pb-24 pt-24">
 	<Header class="grid grid-cols-3 grid-rows-1 items-center border border-zinc-900 bg-white p-1">
-		<Button>
+		<Button size="icon">
 			{#snippet as(props)}
 				<a href="/app/settings" {...props}>
-					<ArrowLeft />
+					<ArrowLeft size={32} />
 				</a>
 			{/snippet}
 		</Button>

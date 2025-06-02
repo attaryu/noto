@@ -107,6 +107,7 @@
 
 	<Button
 		form={formId}
+		size="lg"
 		type="submit"
 		class="mt-auto w-full"
 		disabled={$recoveryKeyQuery.isLoading || !$recoveryKeyQuery.data}

@@ -77,10 +77,10 @@
 </script>
 
 <Header class="flex items-center bg-zinc-900 p-1">
-	<Button variant="secondary" class="bg-white">
+	<Button variant="secondary" size="icon" class="bg-white p-3">
 		{#snippet as(props)}
 			<a href="/app/notes" {...props}>
-				<ArrowLeft />
+				<ArrowLeft size={26} />
 			</a>
 		{/snippet}
 	</Button>
@@ -92,7 +92,8 @@
 			{@const Icon = controlButton.icon}
 
 			<Button
-				class="p-2 disabled:bg-zinc-900"
+				class="disabled:bg-zinc-900 p-3"
+				size="icon"
 				disabled={controlButton.disabled}
 				ontouchend={(event) => {
 					event.preventDefault();
@@ -103,7 +104,7 @@
 					controlButton.onclick();
 				}}
 			>
-				<Icon />
+				<Icon size={26} />
 			</Button>
 		{/each}
 	</div>

@@ -1,30 +1,26 @@
 <script lang="ts">
-	import type { z } from 'zod';
-
 	import type { IUserSecurityPayload, IUserSecurityResponse } from '$lib/types/api/user/security';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
 	import Send from 'lucide-svelte/icons/send';
-	import { onMount } from 'svelte';
 	import { m } from 'paraglide/messages';
+	import { onMount } from 'svelte';
 
 	import Button from '$lib/components/Button.svelte';
-	import Decorator from '$lib/components/Decorator.svelte';
 	import FieldError from '$lib/components/FieldError.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Text from '$lib/components/Text.svelte';
 
 	import { secretKeyManagement } from '$lib/business/secretKeyManagement';
 	import { userCryptography } from '$lib/business/userCrytography';
-	import { createValidation } from '$lib/hooks/createValidation.svelte';
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
+	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 	import { resetPasswordValidator } from '$lib/validator/user';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
-	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
 	const formId = 'account-recovery-step-3';
 	const toastStore = getToastStoreContext();
@@ -125,7 +121,7 @@
 			</form>
 		</div>
 
-		<Button form={formId} type="submit" class="mt-auto w-full">
+		<Button form={formId} type="submit" size="lg" class="mt-auto w-full">
 			<Send />
 			{m['account_recovery_step_3_page.form.submit']()}
 		</Button>

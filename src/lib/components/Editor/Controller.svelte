@@ -161,8 +161,8 @@
 	 * Handle touch start event to get the initial touch position for swipe detection
 	 */
 	const handleTouchStart = (event: TouchEvent) => {
-		touchStartX = event.touches[0].clientX;
-		touchStartY = event.touches[0].clientY;
+		touchStartX = event.targetTouches[0].clientX;
+		touchStartY = event.targetTouches[0].clientY;
 	};
 
 	/**
@@ -196,12 +196,13 @@
 					{@const Icon = controlButton.icon}
 
 					<Button
-						class={`p-2 ${controlButton.isActive ? 'bg-tertiary-1 text-zinc-900' : 'bg-zinc-900'}`}
+						class={'p-3' + (controlButton.isActive ? ' bg-tertiary-1 text-zinc-900' : ' bg-zinc-900')}
+						size="icon"
 						onmouseup={handleClick(controlButton.action)}
 						ontouchend={handleTouchEnd(controlButton.action)}
 						ontouchstart={handleTouchStart}
 					>
-						<Icon />
+						<Icon size={26} />
 					</Button>
 				{:else}
 					<div class="h-8 w-px shrink-0 rounded-full bg-zinc-700"></div>
