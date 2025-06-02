@@ -105,7 +105,7 @@
 				id="fullname"
 				placeholder={m['common.fields.fullname']()}
 				bind:value={$form.fullname}
-				class="mt-1 w-full border-b border-zinc-950 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
+				class="mt-1 w-full border-b border-zinc-900 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
 				disabled={!isEditable || $mutation.isPending}
 			/>
 
@@ -117,7 +117,7 @@
 				id="email"
 				placeholder={m['common.fields.email']()}
 				bind:value={$form.email}
-				class="mt-1 w-full border-b border-zinc-950 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
+				class="mt-1 w-full border-b border-zinc-900 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
 				disabled={!isEditable || $mutation.isPending}
 			/>
 

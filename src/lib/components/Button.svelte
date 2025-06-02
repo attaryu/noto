@@ -13,10 +13,10 @@
 	} & SvelteHTMLElements['button'] &
 		VariantProps<typeof buttonCVA>;
 
-	const { children, as, variant, class: className, ...props }: Props = $props();
+	const { children, as, variant, size, class: className, ...props }: Props = $props();
 
 	const buttonCVA = cva(
-		'flex w-fit items-center justify-center gap-2 rounded-full p-3 font-medium',
+		'flex w-fit items-center justify-center gap-2 rounded-full font-medium',
 		{
 			variants: {
 				variant: {
@@ -24,16 +24,23 @@
 					secondary:
 						'bg-transparent border border-zinc-900 disabled:border-zinc-400 disabled:text-zinc-600',
 				},
+				size: {
+					icon: 'p-1.5',
+					sm: 'text-sm px-2 py-1.5',
+					md: 'text-base px-3 py-2',
+					lg: 'text-lg px-4 py-2.5',
+				}
 			},
 			defaultVariants: {
 				variant: 'primary',
+				size: "md",
 			},
 		},
 	);
 
 	const modifiedProps = $derived({
 		...props,
-		class: mergeClass(buttonCVA({ variant }), className),
+		class: mergeClass(buttonCVA({ variant, size }), className),
 	});
 </script>
 

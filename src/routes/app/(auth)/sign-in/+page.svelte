@@ -121,10 +121,10 @@
 
 <main class="flex h-screen flex-col p-4">
 	<header class="flex h-12 items-center">
-		<Button class="mr-auto">
+		<Button class="mr-auto" size="icon">
 			{#snippet as(props?: any)}
 				<a href="/app/sign-up" {...props}>
-					<ArrowLeft />
+					<ArrowLeft size={32} />
 				</a>
 			{/snippet}
 		</Button>

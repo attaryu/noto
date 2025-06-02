@@ -1,6 +1,12 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "common": {
+    "landing_page_links": {
+      "home": "Beranda",
+      "app": "Aplikasi",
+      "about": "Tentang",
+      "faq": "FAQ"
+    },
     "loading": "Memuat",
     "search": "Cari berdasarkan kata kunci",
     "toast": {
@@ -75,6 +81,88 @@
         }
       ],
       "delete": "Hapus"
+    }
+  },
+  "home_page": {
+    "cta": "Coba sekarang!",
+    "hero": {
+      "title": "Tulis Apa Saja Tanpa Khawatir Tentang Privasi Anda",
+      "description": "Aplikasi pencatatan berbasis web modern dengan pengalaman lancar dengan sedikit keamanan ekstra untuk menjaga privasi Anda."
+    },
+    "key_features": {
+      "title": "Fitur unggulan yang ditawarkan",
+      "items": {
+        "1": {
+          "title": "Antarmuka ramah pengguna",
+          "description": "Desain antarmuka yang sederhana dan modern"
+        },
+        "2": {
+          "title": "Enkripsi ujung ke ujung",
+          "description": "Semua catatan dienkripsi dan disimpan dengan aman"
+        },
+        "3": {
+          "title": "Catatan cadangan",
+          "description": "Impor-ekspor cadangan catatan dalam bentuk file"
+        },
+        "4": {
+          "title": "Pemulihan akun",
+          "description": "Lapisan keamanan ekstra untuk memulihkan akun Anda"
+        }
+      }
+    },
+    "user_benefits": {
+      "title": "Apa yang membuatnya menonjol?",
+      "items": {
+        "1": {
+          "title": "Tulis apa pun yang Anda inginkan",
+          "description": "Catatan Anda dienkripsi secara otomatis dari ujung ke ujung, memastikan hanya Anda yang dapat mengaksesnya."
+        },
+        "2": {
+          "title": "Mudah digunakan",
+          "description": "Antarmuka yang sederhana, modern, dan intuitif yang membuat penulisan catatan menjadi cepat, mudah, dan menyenangkan."
+        },
+        "3": {
+          "title": "Data catatan Anda ada di tangan Anda",
+          "description": "Pulihkan akun dan buat cadangan catatan kapan saja. Anda selalu memegang kendali penuh atas data Anda."
+        }
+      }
+    },
+    "source_available": {
+      "title": "Tidak ada yang disembunyikan",
+      "description": "Proyek ini sepenuhnya tersedia di sumbernya. Anda dapat memeriksa kodenya, memahami bagaimana catatan Anda dienkripsi, dan memverifikasi bagaimana data Anda ditangani - tidak ada kotak hitam, tidak ada proses tersembunyi.",
+      "cta": "Lihat repositori"
+    },
+    "faq": {
+      "title": "Jawaban sekilas",
+      "descriptiont": "Berikut beberapa pertanyaan yang mungkin sering muncul di benak Anda.",
+      "items": {
+        "1": {
+          "question": "Apakah ini gratis?",
+          "answer": "Tentu saja, kami masih belum punya rencana untuk membuat fitur berbayar."
+        },
+        "2": {
+          "question": "Apakah saya harus membuat akun untuk mulai menggunakan aplikasi web?",
+          "answer": "Ya, kami memerlukan sebagian informasi Anda untuk pemulihan akun."
+        },
+        "3": {
+          "question": "Bisakah aplikasi web ini diinstal?",
+          "answer": "Ya, aplikasi web ini mendukungnya karena merupakan PWA."
+        },
+        "4": {
+          "question": "Bisakah catatan saya dibaca oleh orang lain?",
+          "answer": "Tidak, bahkan admin atau pengembang aplikasi web ini tidak bisa."
+        },
+        "5": {
+          "question": "Bisakah catatan saya diakses di perangkat lain?",
+          "answer": "Ya, selama Anda masuk dengan akun yang sama."
+        }
+      }
+    },
+    "last_offer": {
+      "title": {
+        "1": "Apa yang Anda tunggu?",
+        "2": "Cobalah tulis semuanya sekarang!"
+      }
     }
   },
   "sign_in_page": {

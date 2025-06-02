@@ -235,4 +235,8 @@
 			@apply pointer-events-none float-left h-0 text-xl text-zinc-900 opacity-50 content-[attr(data-placeholder)];
 		}
 	}
+
+	.debug {
+		@apply outline outline-red-600;
+	}
 }

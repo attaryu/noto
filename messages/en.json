@@ -1,6 +1,12 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "common": {
+    "landing_page_links": {
+      "home": "Home",
+      "app": "App",
+      "about": "About",
+      "faq": "FAQ"
+    },
     "loading": "Loading",
     "search": "Search by keyword",
     "toast": {
@@ -76,6 +82,88 @@
         }
       ],
       "delete": "Delete"
+    }
+  },
+  "home_page": {
+    "cta": "Try it now!",
+    "hero": {
+      "title": "Write Anything Without Worrying About Your Privacy",
+      "description": "A modern web-based note-taking app with a smooth experience with a little extra security to maintain your privacy."
+    },
+    "key_features": {
+      "title": "Excellent features offered",
+      "items": {
+        "1": {
+          "title": "User-friendly interface",
+          "description": "Simple and modern interface design"
+        },
+        "2": {
+          "title": "End-to-end encryption",
+          "description": "All notes are encrypted and stored securely"
+        },
+        "3": {
+          "title": "Backup notes",
+          "description": "Import-export backup of notes in file form"
+        },
+        "4": {
+          "title": "Account recovery",
+          "description": "An extra layer of security to recover your account"
+        }
+      }
+    },
+    "user_benefits": {
+      "title": "What makes it stand out?",
+      "items": {
+        "1": {
+          "title": "Write whatever you want",
+          "description": "Your notes are end-to-end encrypted automatically, ensuring only you can access them—secure and private."
+        },
+        "2": {
+          "title": "Easy-to-use",
+          "description": "A simple, modern, and intuitive interface that makes writing notes quick, effortless, and pleasant."
+        },
+        "3": {
+          "title": "Your notes data in your hands",
+          "description": "Easily recover your account and backup notes anytime. You're always in full control of your data."
+        }
+      }
+    },
+    "source_available": {
+      "title": "Nothing to hide",
+      "description": "This project is fully source available. You can inspect the code, understand how your notes are encrypted, and verify how your data is handled - no black boxed, no hidden proccesses.",
+      "cta": "View the repository"
+    },
+    "faq": {
+      "title": "Answers at a glance",
+      "descriptiont": "Here are some questions that may often arise in your mind.",
+      "items": {
+        "1": {
+          "question": "Is it free?",
+          "answer": "Of course, we still have no plan to make a paid feature."
+        },
+        "2": {
+          "question": "Do I have to create an account to start using the web-app?",
+          "answer": "Yes, we need some of your information for account recovery."
+        },
+        "3": {
+          "question": "Can this web-app be installed?",
+          "answer": "Yes, this web-app supports that as it is a PWA."
+        },
+        "4": {
+          "question": "Can my notes be read by others?",
+          "answer": "No, even the admin or developer of this web application can't."
+        },
+        "5": {
+          "question": "Can my notes be accessed on other devices?",
+          "answer": "Yes, as long as you sign in with the same account."
+        }
+      }
+    },
+    "last_offer": {
+      "title": {
+        "1": "What are you waiting for?",
+        "2": "Try and write everything now!"
+      }
     }
   },
   "sign_in_page": {

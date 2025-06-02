@@ -20,6 +20,7 @@ export default defineConfig({
 			registerType: 'prompt',
 			injectRegister: false,
 			useCredentials: true,
+			selfDestroying: true,
 
 			pwaAssets: {
 				disabled: false,
@@ -60,7 +61,7 @@ export default defineConfig({
 
 			devOptions: {
 				// ? pwa development flag
-				enabled: true,
+				enabled: false,
 				suppressWarnings: true,
 				navigateFallback: '/',
 				navigateFallbackAllowlist: [/^\/$/],
