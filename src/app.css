@@ -236,7 +236,13 @@
 		}
 	}
 
+	/* debug element position and dimension */
 	.debug {
 		@apply outline outline-red-600;
+	}
+
+	/* fix a container that overlaps with the footer */
+	.overlapping-by-footer {
+		@apply pb-8 md:pb-12 xl:pb-16
 	}
 }

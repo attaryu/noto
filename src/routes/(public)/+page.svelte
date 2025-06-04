@@ -17,7 +17,7 @@
 	<title>{pageTitle(m['common.landing_page_links.home']())}</title>
 </svelte:head>
 
-<main>
+<main class="overlapping-by-footer">
 	<!-- hero -->
 	<section
 		class="flex flex-col items-center px-4 py-8 md:flex-row md:gap-12 md:p-16 lg:justify-between lg:px-24 xl:pb-24"
@@ -100,7 +100,7 @@
 		<Text tag="h2" class="text-center xl:text-3xl">{m['home_page.user_benefits.title']()}</Text>
 
 		<ul
-			class="mt-8 flex flex-col gap-6 md:grid md:auto-rows-auto md:grid-cols-[1.5fr_1fr] xl:mt-12 lg:grid-cols-3"
+			class="mt-8 flex flex-col gap-6 md:grid md:auto-rows-auto md:grid-cols-[1.5fr_1fr] lg:grid-cols-3 xl:mt-12"
 		>
 			<!-- card 1 -->
 			<Card
@@ -116,7 +116,7 @@
 								text: m['home_page.user_benefits.items.1.title'](),
 								class: 'text-center md:text-start',
 							})}
-							
+
 							{@render cardDescription({
 								text: m['home_page.user_benefits.items.1.description'](),
 								class: 'text-center md:text-start',
@@ -211,7 +211,9 @@
 		</div>
 
 		<!-- github logo -->
-		<div class="absolute -right-12 -bottom-12 size-64 rotate-12 md:-right-24 md:size-[400px] xl:size-[500px]">
+		<div
+			class="absolute -right-12 -bottom-12 size-64 rotate-12 md:-right-24 md:size-[400px] xl:size-[500px]"
+		>
 			<div
 				class="from-tertiary-2 to-tertiary-2/30 md:from-tertiary-2/90 absolute inset-0 bg-gradient-to-br md:bg-gradient-to-r"
 			></div>
@@ -221,7 +223,9 @@
 	</section>
 
 	<!-- faq -->
-	<section class="flex flex-col justify-between gap-8 px-4 py-12 md:flex-row md:p-16 lg:px-24 xl:py-24">
+	<section
+		class="flex flex-col justify-between gap-8 px-4 py-12 md:flex-row md:p-16 lg:px-24 xl:py-24"
+	>
 		<div class="w-full">
 			<Text tag="h2" class="xl:text-3xl">{m['home_page.faq.title']()}</Text>
 			<Text class="mt-2">{m['home_page.faq.descriptiont']()}</Text>
@@ -272,7 +276,7 @@
 			color="yellow"
 			class="h-[400px] overflow-hidden p-6 md:relative md:flex md:h-fit md:items-center md:p-8 xl:p-12"
 		>
-			<div class="flex flex-col gap-4 xl:gap-10 md:w-2/3">
+			<div class="flex flex-col gap-4 md:w-2/3 xl:gap-10">
 				<Text tag="h2" class="xl:text-4xl">
 					{m['home_page.last_offer.title.1']()}
 					<br class="hidden md:inline" />
