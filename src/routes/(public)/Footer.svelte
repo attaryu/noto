@@ -5,7 +5,7 @@
 </script>
 
 <footer
-	class="space-y-10 rounded-t-4xl bg-zinc-900 px-4 py-8 md:space-y-14 md:rounded-t-[48px] md:px-16 md:pt-16 lg:px-24 xl:rounded-t-[64px] xl:pt-20 -mt-8 md:-mt-12 xl:-mt-16"
+	class="space-y-10 rounded-t-4xl bg-zinc-900 px-4 py-8 md:space-y-14 md:rounded-t-[48px] md:px-16 md:pt-16 lg:px-24 xl:rounded-t-[64px] xl:pt-20 -mt-8 md:-mt-12 xl:-mt-16 w-full"
 >
 	<div class="flex gap-4 md:justify-between">
 		<div class="md:w-3/4 xl:w-1/2">

@@ -9,10 +9,10 @@
 </script>
 
 <!-- 2xl:w-7xl same as content container width -->
-<div class="fixed z-50 top-0 inset-x-0 p-4 md:px-16 lg:px-24 2xl:w-7xl mx-auto">
+<div class="fixed inset-x-0 top-0 z-50 mx-auto w-full p-4 md:px-16 lg:px-24 2xl:w-7xl">
 	<!-- navbar -->
 	<nav
-		class="flex items-center justify-between gap-2 rounded-full border border-zinc-900 bg-white p-2.5 md:grid md:grid-cols-[1fr_2fr_1fr] md:rounded-2xl shadow-md"
+		class="flex items-center justify-between gap-2 rounded-full border border-zinc-900 bg-white p-2.5 shadow-md md:grid md:grid-cols-[1fr_2fr_1fr] md:rounded-2xl"
 	>
 		<!-- logo -->
 		<div class="flex items-center gap-2">
@@ -24,7 +24,9 @@
 		</div>
 
 		<!-- medium or larger screen navigation -->
-		<ul class="hidden items-center gap-4 md:flex md:justify-self-center xl:gap-8">
+		<ul
+			class="invisible hidden items-center gap-4 md:visible md:flex md:justify-self-center xl:gap-8"
+		>
 			{@render wideViewLink(m['common.landing_page_links.home'](), '/')}
 			{@render wideViewLink(m['common.landing_page_links.app'](), '/app')}
 			{@render wideViewLink(m['common.landing_page_links.about'](), '/about')}
@@ -32,7 +34,7 @@
 
 			{#snippet wideViewLink(title: string, href: string)}
 				<li>
-					<a {href} class:underline={page.url.pathname.startsWith(href)} class="text-nowrap">
+					<a {href} class:underline={page.url.pathname === href} class="text-nowrap">
 						{title}
 					</a>
 				</li>
@@ -51,7 +53,7 @@
 			<!-- small screen navigation -->
 			<DropdownMenu.Root>
 				<!-- just need hidden the trigger button -->
-				<Button size="icon" variant="secondary" class="md:hidden">
+				<Button size="icon" variant="secondary" class="md:invisible md:hidden">
 					{#snippet as(props: any)}
 						<DropdownMenu.Trigger {...props}>
 							<Menu />
@@ -59,7 +61,7 @@
 					{/snippet}
 				</Button>
 
-				<DropdownMenu.Content align="end" class="rounded-xl border border-zinc-900">
+				<DropdownMenu.Content align="end" class="rounded-xl border border-zinc-500">
 					{@render smallViewLink(m['common.landing_page_links.home'](), '/')}
 					{@render smallViewLink(m['common.landing_page_links.app'](), '/app')}
 					{@render smallViewLink(m['common.landing_page_links.about'](), '/about')}
@@ -68,10 +70,8 @@
 			</DropdownMenu.Root>
 
 			{#snippet smallViewLink(title: string, href: string)}
-				<DropdownMenu.Item
-					class={(page.url.pathname.startsWith(href) && 'underline') + ' rounded-lg'}
-				>
-					<a {href}>{title}</a>
+				<DropdownMenu.Item class="rounded-lg">
+					<a {href} class:underline={page.url.pathname === href}>{title}</a>
 				</DropdownMenu.Item>
 			{/snippet}
 		</div>

@@ -27,7 +27,7 @@
 				h1: 'font-medium text-4xl text-zinc-900',
 				h2: 'font-medium text-2xl text-zinc-900',
 				h3: 'font-medium text-xl text-zinc-900',
-				p: 'text-zinc-700',
+				p: 'xl:text-lg text-zinc-700',
 				small: 'text-sm text-zinc-600',
 			},
 		},

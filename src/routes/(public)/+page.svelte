@@ -17,7 +17,7 @@
 	<title>{pageTitle(m['common.landing_page_links.home']())}</title>
 </svelte:head>
 
-<main class="overlapping-by-footer">
+<main class="overlapping-by-footer overlapping-by-navbar">
 	<!-- hero -->
 	<section
 		class="flex flex-col items-center px-4 py-8 md:flex-row md:gap-12 md:p-16 lg:justify-between lg:px-24 xl:pb-24"

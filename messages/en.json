@@ -166,6 +166,67 @@
       }
     }
   },
+  "about_page": {
+    "title": "About Noto Web-app",
+    "description": "A little explanation that makes you recognize more about this web-app.",
+    "content_1": {
+      "title": "Introduction",
+      "texts": {
+        "1": "Noto is a web-based note-taking app that emphasizes simplicity, convenience, and security. It is designed for anyone who wants to take notes without visual distractions, while having the peace of mind that their notes are protected by modern security systems.",
+        "2": "Although Noto was developed as part of a personal portfolio, I built it with a professional standard and approach-with a seamless user experience and well-designed features, as if it were a ready-made product for the public."
+      }
+    },
+    "content_2": {
+      "title": "Motivation",
+      "texts": {
+        "1": "Behind the creation of Noto was a personal desire to create a truly simple yet secure note app. I often felt that note apps available on the market were either too complicated, too crowded, or didn't provide full control over the privacy of note contents.",
+        "2": "I wanted to prove that even a simple app could have an advanced security system, without compromising user convenience. By developing Noto, I was not only challenging myself technically, but also trying to provide a useful solution, albeit in the form of a personal portfolio project."
+      }
+    },
+    "content_3": {
+      "title": "Key Features",
+      "texts": {
+        "1": "Noto was designed with a focus on three key pillars: simplicity, security, and user control. Some of the features available today reflect these principles:",
+        "2": {
+          "a": "Modern and Intuitive Interface: The note-taking experience is made more enjoyable with a clean interface and easy-to-understand navigation from first use.",
+          "b": "Automatic Note Encryption: Every note is encrypted locally before being sent to the server, ensuring that only you can read its contents - even i can't access it.",
+          "c": "Account Recovery and Notes Export: You have complete control over your data, including the ability to independently recover your account and export all records whenever necessary."
+        }
+      }
+    },
+    "content_4": {
+      "title": "Technology Used",
+      "texts": {
+        "1": "There are many technologies that I used to build this web-app. But in outline, here are the main players:",
+        "2": {
+          "a": "Svelte & SvelteKit - the main framework for building your web application.",
+          "b": "Tailwind CSS - for modern and consistent UI styling.",
+          "c": "TipTap - a rich-text editor that supports advanced features while remaining lightweight.",
+          "d": "TanStack Query (Svelte Query) - for data management and inter-component caching.",
+          "e": "Zod - for secure and structured data validation, especially on forms.",
+          "f": "Vite & Vite PWA Plugin - bundler and progressive support for offline performance and features.",
+          "g": "Workbox - for caching and offline support on PWAs.",
+          "h": "Day.js - lightweight and efficient time and date management.",
+          "i": "JOSE - cryptography for data and token security.",
+          "j": "Bcrypt - for server-side password hashing."
+        },
+        "3": "For more details, you can check it through project's package.json file."
+      }
+    },
+    "content_5": {
+      "title": "Project Status",
+      "texts": {
+        "1": "The development of this project is still ongoing and maintained, but updates cannot come every week or even month because I am busy with other things. If you are interested in helping make this web-app better, you can send me an email here."
+      }
+    },
+    "content_6": {
+      "title": "Conclusion",
+      "texts": {
+        "1": "I hope this web-app can help many people even though this is only part of my project portfolio. Thank you if you have tried this web-app or even use it daily.",
+        "2": "Thank you to those who helped me with libraries or assets in this project!"
+      }
+    }
+  },
   "sign_in_page": {
     "greeting": "Welcome back!",
     "description": "I'm glad you're back! It's your time to note everything",

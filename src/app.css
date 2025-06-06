@@ -241,8 +241,13 @@
 		@apply outline outline-red-600;
 	}
 
-	/* fix a container that overlaps with the footer */
+	/* fix overlaps with the footer */
 	.overlapping-by-footer {
-		@apply pb-8 md:pb-12 xl:pb-16
+		@apply pb-8 md:pb-12 xl:pb-16;
+	}
+	
+	/* fix overlaps with the navbar */
+	.overlapping-by-navbar {
+		@apply pt-20;
 	}
 }

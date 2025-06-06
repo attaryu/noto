@@ -65,6 +65,7 @@
     "@internationalized/date": "^3.8.1",
     "@lucide/svelte": "^0.482.0",
     "@playwright/test": "^1.52.0",
+    "@svelte-put/toc": "^6.0.2",
     "@sveltejs/adapter-auto": "^6.0.1",
     "@types/bcrypt": "^5.0.2",
     "@types/lodash": "^4.17.17",

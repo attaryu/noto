@@ -22,7 +22,7 @@
 				variant: {
 					primary: 'bg-zinc-900 text-white disabled:text-zinc-500 disabled:bg-zinc-800',
 					secondary:
-						'bg-transparent border border-zinc-900 disabled:border-zinc-400 disabled:text-zinc-600',
+						'bg-white border border-zinc-900 disabled:border-zinc-400 disabled:text-zinc-600',
 				},
 				size: {
 					icon: 'p-1.5',

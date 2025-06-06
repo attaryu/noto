@@ -10,7 +10,8 @@
     "loading": "Memuat",
     "search": "Cari berdasarkan kata kunci",
     "toast": {
-      "retry": "Ulangi"
+      "retry": "Ulangi",
+      "undo": "Batalkan"
     },
     "fields": {
       "fullname": "Nama lengkap",
@@ -162,6 +163,67 @@
       "title": {
         "1": "Apa yang Anda tunggu?",
         "2": "Cobalah tulis semuanya sekarang!"
+      }
+    }
+  },
+  "about_page": {
+    "title": "Tentang Aplikasi Web Noto",
+    "description": "Penjelasan singkat agar kamu lebih mengenal aplikasi ini.",
+    "content_1": {
+      "title": "Pendahuluan",
+      "texts": {
+        "1": "Noto adalah aplikasi pencatat berbasis web yang menekankan kesederhanaan, kenyamanan, dan keamanan. Aplikasi ini dirancang untuk siapa saja yang ingin mencatat tanpa gangguan visual, dengan ketenangan bahwa catatan mereka terlindungi oleh sistem keamanan modern.",
+        "2": "Meskipun Noto dikembangkan sebagai bagian dari portofolio pribadi, saya membangunnya dengan standar dan pendekatan profesional — dengan pengalaman pengguna yang mulus dan fitur yang dirancang dengan baik, seolah-olah ini adalah produk siap pakai untuk publik."
+      }
+    },
+    "content_2": {
+      "title": "Motivasi",
+      "texts": {
+        "1": "Di balik pembuatan Noto, ada keinginan pribadi untuk menciptakan aplikasi catatan yang benar-benar sederhana namun aman. Saya sering merasa bahwa aplikasi catatan yang tersedia terlalu rumit, terlalu ramai, atau tidak memberikan kendali penuh atas privasi isi catatan.",
+        "2": "Saya ingin membuktikan bahwa bahkan aplikasi sederhana pun bisa memiliki sistem keamanan tingkat lanjut, tanpa mengorbankan kenyamanan pengguna. Dengan mengembangkan Noto, saya tidak hanya menantang diri sendiri secara teknis, tapi juga mencoba memberikan solusi yang bermanfaat, meskipun dalam bentuk proyek portofolio pribadi."
+      }
+    },
+    "content_3": {
+      "title": "Fitur Utama",
+      "texts": {
+        "1": "Noto dirancang dengan fokus pada tiga pilar utama: kesederhanaan, keamanan, dan kendali pengguna. Beberapa fitur yang tersedia saat ini mencerminkan prinsip-prinsip tersebut:",
+        "2": {
+          "a": "Antarmuka Modern dan Intuitif. Pengalaman mencatat menjadi lebih menyenangkan dengan tampilan yang bersih dan navigasi yang mudah dipahami sejak awal.",
+          "b": "Enkripsi Catatan Otomatis. Setiap catatan dienkripsi secara lokal sebelum dikirim ke server, memastikan hanya kamu yang dapat membacanya — bahkan saya tidak bisa mengaksesnya.",
+          "c": "Pemulihan Akun dan Ekspor Catatan. Kamu memiliki kendali penuh atas data kamu, termasuk kemampuan untuk memulihkan akun dan mengekspor semua catatan kapan pun dibutuhkan."
+        }
+      }
+    },
+    "content_4": {
+      "title": "Teknologi yang Digunakan",
+      "texts": {
+        "1": "Ada banyak teknologi yang saya gunakan untuk membangun aplikasi ini. Namun secara garis besar, berikut beberapa teknologi utamanya:",
+        "2": {
+          "a": "Svelte & SvelteKit - framework utama dalam membangun aplikasi web ini.",
+          "b": "Tailwind CSS - untuk styling UI yang modern dan konsisten.",
+          "c": "TipTap - editor rich-text ringan yang mendukung fitur lanjutan.",
+          "d": "TanStack Query (Svelte Query) - untuk manajemen data dan caching antar komponen.",
+          "e": "Zod - validasi data yang aman dan terstruktur, terutama pada formulir.",
+          "f": "Vite & Vite PWA Plugin - bundler dan dukungan progresif untuk performa dan fitur offline.",
+          "g": "Workbox - untuk caching dan dukungan offline pada PWA.",
+          "h": "Day.js - manajemen tanggal dan waktu yang ringan dan efisien.",
+          "i": "JOSE - kriptografi untuk keamanan data dan token.",
+          "j": "Bcrypt - untuk hashing password di sisi server."
+        },
+        "3": "Untuk informasi lebih lengkap, kamu bisa melihatnya melalui file package.json di proyek ini."
+      }
+    },
+    "content_5": {
+      "title": "Status Proyek",
+      "texts": {
+        "1": "Pengembangan proyek ini masih berjalan dan tetap dirawat, namun pembaruan tidak bisa dilakukan setiap minggu atau bahkan setiap bulan karena saya juga disibukkan dengan hal lain. Jika kamu tertarik untuk membantu meningkatkan aplikasi ini, kamu bisa menghubungi saya melalui email di sini."
+      }
+    },
+    "content_6": {
+      "title": "Penutup",
+      "texts": {
+        "1": "Saya berharap aplikasi ini bisa membantu banyak orang meskipun ini hanya bagian dari proyek portofolio saya. Terima kasih jika kamu sudah mencoba atau bahkan menggunakannya setiap hari.",
+        "2": "Terima kasih juga kepada semua yang membantu saya melalui pustaka atau aset dalam proyek ini!"
       }
     }
   },
