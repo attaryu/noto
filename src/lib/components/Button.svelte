@@ -16,24 +16,25 @@
 	const { children, as, variant, size, class: className, ...props }: Props = $props();
 
 	const buttonCVA = cva(
-		'flex w-fit items-center justify-center gap-2 rounded-full font-medium',
+		'flex w-fit items-center justify-center gap-2 rounded-full font-medium disabled:cursor-not-allowed',
 		{
 			variants: {
 				variant: {
-					primary: 'bg-zinc-900 text-white disabled:text-zinc-500 disabled:bg-zinc-800',
+					primary:
+						'bg-zinc-800 text-white disabled:text-zinc-500 disabled:bg-zinc-600 hover:bg-zinc-950',
 					secondary:
-						'bg-white border border-zinc-900 disabled:border-zinc-400 disabled:text-zinc-600',
+						'bg-white border border-zinc-800 hover:border-zinc-950 disabled:border-zinc-400 disabled:text-zinc-600',
 				},
 				size: {
 					icon: 'p-1.5',
 					sm: 'text-sm px-2 py-1.5',
 					md: 'text-base px-3 py-2',
 					lg: 'text-lg px-4 py-2.5',
-				}
+				},
 			},
 			defaultVariants: {
 				variant: 'primary',
-				size: "md",
+				size: 'md',
 			},
 		},
 	);
