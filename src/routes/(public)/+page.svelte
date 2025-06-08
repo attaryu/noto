@@ -28,7 +28,13 @@
 
 			<Text class="mt-4 leading-normal xl:text-lg">{m['home_page.hero.description']()}</Text>
 
-			<Button size="lg" class="mt-8">{m['home_page.cta']()}</Button>
+			<Button size="lg" class="mt-8">
+				{#snippet as(props)}
+					<a {...props} href="/app/sign-in">
+						{m['home_page.cta']()}
+					</a>
+				{/snippet}
+			</Button>
 		</div>
 
 		<!-- image -->
@@ -206,7 +212,11 @@
 			</Text>
 
 			<Button class="mt-10">
-				{m['home_page.source_available.cta']()}
+				{#snippet as(props)}
+					<a {...props} href="https://github.com/attaryu/noto" target="_blank">
+						{m['home_page.source_available.cta']()}
+					</a>
+				{/snippet}
 			</Button>
 		</div>
 
@@ -283,7 +293,13 @@
 					{m['home_page.last_offer.title.2']()}
 				</Text>
 
-				<Button>{m['home_page.cta']()}</Button>
+				<Button>
+					{#snippet as(props)}
+						<a {...props} href="/app/sign-in">
+							{m['home_page.cta']()}
+						</a>
+					{/snippet}
+				</Button>
 			</div>
 
 			<img
