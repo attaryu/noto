@@ -5,7 +5,8 @@
       "home": "Beranda",
       "app": "Aplikasi",
       "about": "Tentang",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "privacy_policy": "Privasi & Kebijakan"
     },
     "loading": "Memuat",
     "search": "Cari berdasarkan kata kunci",
@@ -334,8 +335,6 @@
     "other_menu": {
       "title": "Lainnya",
       "item": {
-        "about": "Tentang",
-        "privacy_policy": "Kebijakan dan Privasi",
         "support": "Dukungan"
       }
     },

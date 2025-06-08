@@ -30,7 +30,7 @@
 			{@render wideViewLink(m['common.landing_page_links.home'](), '/')}
 			{@render wideViewLink(m['common.landing_page_links.app'](), '/app')}
 			{@render wideViewLink(m['common.landing_page_links.about'](), '/about')}
-			{@render wideViewLink(m['common.landing_page_links.faq'](), '/faq')}
+			<!-- {@render wideViewLink(m['common.landing_page_links.faq'](), '/faq')} -->
 
 			{#snippet wideViewLink(title: string, href: string)}
 				<li>
@@ -65,7 +65,7 @@
 					{@render smallViewLink(m['common.landing_page_links.home'](), '/')}
 					{@render smallViewLink(m['common.landing_page_links.app'](), '/app')}
 					{@render smallViewLink(m['common.landing_page_links.about'](), '/about')}
-					{@render smallViewLink(m['common.landing_page_links.faq'](), '/faq')}
+					<!-- {@render smallViewLink(m['common.landing_page_links.faq'](), '/faq')} -->
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 

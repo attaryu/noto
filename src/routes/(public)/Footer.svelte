@@ -24,11 +24,11 @@
 			</Text>
 
 			<!-- link -->
-			<ul class="flex max-w-1/2 justify-between gap-6 text-white">
+			<ul class="flex max-w-1/3 justify-between gap-6 text-white">
 				{@render link(m['common.landing_page_links.home'](), '/')}
 				{@render link(m['common.landing_page_links.app'](), '/app')}
 				{@render link(m['common.landing_page_links.about'](), '/about')}
-				{@render link(m['common.landing_page_links.faq'](), '/faq')}
+				<!-- {@render link(m['common.landing_page_links.faq'](), '/faq')} -->
 
 				{#snippet link(text: string, href: string)}
 					<li><a {href} class="hover:underline xl:text-lg">{text}</a></li>
@@ -47,8 +47,8 @@
 
 	<!-- footnote -->
 	<div class="space-y-2 border-t border-white pt-4 md:flex md:items-center md:justify-between">
-		<a href="/#" class="block text-sm text-white underline md:order-1">
-			{m['settings_page.other_menu.item.privacy_policy']()}
+		<a href="/privacy-policy" class="block text-sm text-white underline md:order-1">
+			{m['common.landing_page_links.privacy_policy']()}
 		</a>
 
 		<Text styling="small" class="text-white">© 2025 M Attar. All rights reserved.</Text>

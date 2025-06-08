@@ -5,7 +5,8 @@
       "home": "Home",
       "app": "App",
       "about": "About",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "privacy_policy": "Privacy & Policy"
     },
     "loading": "Loading",
     "search": "Search by keyword",
@@ -334,8 +335,6 @@
     "other_menu": {
       "title": "Other",
       "item": {
-        "about": "About",
-        "privacy_policy": "Privacy and Policy",
         "support": "Support"
       }
     },
