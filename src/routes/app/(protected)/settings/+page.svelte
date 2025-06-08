@@ -2,11 +2,11 @@
 	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
 	import {
+		Info,
 		ArrowRight,
 		CircleUserRound,
 		CloudUpload,
 		Globe,
-		Info,
 		Key,
 		Shield,
 	} from 'lucide-svelte';
@@ -181,7 +181,7 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<MenuItem type="container" text={m['settings_page.other_menu.item.privacy_policy']()}>
+						<MenuItem type="container" text={m['common.landing_page_links.privacy_policy']()}>
 							{#snippet icon()}
 								<Shield />
 							{/snippet}
@@ -191,19 +191,19 @@
 						</MenuItem>
 					</li>
 
-					<!-- <li>
-						<MenuItem type="container" text="Support">
+					<li>
+						<MenuItem type="container" text={m['common.landing_page_links.about']()}>
 							{#snippet icon()}
-								<HeartHandshake />
+								<Info />
 							{/snippet}
 							{#snippet rightElement()}
 								<ArrowRight />
 							{/snippet}
 						</MenuItem>
-					</li> -->
+					</li>
 
 					<li>
-						<MenuItem type="container" text={m['settings_page.other_menu.item.about']()}>
+						<MenuItem type="container" text={m['common.landing_page_links.about']()}>
 							{#snippet icon()}
 								<Info />
 							{/snippet}

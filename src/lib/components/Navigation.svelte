@@ -21,13 +21,17 @@
 </script>
 
 <div class="fixed inset-x-0 bottom-0 bg-linear-to-b from-transparent to-white px-4 pb-4">
-	<nav class="flex max-w-[440px] mx-auto min-h-12 items-center justify-between">
-		<div class="flex h-full w-fit max-w-56 items-center gap-2 rounded-full bg-zinc-900 p-1">
+	<nav class="mx-auto flex min-h-12 max-w-[440px] items-center justify-between">
+		<div class="flex h-full w-fit max-w-56 items-center gap-2 rounded-full bg-zinc-800 p-1">
 			{#each links as link (link.pathname)}
 				{@const Icon = link.icon}
 				{@const isActive = link.pathname === page.url.pathname}
 
-				<Button size="icon" class="p-3 transition-all {isActive && 'w-32 bg-tertiary-1 text-zinc-900'}">
+				<Button
+					size="icon"
+					class="p-3 transition-all {isActive &&
+						'bg-tertiary-1 hover:bg-tertiary-1 w-32 text-zinc-800'}"
+				>
 					{#snippet as(props: any)}
 						<a href={link.pathname} {...props}>
 							<Icon size={26} />
