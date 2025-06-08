@@ -112,12 +112,14 @@ export class UpdateNote implements IUpdateNote {
 			...(labelsFromRequest && { labels: processedLabels }),
 		});
 
+		const { id, ...note } = noteEntity.toObject();
+
 		const {
 			deletedAt,
 			createdAt,
 			userId: _userId,
 			...updatedNote
-		} = await this.noteRepository.update(noteId, noteEntity.toObject());
+		} = await this.noteRepository.update(noteId, note);
 
 		return updatedNote;
 	}

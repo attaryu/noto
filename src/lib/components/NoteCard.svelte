@@ -1,16 +1,17 @@
 <script lang="ts">
 	import type { JSONContent } from '@tiptap/core';
-	import type{  InfiniteData } from '@tanstack/svelte-query';
 
-	import type { INote, INoteResponse, INotesResponse } from '$lib/types/api/notes';
+	import type { INote, INoteResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
-	
+
 	import { goto } from '$app/navigation';
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { Ellipsis, Pin, PinOff } from 'lucide-svelte';
+	import { m } from 'paraglide/messages';
 	import { get } from 'svelte/store';
+	import 'dayjs/locale/id';
 
 	import Button from './Button.svelte';
 	import Card from './Card.svelte';
@@ -18,7 +19,7 @@
 
 	import { axiosFetch } from '$lib/stores/api/baseConfig';
 	import { getToastStoreContext } from '$lib/stores/toast.svelte';
-	
+
 	import createEditor from '$lib/utils/editor';
 	import { generateToastHTTPError } from '$lib/utils/toastMessage';
 
@@ -69,15 +70,19 @@
 			{
 				onSuccess: (response) => {
 					toastStore.setSuccess({
-						message: `Note ${response.payload.note.pinned ? 'pinned' : 'unpinned'}`,
+						message: m['note_card_component.toast.pinned_success']({
+							pinned: response.payload.note.pinned.toString(),
+						}),
 						action: {
-							title: 'Undo',
+							title: m['common.toast.undo'](),
 							event: () => $noteMutation.mutate({ pinned: !response.payload.note.pinned }),
 						},
 					});
 				},
 				onError: (error) => {
-					toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: updatePin }));
+					toastStore.setError(
+						generateToastHTTPError(error, { title: m['common.toast.retry'](), event: updatePin }),
+					);
 				},
 			},
 		);
@@ -89,16 +94,21 @@
 			{
 				onSuccess: (response) => {
 					toastStore.setSuccess({
-						message: `Note ${response.payload.note.archived ? 'archived' : 'unarchived'}`,
+						message: m['note_card_component.toast.archived_success']({
+							archived: response.payload.note.archived.toString(),
+						}),
 						action: {
-							title: 'Undo',
+							title: m['common.toast.undo'](),
 							event: () => $noteMutation.mutate({ archived: !response.payload.note.archived }),
 						},
 					});
 				},
 				onError: (error) => {
 					toastStore.setError(
-						generateToastHTTPError(error, { title: 'Retry', event: updateArchived }),
+						generateToastHTTPError(error, {
+							title: m['common.toast.retry'](),
+							event: updateArchived,
+						}),
 					);
 				},
 			},
@@ -144,24 +154,27 @@
 				{#if !data.archived}
 					<Button
 						variant={isPinned ? 'primary' : 'secondary'}
-						class={`${!isPinned && 'bg-transparent'} size-10`}
+						size="icon"
+						class={`${!isPinned && 'bg-transparent'} p-2.5`}
 						disabled={$noteMutation.isPending}
 						onclick={updatePin}
 					>
-						<PinIcon className="rotate-24" />
+						<PinIcon className="rotate-24" size={20} />
 					</Button>
 				{/if}
 
 				<Dropdown
-					class="size-10"
+					class="p-2.5"
 					disabled={$noteMutation.isPending}
 					items={[
 						{
-							title: 'Detail',
+							title: m['note_card_component.dropdown.detail'](),
 							action: () => goto(`/app/notes/${data.id}`),
 						},
 						{
-							title: data.archived ? 'Unarchive' : 'Archive',
+							title: m['note_card_component.dropdown.archive']({
+								archived: data.archived.toString(),
+							}),
 							action: updateArchived,
 						},
 					]}

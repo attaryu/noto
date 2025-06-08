@@ -10,7 +10,7 @@
 
 	const { children, gradientColor, class: className, ...props }: Props = $props();
 
-	const headerCVA = cva('fixed z-50 inset-x-0 top-0 p-4 bg-gradient-to-b to-transparent', {
+	const headerCVA = cva('fixed z-50 inset-x-0 top-0 p-4 bg-linear-to-b to-transparent', {
 		variants: {
 			gradientColor: {
 				white: 'from-white',
@@ -26,7 +26,7 @@
 
 <div class={mergeClass(headerCVA({ gradientColor }))}>
 	<header
-		class={mergeClass('flex min-h-12 items-center justify-center rounded-full', className)}
+		class={mergeClass('flex min-h-12 max-w-[440px] mx-auto items-center justify-center rounded-full', className)}
 		{...props}
 	>
 		{@render children?.()}

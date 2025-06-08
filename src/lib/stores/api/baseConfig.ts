@@ -2,6 +2,7 @@ import type { AxiosResponse } from 'axios';
 
 import { PUBLIC_API_VERSION } from '$env/static/public';
 import axios from 'axios';
+import { getLocale } from 'paraglide/runtime';
 
 class AxiosFetch {
 	private base = axios.create({
@@ -14,9 +15,16 @@ class AxiosFetch {
 		pathname: string,
 		payload?: Payload,
 	) {
-		return this.base[method]<unknown, AxiosResponse<Response>, Payload>(
+		const options = {
+			headers: {
+				'Accept-Language': getLocale(),
+			},
+		};
+
+		return this.base[method]<unknown, AxiosResponse<Response>>(
 			pathname,
-			payload ?? undefined,
+			payload ?? options,
+			payload ? options : undefined,
 		)
 			.then((response) => Promise.resolve(response.data))
 			.catch((error) => Promise.reject(error.response?.data));

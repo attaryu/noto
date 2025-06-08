@@ -1,3 +1,3 @@
 export interface IUpdateLabelDTO {
-	used?: number;
+	used: number;
 }

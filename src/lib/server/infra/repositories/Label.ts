@@ -4,6 +4,7 @@ import type { ILabelInDTO } from '$lib/server/domain/dtos/Label/LabelIn';
 import type { IUpdateLabelDTO } from '$lib/server/domain/dtos/Label/UpdateLabel';
 import type { Collection, MongoClient } from 'mongodb';
 import { objectId } from '../helper/objectId';
+import type { ILabelOutDTO } from '$lib/server/domain/dtos/Label/LabelOut';
 
 export type Document = Omit<ILabelInDTO, 'id'>;
 
@@ -66,5 +67,10 @@ export class LabelRepository implements ILabelRepository {
 
 	async delete(labelId: string): Promise<void> {
 		await this.database.deleteOne({ _id: objectId(labelId) });
+	}
+
+	async replaceAll(data: ILabelOutDTO[], userId: string): Promise<void> {
+		await this.database.deleteMany({ userId });
+		await this.database.insertMany(data.map((label) => ({ ...label, userId })));
 	}
 }

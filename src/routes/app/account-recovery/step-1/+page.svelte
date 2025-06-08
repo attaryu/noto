@@ -9,7 +9,8 @@
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import Send from 'lucide-svelte/icons/send';
 	import { defaults, superForm } from 'sveltekit-superforms';
-	import { zod } from 'sveltekit-superforms/adapters';
+	import { m } from 'paraglide/messages';
+	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
@@ -32,46 +33,55 @@
 	>({
 		mutationFn: (payload) => axiosFetch.POST('/auth/recover-email', payload),
 		onSuccess: () => {
-			toastStore.setSuccess({ message: 'Success, please check your email' });
+			toastStore.setSuccess({
+				message: m['account_recovery_step_1_page.state.email_sent_success'](),
+			});
+
 			reset();
 		},
 		onError: (error) => {
-			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
+			toastStore.setError(generateToastHTTPError(error, { title: m['common.toast.retry'](), event: submit }));
 		},
 	});
 
-	const { form, errors, enhance, reset, submit } = superForm(defaults(zod(accountRecoveryValidator)), {
-		SPA: true,
-		resetForm: false,
-		onUpdate: ({ form }) => {
-			if (form.valid) {
-				$recoverEmailMutation.mutate(form.data);
-			}
+	const { form, errors, enhance, reset, submit } = superForm(
+		defaults(zod(accountRecoveryValidator)),
+		{
+			SPA: true,
+			resetForm: false,
+			validators: zodClient(accountRecoveryValidator),
+			onUpdate: ({ form }) => {
+				if (form.valid) {
+					$recoverEmailMutation.mutate(form.data);
+				}
+			},
 		},
-	});
+	);
 </script>
 
 <main class="flex h-screen flex-col p-4">
 	<header class="h-12">
-		<Button>
+		<Button size="icon" class="p-3">
 			{#snippet as(prop: any)}
-				<a href="/app/sign-in" {...prop}><ArrowLeft /></a>
+				<a href="/app/settings" {...prop}><ArrowLeft size={26} /></a>
 			{/snippet}
 		</Button>
 	</header>
 
 	<div class="mt-20 flex flex-col items-center">
-		<Text tag="h1" class="text-center">Account Recovery</Text>
+		<Text tag="h1" class="text-center">
+			{m['account_recovery_step_1_page.heading']()}
+		</Text>
 
 		<Text tag="p" class="mt-4 text-center">
-			We will send an email message along with a link to enter the recovery key
+			{m['account_recovery_step_1_page.description']()}
 		</Text>
 
 		<form method="POST" id={formId} class="mt-8 w-full" use:enhance>
 			<Input
 				type="email"
 				name="email"
-				placeholder="Email"
+				placeholder={m['common.fields.email']()}
 				class="w-full"
 				bind:value={$form.email}
 			/>
@@ -84,16 +94,13 @@
 		form={formId}
 		type="submit"
 		class="mt-auto w-full"
+		size="lg"
 		disabled={$recoverEmailMutation.isPending}
 	>
 		{#if $recoverEmailMutation.isPending}
-			Loading...
+			{m['common.loading']()}...
 		{:else}
-			<Send /> Send now
+			<Send /> {m['account_recovery_step_1_page.form.submit']()}
 		{/if}
 	</Button>
 </main>
-
-<Decorator size="normal" color="yellow" class="top-0" />
-<Decorator size="normal" color="green" class="-right-1/3 top-1/3" />
-<Decorator size="large" color="yellow" class="-bottom-1/4 left-1/4" />

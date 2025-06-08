@@ -1,5 +1,6 @@
 import type { ICreateNoteDTO } from '$lib/server/domain/dtos/Note/CreateNote';
 import type { INoteInDTO } from '$lib/server/domain/dtos/Note/NoteIn';
+import type { INoteOutDTO } from '$lib/server/domain/dtos/Note/NoteOut';
 import type { IUpdateNoteDTO } from '$lib/server/domain/dtos/Note/UpdateNote';
 
 export interface INoteFilter {
@@ -21,4 +22,5 @@ export interface INoteRepository {
 	count(filter: INoteFilter): Promise<number>;
 	softDeletes(noteId: string[], userId: string): Promise<void>;
 	hardDeletes(noteId: string[], userId: string): Promise<void>;
+	replaceAll(data: INoteOutDTO[], userId: string): Promise<void>;
 }

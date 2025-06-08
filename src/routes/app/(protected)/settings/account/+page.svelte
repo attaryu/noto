@@ -10,6 +10,7 @@
 	import _ from 'lodash';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
+	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
@@ -38,13 +39,15 @@
 	>({
 		mutationFn: (payload) => axiosFetch.PATCH('/user', payload),
 		onSuccess: (response) => {
-			toastStore.setSuccess({ message: 'Information updated successfully!' });
+			toastStore.setSuccess({ message: m['account_setting_page.state.update_success']() });
 
 			isEditable = false;
 			user.update(response.payload.user);
 		},
 		onError: (error) => {
-			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
+			toastStore.setError(
+				generateToastHTTPError(error, { title: m['common.toast.retry'](), event: submit }),
+			);
 		},
 	});
 
@@ -81,11 +84,17 @@
 
 <main class="flex flex-col gap-8 px-4 pb-24 pt-24">
 	<Header class="grid grid-cols-3 grid-rows-1 items-center border border-zinc-900 bg-white p-1">
-		<Button onclick={() => history.back()}>
-			<ArrowLeft />
+		<Button size="icon">
+			{#snippet as(props)}
+				<a href="/app/settings" {...props}>
+					<ArrowLeft size={32} />
+				</a>
+			{/snippet}
 		</Button>
 
-		<Text tag="p" styling="h3" class="text-center">Account</Text>
+		<Text tag="p" styling="h3" class="text-center">
+			{m['account_setting_page.title']()}
+		</Text>
 	</Header>
 
 	<Card color="green">
@@ -94,9 +103,9 @@
 				type="text"
 				name="fullname"
 				id="fullname"
-				placeholder="Fullname"
+				placeholder={m['common.fields.fullname']()}
 				bind:value={$form.fullname}
-				class="mt-1 w-full border-b border-zinc-950 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
+				class="mt-1 w-full border-b border-zinc-900 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
 				disabled={!isEditable || $mutation.isPending}
 			/>
 
@@ -106,9 +115,9 @@
 				type="email"
 				name="email"
 				id="email"
-				placeholder="Email"
+				placeholder={m['common.fields.email']()}
 				bind:value={$form.email}
-				class="mt-1 w-full border-b border-zinc-950 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
+				class="mt-1 w-full border-b border-zinc-900 bg-transparent py-1 text-xl outline-none disabled:border-none disabled:opacity-80"
 				disabled={!isEditable || $mutation.isPending}
 			/>
 
@@ -125,7 +134,7 @@
 							isEditable = false;
 						}}
 					>
-						Cancel
+						{m['account_setting_page.form.cancel']()}
 					</Button>
 
 					<Button
@@ -134,7 +143,9 @@
 						variant="primary"
 						disabled={$mutation.isPending || _.isEqual($form, defaultValues)}
 					>
-						{$mutation.isPending ? 'Loading...' : 'Save'}
+						{$mutation.isPending
+							? `${m['common.loading']()}...`
+							: m['account_setting_page.form.save']()}
 					</Button>
 				{:else}
 					<Button
@@ -143,14 +154,10 @@
 						variant="secondary"
 						onclick={() => (isEditable = true)}
 					>
-						Edit
+						{m['account_setting_page.form.edit']()}
 					</Button>
 				{/if}
 			</div>
 		</form>
 	</Card>
 </main>
-
-<Decorator color="green" class="-left-0 -top-8" />
-<Decorator color="yellow" class="-right-1/2 top-1/4" size="large" />
-<Decorator color="yellow" class="-left-1/2 top-1/2" size="large" />

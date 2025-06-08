@@ -10,6 +10,7 @@
 	import Mail from 'lucide-svelte/icons/mail';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
+	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
 	import Decorator from '$lib/components/Decorator.svelte';
@@ -56,8 +57,11 @@
 
 			if (!passwordCryptoKey) {
 				toastStore.setError({
-					message: 'Submit cannot be processed',
-					action: { title: 'Send again', event: submit },
+					message: m['sign_in_page.state.password_crypto_key_error.text'](),
+					action: {
+						title: m['sign_in_page.state.password_crypto_key_error.cta'](),
+						event: submit,
+					},
 				});
 
 				return;
@@ -72,12 +76,14 @@
 			await secretKeyManagement.storeSecretKey(secretKey);
 			reset();
 
-			toastStore.setSuccess({ message: 'Sign in successful!' });
+			toastStore.setSuccess({ message: m['sign_in_page.state.sign_in_success']() });
 
 			goto('/app/notes');
 		},
 		onError: (error) => {
-			toastStore.setError(generateToastHTTPError(error, { title: 'Retry', event: submit }));
+			toastStore.setError(
+				generateToastHTTPError(error, { title: m['common.toast.retry'](), event: submit }),
+			);
 		},
 	});
 
@@ -115,23 +121,28 @@
 
 <main class="flex h-screen flex-col p-4">
 	<header class="flex h-12 items-center">
-		<Button class="mr-auto">
+		<Button class="mr-auto" size="icon">
 			{#snippet as(props?: any)}
 				<a href="/app/sign-up" {...props}>
-					<ArrowLeft />
+					<ArrowLeft size={32} />
 				</a>
 			{/snippet}
 		</Button>
 	</header>
 
 	<div class="mt-20 flex flex-col items-center">
-		<Text tag="h1" class="mt-auto text-center">Welcome back!</Text>
-		<Text class="mt-4 text-center">I'm glad you're back! It's your time to note everything</Text>
+		<Text tag="h1" class="mt-auto text-center">
+			{m['sign_in_page.greeting']()}
+		</Text>
+
+		<Text class="mt-4 text-center">
+			{m['sign_in_page.description']()}
+		</Text>
 
 		<form id={formId} class="mt-8 w-full space-y-2" use:enhance method="POST">
 			<Input
 				type="email"
-				placeholder="Email"
+				placeholder={m['common.fields.email']()}
 				name="email"
 				class="w-full"
 				bind:value={$form.email}
@@ -141,7 +152,7 @@
 
 			<Input
 				type="password"
-				placeholder="Password"
+				placeholder={m['common.fields.password']()}
 				name="password"
 				class="w-full"
 				bind:value={$form.password}
@@ -151,25 +162,27 @@
 		</form>
 
 		<Text tag="small" class="mt-8">
-			Forgot your password? <a href="/app/account-recovery/step-1" class="text-sky-500"
-				>Recover here</a
-			>
+			{m['sign_in_page.forgot_password.text']()}{' '}
+
+			<a href="/app/account-recovery/step-1" class="text-sky-500">
+				{m['sign_in_page.forgot_password.cta']()}
+			</a>
 		</Text>
 
 		<Text tag="small" class="mt-4">
-			Don't have an account? <a href="/app/sign-up" class="text-sky-500">Sign up now!</a>
+			{m['sign_in_page.sign_up_link.text']()}{' '}
+
+			<a href="/app/sign-up" class="text-sky-500">
+				{m['sign_in_page.sign_up_link.cta']()}
+			</a>
 		</Text>
 	</div>
 
-	<Button form={formId} type="submit" class="mt-auto w-full" disabled={$signinMutation.isPending}>
+	<Button form={formId} type="submit" size="lg" class="mt-auto w-full" disabled={$signinMutation.isPending}>
 		{#if $signinMutation.isPending}
-			Loading...
+			{m['common.loading']()}...
 		{:else}
-			<Mail /> Sign In
+			<Mail /> {m['sign_in_page.form.submit']()}
 		{/if}
 	</Button>
 </main>
-
-<Decorator color="green" class="-left-6 top-0" />
-<Decorator color="yellow" class="-right-6 top-[15%]" />
-<Decorator color="yellow" class="-bottom-10 -left-5" size="large" />

@@ -1,11 +1,13 @@
 test-results
 node_modules
+static/_*
 
 # Output
 .output
 .vercel
 /.svelte-kit
 /build
+/dev-dist
 
 # OS
 .DS_Store

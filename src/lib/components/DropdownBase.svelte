@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 
 	import { ChevronRight } from 'lucide-svelte';
+	import { fly } from 'svelte/transition';
 
 	import Text from './Text.svelte';
 
@@ -58,7 +59,7 @@
 		onclick={openDropdown}
 		{disabled}
 		class={mergeClass(
-			'flex min-w-24 items-center justify-center gap-2 rounded-full bg-zinc-900 px-3 py-2 text-white disabled:bg-zinc-800 disabled:text-zinc-500',
+			'flex min-w-24 items-center justify-center gap-2 rounded-full bg-zinc-800 px-3 py-2 text-white disabled:bg-zinc-800 disabled:text-zinc-500',
 			className,
 		)}
 	>
@@ -82,14 +83,15 @@
 	<!--? list item element -->
 	{#if isOpen}
 		<ul
-			class="absolute right-0 z-10 min-w-full rounded-2xl bg-zinc-900 text-white shadow-xl"
+			class="absolute right-0 z-10 w-fit rounded-2xl bg-zinc-800 text-white shadow-xl"
 			class:above={listPosition === 'above'}
 			class:below={listPosition === 'below'}
 			bind:this={itemsParentRef}
+			transition:fly={{ y: listPosition === 'above' ? 10 : -10, duration: 200 }}
 		>
-			{#each items as item}
+			{#each items as item (item)}
 				<li>
-					{@render itemRender('px-4 py-2 disabled:text-zinc-500', item)}
+					{@render itemRender('px-4 py-2 w-full disabled:text-zinc-500 text-start', item)}
 				</li>
 			{/each}
 		</ul>

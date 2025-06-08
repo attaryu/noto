@@ -4,7 +4,7 @@ export interface IErrorResponseAPI {
 	error: { message: string };
 }
 
-export interface IResponseAPI<Type> {
+export interface IResponseAPI<Type = undefined> {
 	success: true;
 	statusCode: number;
 	payload: Type;

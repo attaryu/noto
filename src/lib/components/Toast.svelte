@@ -51,7 +51,7 @@
 	// };
 </script>
 
-<aside class="pointer-events-none fixed inset-x-4 bottom-24 z-[99] space-y-4">
+<aside class="pointer-events-none fixed inset-x-4 bottom-24 z-99 space-y-4">
 	{#each toastStore.toasts as toast (toast.id)}
 		<div
 			class={toastCVA({ type: toast.type })}
@@ -63,7 +63,7 @@
 
 			{#if toast.action}
 				<button
-					class="text-sm !text-white underline"
+					class="text-sm text-white! underline"
 					onclick={() => {
 						toast.action!.event();
 						toastStore.unset(toast.id);
@@ -73,7 +73,7 @@
 				</button>
 			{/if}
 
-			<button class="!text-white" onclick={() => toastStore.unset(toast.id)}>
+			<button class="text-white!" onclick={() => toastStore.unset(toast.id)}>
 				<X size="16" />
 			</button>
 		</div>

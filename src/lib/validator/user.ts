@@ -1,13 +1,16 @@
 import { z } from 'zod';
+import { m } from 'paraglide/messages';
 
 const fullname = z
 	.string()
-	.min(4, 'Fullname must be at least 4 characters long')
-	.max(32, 'Fullname must be at most 32 characters long');
+	.min(4, m['common.validation.min_length']({ field: m['common.fields.fullname'](), length: 4 }))
+	.max(32, m['common.validation.max_length']({ field: m['common.fields.fullname'](), length: 32 }));
 
-const email = z.string().email('Invalid email address');
+const email = z.string().email(m['user_validation.email.invalid']());
 
-const password = z.string().min(8, 'Password must be at least 8 characters long');
+const password = z
+	.string()
+	.min(8, m['common.validation.min_length']({ field: m['common.fields.password'](), length: 8 }));
 
 export const signupUserValidator = z
 	.object({
@@ -17,7 +20,7 @@ export const signupUserValidator = z
 		repeatPassword: password,
 	})
 	.refine((data) => data.password === data.repeatPassword, {
-		message: "Passwords did'nt match",
+		message: m['user_validation.password.not_match'](),
 		path: ['repeatPassword'],
 	});
 
@@ -30,10 +33,15 @@ export const accountRecoveryValidator = z.object({
 	email,
 });
 
-export const resetPasswordValidator = z.object({
-	password,
-	repeatPassword: password,
-});
+export const resetPasswordValidator = z
+	.object({
+		password,
+		repeatPassword: password,
+	})
+	.refine((data) => data.password === data.repeatPassword, {
+		message: m['user_validation.password.not_match'](),
+		path: ['repeatPassword'],
+	});
 
 export const updateUserValidator = z.object({
 	fullname,

@@ -1,4 +1,5 @@
 import type { ICreateLabelDTO } from '../dtos/Label/CreateLabel';
+import type { IUpdateLabelDTO } from '../dtos/Label/UpdateLabel';
 
 import { Validation } from '../helper/validation';
 
@@ -26,6 +27,18 @@ export class LabelEntity {
 		});
 
 		return new LabelEntity({ ...props, id: '', used: 1 });
+	}
+
+	public update(props: IUpdateLabelDTO) {
+		Validation.object(props, {
+			type: 'object',
+			required: true,
+			properties: {
+				used: { type: 'number', required: true },
+			},
+		});
+
+		this._used = props.used;
 	}
 
 	public toObject(): LabelInterface {

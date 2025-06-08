@@ -159,10 +159,10 @@
 
 	/**
 	 * Handle touch start event to get the initial touch position for swipe detection
-	*/
+	 */
 	const handleTouchStart = (event: TouchEvent) => {
-		touchStartX = event.touches[0].clientX;
-		touchStartY = event.touches[0].clientY;
+		touchStartX = event.targetTouches[0].clientX;
+		touchStartY = event.targetTouches[0].clientY;
 	};
 
 	/**
@@ -189,25 +189,28 @@
 </script>
 
 {#if editorInstance.isFocused}
-	<div
-		class="fixed inset-x-0 bottom-0 z-10 flex items-center gap-4 overflow-x-auto bg-zinc-900 p-4"
-		transition:slide
-	>
-		{#each controlButtons as controlButton (controlButton.id)}
-			{#if controlButton.type === 'control'}
-				{@const Icon = controlButton.icon}
+	<div class="fixed inset-x-0 bottom-0 z-10">
+		<div
+			class="mx-auto flex max-w-[440px] items-center gap-4 overflow-x-auto bg-zinc-900 p-4"
+			transition:slide
+		>
+			{#each controlButtons as controlButton (controlButton.id)}
+				{#if controlButton.type === 'control'}
+					{@const Icon = controlButton.icon}
 
-				<Button
-					class={`p-2 ${controlButton.isActive ? 'bg-tertiary-1 text-zinc-900' : 'bg-zinc-900'}`}
-					onmouseup={handleClick(controlButton.action)}
-					ontouchend={handleTouchEnd(controlButton.action)}
-					ontouchstart={handleTouchStart}
-				>
-					<Icon />
-				</Button>
-			{:else}
-				<div class="h-8 w-[1px] shrink-0 rounded-full bg-zinc-700"></div>
-			{/if}
-		{/each}
+					<button
+						class={'rounded-full p-3 text-white disabled:text-zinc-500' +
+							(controlButton.isActive ? ' bg-tertiary-1 text-zinc-900' : ' bg-zinc-900')}
+						onmouseup={handleClick(controlButton.action)}
+						ontouchend={handleTouchEnd(controlButton.action)}
+						ontouchstart={handleTouchStart}
+					>
+						<Icon size={26} />
+					</button>
+				{:else}
+					<div class="h-8 w-px shrink-0 rounded-full bg-zinc-700"></div>
+				{/if}
+			{/each}
+		</div>
 	</div>
 {/if}

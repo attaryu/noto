@@ -1,0 +1,384 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "common": {
+    "landing_page_links": {
+      "home": "Beranda",
+      "app": "Aplikasi",
+      "about": "Tentang",
+      "faq": "FAQ",
+      "privacy_policy": "Privasi & Kebijakan"
+    },
+    "loading": "Memuat",
+    "search": "Cari berdasarkan kata kunci",
+    "toast": {
+      "retry": "Ulangi",
+      "undo": "Batalkan"
+    },
+    "fields": {
+      "fullname": "Nama lengkap",
+      "email": "Email",
+      "password": "Kata sandi",
+      "repeat_password": "Ulang kata sandi"
+    },
+    "cancel": "Batal",
+    "continue": "Lanjutkan",
+    "validation": {
+      "min_length": "{field} harus memiliki panjang minimal {length} karakter",
+      "max_length": "{field} harus memiliki panjang maksimal {length} karakter"
+    }
+  },
+  "user_validation": {
+    "email": {
+      "invalid": "Alamat email tidak valid"
+    },
+    "password": {
+      "not_match": "Password tidak sama"
+    }
+  },
+  "loadmore_component": {
+    "cta": "Muat lebih banyak",
+    "have_next_page": "{loaded} dari {total} catatan ditampilkan.",
+    "dont_have_next_page": [
+      {
+        "match": {
+          "total=1": "Catatan ditampilkan.",
+          "total=*": "Semua catatan ditampilkan."
+        }
+      }
+    ]
+  },
+  "select_component": {
+    "default_display": "Pilih item"
+  },
+  "search_component": {
+    "placholder": "Cari"
+  },
+  "note_card_component": {
+    "toast": {
+      "pinned_success": [
+        {
+          "match": {
+            "pinned=true": "Catatan disematkan",
+            "pinned=false": "Catatan tidak disematkan"
+          }
+        }
+      ],
+      "archived_success": [
+        {
+          "match": {
+            "archived=true": "Catatan diarsipkan",
+            "archived=false": "Catatan tidak diarsipkan"
+          }
+        }
+      ]
+    },
+    "dropdown": {
+      "detail": "Detail",
+      "archive": [
+        {
+          "match": {
+            "archived=true": "Kembalikan",
+            "archived=false": "Arsipkan"
+          }
+        }
+      ],
+      "delete": "Hapus"
+    }
+  },
+  "home_page": {
+    "cta": "Coba sekarang!",
+    "hero": {
+      "title": "Tulis Apa Saja Tanpa Khawatir Tentang Privasi Anda",
+      "description": "Aplikasi pencatatan berbasis web modern dengan pengalaman lancar dengan sedikit keamanan ekstra untuk menjaga privasi Anda."
+    },
+    "key_features": {
+      "title": "Fitur unggulan yang ditawarkan",
+      "items": {
+        "1": {
+          "title": "Antarmuka ramah pengguna",
+          "description": "Desain antarmuka yang sederhana dan modern"
+        },
+        "2": {
+          "title": "Enkripsi ujung ke ujung",
+          "description": "Semua catatan dienkripsi dan disimpan dengan aman"
+        },
+        "3": {
+          "title": "Catatan cadangan",
+          "description": "Impor-ekspor cadangan catatan dalam bentuk file"
+        },
+        "4": {
+          "title": "Pemulihan akun",
+          "description": "Lapisan keamanan ekstra untuk memulihkan akun Anda"
+        }
+      }
+    },
+    "user_benefits": {
+      "title": "Apa yang membuatnya menonjol?",
+      "items": {
+        "1": {
+          "title": "Tulis apa pun yang Anda inginkan",
+          "description": "Catatan Anda dienkripsi secara otomatis dari ujung ke ujung, memastikan hanya Anda yang dapat mengaksesnya."
+        },
+        "2": {
+          "title": "Mudah digunakan",
+          "description": "Antarmuka yang sederhana, modern, dan intuitif yang membuat penulisan catatan menjadi cepat, mudah, dan menyenangkan."
+        },
+        "3": {
+          "title": "Data catatan Anda ada di tangan Anda",
+          "description": "Pulihkan akun dan buat cadangan catatan kapan saja. Anda selalu memegang kendali penuh atas data Anda."
+        }
+      }
+    },
+    "source_available": {
+      "title": "Tidak ada yang disembunyikan",
+      "description": "Proyek ini sepenuhnya tersedia di sumbernya. Anda dapat memeriksa kodenya, memahami bagaimana catatan Anda dienkripsi, dan memverifikasi bagaimana data Anda ditangani - tidak ada kotak hitam, tidak ada proses tersembunyi.",
+      "cta": "Lihat repositori"
+    },
+    "faq": {
+      "title": "Jawaban sekilas",
+      "descriptiont": "Berikut beberapa pertanyaan yang mungkin sering muncul di benak Anda.",
+      "items": {
+        "1": {
+          "question": "Apakah ini gratis?",
+          "answer": "Tentu saja, kami masih belum punya rencana untuk membuat fitur berbayar."
+        },
+        "2": {
+          "question": "Apakah saya harus membuat akun untuk mulai menggunakan aplikasi web?",
+          "answer": "Ya, kami memerlukan sebagian informasi Anda untuk pemulihan akun."
+        },
+        "3": {
+          "question": "Bisakah aplikasi web ini diinstal?",
+          "answer": "Ya, aplikasi web ini mendukungnya karena merupakan PWA."
+        },
+        "4": {
+          "question": "Bisakah catatan saya dibaca oleh orang lain?",
+          "answer": "Tidak, bahkan admin atau pengembang aplikasi web ini tidak bisa."
+        },
+        "5": {
+          "question": "Bisakah catatan saya diakses di perangkat lain?",
+          "answer": "Ya, selama Anda masuk dengan akun yang sama."
+        }
+      }
+    },
+    "last_offer": {
+      "title": {
+        "1": "Apa yang Anda tunggu?",
+        "2": "Cobalah tulis semuanya sekarang!"
+      }
+    }
+  },
+  "about_page": {
+    "title": "Tentang Aplikasi Web Noto",
+    "description": "Penjelasan singkat agar kamu lebih mengenal aplikasi ini.",
+    "content_1": {
+      "title": "Pendahuluan",
+      "texts": {
+        "1": "Noto adalah aplikasi pencatat berbasis web yang menekankan kesederhanaan, kenyamanan, dan keamanan. Aplikasi ini dirancang untuk siapa saja yang ingin mencatat tanpa gangguan visual, dengan ketenangan bahwa catatan mereka terlindungi oleh sistem keamanan modern.",
+        "2": "Meskipun Noto dikembangkan sebagai bagian dari portofolio pribadi, saya membangunnya dengan standar dan pendekatan profesional — dengan pengalaman pengguna yang mulus dan fitur yang dirancang dengan baik, seolah-olah ini adalah produk siap pakai untuk publik."
+      }
+    },
+    "content_2": {
+      "title": "Motivasi",
+      "texts": {
+        "1": "Di balik pembuatan Noto, ada keinginan pribadi untuk menciptakan aplikasi catatan yang benar-benar sederhana namun aman. Saya sering merasa bahwa aplikasi catatan yang tersedia terlalu rumit, terlalu ramai, atau tidak memberikan kendali penuh atas privasi isi catatan.",
+        "2": "Saya ingin membuktikan bahwa bahkan aplikasi sederhana pun bisa memiliki sistem keamanan tingkat lanjut, tanpa mengorbankan kenyamanan pengguna. Dengan mengembangkan Noto, saya tidak hanya menantang diri sendiri secara teknis, tapi juga mencoba memberikan solusi yang bermanfaat, meskipun dalam bentuk proyek portofolio pribadi."
+      }
+    },
+    "content_3": {
+      "title": "Fitur Utama",
+      "texts": {
+        "1": "Noto dirancang dengan fokus pada tiga pilar utama: kesederhanaan, keamanan, dan kendali pengguna. Beberapa fitur yang tersedia saat ini mencerminkan prinsip-prinsip tersebut:",
+        "2": {
+          "a": "Antarmuka Modern dan Intuitif. Pengalaman mencatat menjadi lebih menyenangkan dengan tampilan yang bersih dan navigasi yang mudah dipahami sejak awal.",
+          "b": "Enkripsi Catatan Otomatis. Setiap catatan dienkripsi secara lokal sebelum dikirim ke server, memastikan hanya kamu yang dapat membacanya — bahkan saya tidak bisa mengaksesnya.",
+          "c": "Pemulihan Akun dan Ekspor Catatan. Kamu memiliki kendali penuh atas data kamu, termasuk kemampuan untuk memulihkan akun dan mengekspor semua catatan kapan pun dibutuhkan."
+        }
+      }
+    },
+    "content_4": {
+      "title": "Teknologi yang Digunakan",
+      "texts": {
+        "1": "Ada banyak teknologi yang saya gunakan untuk membangun aplikasi ini. Namun secara garis besar, berikut beberapa teknologi utamanya:",
+        "2": {
+          "a": "Svelte & SvelteKit - framework utama dalam membangun aplikasi web ini.",
+          "b": "Tailwind CSS - untuk styling UI yang modern dan konsisten.",
+          "c": "TipTap - editor rich-text ringan yang mendukung fitur lanjutan.",
+          "d": "TanStack Query (Svelte Query) - untuk manajemen data dan caching antar komponen.",
+          "e": "Zod - validasi data yang aman dan terstruktur, terutama pada formulir.",
+          "f": "Vite & Vite PWA Plugin - bundler dan dukungan progresif untuk performa dan fitur offline.",
+          "g": "Workbox - untuk caching dan dukungan offline pada PWA.",
+          "h": "Day.js - manajemen tanggal dan waktu yang ringan dan efisien.",
+          "i": "JOSE - kriptografi untuk keamanan data dan token.",
+          "j": "Bcrypt - untuk hashing password di sisi server."
+        },
+        "3": "Untuk informasi lebih lengkap, kamu bisa melihatnya melalui file package.json di proyek ini."
+      }
+    },
+    "content_5": {
+      "title": "Status Proyek",
+      "texts": {
+        "1": "Pengembangan proyek ini masih berjalan dan tetap dirawat, namun pembaruan tidak bisa dilakukan setiap minggu atau bahkan setiap bulan karena saya juga disibukkan dengan hal lain. Jika kamu tertarik untuk membantu meningkatkan aplikasi ini, kamu bisa menghubungi saya melalui email di sini."
+      }
+    },
+    "content_6": {
+      "title": "Penutup",
+      "texts": {
+        "1": "Saya berharap aplikasi ini bisa membantu banyak orang meskipun ini hanya bagian dari proyek portofolio saya. Terima kasih jika kamu sudah mencoba atau bahkan menggunakannya setiap hari.",
+        "2": "Terima kasih juga kepada semua yang membantu saya melalui pustaka atau aset dalam proyek ini!"
+      }
+    }
+  },
+  "sign_in_page": {
+    "greeting": "Selamat datang kembali!",
+    "description": "Senang melihat anda kembali! Sekarang saatnya mencatat berbagai hal",
+    "form": {
+      "submit": "Masuk"
+    },
+    "forgot_password": {
+      "text": "Lupa password?",
+      "cta": "Pulihkan akun disini"
+    },
+    "sign_up_link": {
+      "text": "Tidak punya akun?",
+      "cta": "Buat baru"
+    },
+    "state": {
+      "sign_in_success": "Berhasil masuk!",
+      "password_crypto_key_error": {
+        "text": "Permintaan masuk tidak bisa diproses",
+        "cta": "Kirim ulang"
+      }
+    }
+  },
+  "sign_up_page": {
+    "greeting": "Selamat datang!",
+    "description": "Daftar sekarang sebagai akun baru!",
+    "form": {
+      "submit": "Daftar"
+    },
+    "state": {
+      "sign_up_success": "Pendaftaran berhasil!"
+    },
+    "sign_in_link": {
+      "text": "Sudah punya akun?",
+      "cta": "Masuk di sini"
+    }
+  },
+  "recovery_key_page": {
+    "heading": "Kunci Pemulihan",
+    "description": "Simpan kunci pemulihan untuk memulihkan akun Anda jika Anda lupa kata sandi di masa mendatang.",
+    "agreement": "Catat! Jika Anda kehilangan kunci pemulihan, Anda akan kehilangan akses ke akun Anda selamanya. Kecuali jika Anda mengingat kembali kata sandi Anda.",
+    "download_as_file_cta": "Unduh kunci pemulihan",
+    "continue_cta": "Lanjutkan untuk masuk"
+  },
+  "account_recovery_step_1_page": {
+    "heading": "Pemulihan Akun",
+    "description": "Kami akan mengirimkan pesan email beserta tautan untuk memasukkan kunci pemulihan",
+    "form": {
+      "submit": "Kirim sekarang"
+    },
+    "state": {
+      "email_sent_success": "Berhasil, silakan periksa email Anda!"
+    }
+  },
+  "account_recovery_step_2_page": {
+    "heading": "Masukkan Kunci Pemulihan",
+    "description": "Gunakan salah satu kunci pemulihan yang Anda simpan. Jika Anda kehilangannya, tidak ada jalan keluar dan akses akan otomatis hilang",
+    "form": {
+      "fields": {
+        "recovery_key": "Kunci Pemulihan"
+      },
+      "submit": "Periksa"
+    },
+    "state": {
+      "incorrect_recovery_key": "4 digit terakhir kunci pemulihan salah!"
+    }
+  },
+  "account_recovery_step_3_page": {
+    "heading": "Atur Ulang Kata Sandi",
+    "description": "Harap masukkan kata sandi baru. Setelah Anda mengirimkannya, semua perangkat yang masuk dengan akun ini akan otomatis keluar",
+    "form": {
+      "submit": "Atur ulang"
+    }
+  },
+  "notes_pages": {
+    "empty_note": {
+      "message": "Belum ada catatan yang dibuat",
+      "cta": "Buat yang baru"
+    }
+  },
+  "archived_notes_pages": {
+    "empty_note": {
+      "message": "Tidak ada catatan yang diarsipkan",
+      "cta": "Arsipkan catatan lain"
+    }
+  },
+  "settings_page": {
+    "title": "Pengaturan",
+    "main_menu": {
+      "item": {
+        "account": "Akun",
+        "backup": "Pencadangan catatan",
+        "account_recovery": "Pemulihan akun"
+      }
+    },
+    "interface_menu": {
+      "title": "Antarmuka",
+      "item": {
+        "language": "Bahasa",
+        "language_value": {
+          "en": "Inggris",
+          "id": "Indonesia"
+        }
+      }
+    },
+    "other_menu": {
+      "title": "Lainnya",
+      "item": {
+        "support": "Dukungan"
+      }
+    },
+    "sign_out": "Keluar akun"
+  },
+  "account_setting_page": {
+    "title": "Akun",
+    "form": {
+      "cancel": "Batal",
+      "save": "Simpan",
+      "edit": "Sunting"
+    },
+    "state": {
+      "update_success": "Akun berhasil diupdate!"
+    }
+  },
+  "backup_setting_page": {
+    "validation": {
+      "file_type": "Input harus berupa file",
+      "extension": "File harus berekstensi JSON"
+    },
+    "state": {
+      "import_success": "Berhasil mengimpor catatan!",
+      "invalid_backup": "File cadangan tidak valid"
+    },
+    "title": "Pencadangan",
+    "menu": {
+      "title": "Sebagai File",
+      "item": {
+        "export": "Ekspor",
+        "import": "Impor"
+      }
+    },
+    "confirmation_dialog": {
+      "title": "Impor catatan cadangan",
+      "description": "Apakah Anda yakin ingin mengimpor catatan cadangan? Tindakan ini akan menimpa catatan Anda saat ini."
+    },
+    "import_dialog": {
+      "title": "Impor file cadangan",
+      "form": {
+        "fields": {
+          "file": "Unggah file cadangan di sini"
+        }
+      }
+    }
+  }
+}
