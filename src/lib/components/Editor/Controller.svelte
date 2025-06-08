@@ -190,20 +190,23 @@
 
 {#if editorInstance.isFocused}
 	<div class="fixed inset-x-0 bottom-0 z-10">
-		<div class="flex items-center gap-4 mx-auto max-w-[440px] overflow-x-auto bg-zinc-900 p-4" transition:slide>
+		<div
+			class="mx-auto flex max-w-[440px] items-center gap-4 overflow-x-auto bg-zinc-900 p-4"
+			transition:slide
+		>
 			{#each controlButtons as controlButton (controlButton.id)}
 				{#if controlButton.type === 'control'}
 					{@const Icon = controlButton.icon}
 
-					<Button
-						class={'p-3' + (controlButton.isActive ? ' bg-tertiary-1 text-zinc-900' : ' bg-zinc-900')}
-						size="icon"
+					<button
+						class={'rounded-full p-3 text-white disabled:text-zinc-500' +
+							(controlButton.isActive ? ' bg-tertiary-1 text-zinc-900' : ' bg-zinc-900')}
 						onmouseup={handleClick(controlButton.action)}
 						ontouchend={handleTouchEnd(controlButton.action)}
 						ontouchstart={handleTouchStart}
 					>
 						<Icon size={26} />
-					</Button>
+					</button>
 				{:else}
 					<div class="h-8 w-px shrink-0 rounded-full bg-zinc-700"></div>
 				{/if}

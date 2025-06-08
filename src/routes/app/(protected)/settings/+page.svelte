@@ -44,7 +44,7 @@
 	<title>Profile</title>
 </svelte:head>
 
-<main class="flex flex-col gap-8 px-4 pb-24 pt-24">
+<main class="flex flex-col gap-8 px-4 pt-24 pb-24">
 	<Header class="border border-zinc-900 bg-white py-3">
 		<Text tag="p" styling="h3">{m['settings_page.title']()}</Text>
 	</Header>
@@ -181,7 +181,11 @@
 			{#snippet as(props)}
 				<ul {...props}>
 					<li>
-						<MenuItem type="container" text={m['common.landing_page_links.privacy_policy']()}>
+						<MenuItem
+							type="link"
+							action="/privacy-policy"
+							text={m['common.landing_page_links.privacy_policy']()}
+						>
 							{#snippet icon()}
 								<Shield />
 							{/snippet}
@@ -192,18 +196,7 @@
 					</li>
 
 					<li>
-						<MenuItem type="container" text={m['common.landing_page_links.about']()}>
-							{#snippet icon()}
-								<Info />
-							{/snippet}
-							{#snippet rightElement()}
-								<ArrowRight />
-							{/snippet}
-						</MenuItem>
-					</li>
-
-					<li>
-						<MenuItem type="container" text={m['common.landing_page_links.about']()}>
+						<MenuItem type="link" action="/about" text={m['common.landing_page_links.about']()}>
 							{#snippet icon()}
 								<Info />
 							{/snippet}

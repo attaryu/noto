@@ -27,17 +27,14 @@
 				{@const Icon = link.icon}
 				{@const isActive = link.pathname === page.url.pathname}
 
-				<Button
-					size="icon"
-					class="p-3 transition-all {isActive &&
-						'bg-tertiary-1 hover:bg-tertiary-1 w-32 text-zinc-800'}"
+				<a
+					href={link.pathname}
+					class="p-3 transition-all rounded-full grid place-items-center {isActive
+						? 'bg-tertiary-1 hover:bg-tertiary-1 w-32 text-zinc-800'
+						: 'text-white'}"
 				>
-					{#snippet as(props: any)}
-						<a href={link.pathname} {...props}>
-							<Icon size={26} />
-						</a>
-					{/snippet}
-				</Button>
+					<Icon size={26} />
+				</a>
 			{/each}
 		</div>
 

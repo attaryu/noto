@@ -3,7 +3,6 @@
 
 	import { ArrowLeft, Check, Pencil, RotateCcw, X } from 'lucide-svelte';
 
-	import Button from '../Button.svelte';
 	import Header from '../Header.svelte';
 	import Text from '../Text.svelte';
 
@@ -76,24 +75,19 @@
 	});
 </script>
 
-<Header class="flex items-center bg-zinc-900 p-1">
-	<Button variant="secondary" size="icon" class="bg-white p-3">
-		{#snippet as(props)}
-			<a href="/app/notes" {...props}>
-				<ArrowLeft size={26} />
-			</a>
-		{/snippet}
-	</Button>
+<Header class="flex items-center bg-zinc-800 p-1">
+	<a href="/app/notes" class="bg-white p-3 rounded-full">
+		<ArrowLeft size={26} />
+	</a>
 
 	<Text tag="h3" class="ml-4 text-white">{title}</Text>
 
-	<div class="ml-auto mr-2 flex gap-2">
+	<div class="mr-2 ml-auto flex gap-2">
 		{#each controlButtons as controlButton (controlButton.id)}
 			{@const Icon = controlButton.icon}
 
-			<Button
-				class="disabled:bg-zinc-900 p-3"
-				size="icon"
+			<button
+				class="p-3 text-white disabled:text-zinc-500"
 				disabled={controlButton.disabled}
 				ontouchend={(event) => {
 					event.preventDefault();
@@ -105,7 +99,7 @@
 				}}
 			>
 				<Icon size={26} />
-			</Button>
+			</button>
 		{/each}
 	</div>
 </Header>
