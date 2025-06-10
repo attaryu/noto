@@ -20,7 +20,7 @@
 <main class="overlapping-by-footer overlapping-by-navbar">
 	<!-- hero -->
 	<section
-		class="flex flex-col items-center px-4 py-8 md:flex-row md:gap-12 md:p-16 lg:justify-between lg:px-24 xl:pb-24"
+		class="flex flex-col items-center overflow-hidden px-4 py-8 md:flex-row md:gap-12 md:p-16 lg:justify-between lg:px-24 xl:pb-24"
 	>
 		<!-- content -->
 		<div class="lg:w-[350px] lg:shrink-0 xl:w-1/2 xl:shrink">
