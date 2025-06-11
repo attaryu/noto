@@ -44,11 +44,7 @@ export class GetRecoveryKey implements IGetRecoveryKey {
 
 		const resetPasswordToken = await this.tokenManager.sign({
 			purpose: TokenPurposeEnum.resetPassword,
-			user: {
-				id: userEntity.id,
-				email: userEntity.email,
-				fullname: userEntity.fullname,
-			},
+			userId: userEntity.id!,
 		});
 
 		const tokenEntity = TokenEntity.create({

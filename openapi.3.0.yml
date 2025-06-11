@@ -616,6 +616,7 @@ paths:
                   labels:
                     - id: '123'
                       label: 'label 1'
+                      used: 3
 
 components:
   schemas:
@@ -709,3 +710,5 @@ components:
           type: string
         labels:
           type: string
+        used:
+          type: number

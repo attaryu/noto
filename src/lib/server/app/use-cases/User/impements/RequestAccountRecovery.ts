@@ -33,11 +33,7 @@ export class RequestAccountRecovery implements IRequestAccountRecovery {
 
 		const token = await this.tokenManager.sign({
 			purpose: TokenPurposeEnum.recoveryEmail,
-			user: {
-				id: user.id!,
-				email: user.email,
-				fullname: user.fullname,
-			},
+			userId: user.id,
 		});
 
 		const tokenEntity = TokenEntity.create({

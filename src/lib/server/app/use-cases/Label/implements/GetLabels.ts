@@ -7,6 +7,6 @@ export class GetLabels implements IGetLabels {
 
 	async execute(userId: string): Promise<ILabelOutDTO[]> {
 		const labelFromDatabase = await this.labelRepository.finds({ userId });
-		return labelFromDatabase.map(({ userId, used, ...label }) => label);
+		return labelFromDatabase.map(({ userId, ...label }) => label);
 	}
 }
