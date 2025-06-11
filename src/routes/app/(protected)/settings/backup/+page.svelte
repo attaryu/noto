@@ -9,7 +9,9 @@
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
-	import { ArrowLeft, LoaderCircle, Send } from 'lucide-svelte';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import Send from '@lucide/svelte/icons/send';
 	import { defaults, fileProxy, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 	import { z } from 'zod';

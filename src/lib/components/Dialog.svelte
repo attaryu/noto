@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	import { X } from 'lucide-svelte';
+	import X from '@lucide/svelte/icons/x';
 	import { fade } from 'svelte/transition';
 
 	import Text from './Text.svelte';

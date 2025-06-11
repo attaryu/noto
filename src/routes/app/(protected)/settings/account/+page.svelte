@@ -5,7 +5,7 @@
 	} from '$lib/types/api/user';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
-	import { ArrowLeft } from 'lucide-svelte';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import { createMutation } from '@tanstack/svelte-query';
 	import _ from 'lodash';
 	import { defaults, superForm } from 'sveltekit-superforms';

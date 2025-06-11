@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Archive, Settings, Plus, StickyNote } from 'lucide-svelte';
+	import Archive from '@lucide/svelte/icons/archive';
+	import Settings from '@lucide/svelte/icons/settings';
+	import StickyNote from '@lucide/svelte/icons/sticky-note';
+	import Plus from '@lucide/svelte/icons/plus';
 
 	import Button from '$lib/components/Button.svelte';
 
@@ -29,7 +32,7 @@
 
 				<a
 					href={link.pathname}
-					class="p-3 transition-all rounded-full grid place-items-center {isActive
+					class="grid place-items-center rounded-full p-3 transition-all {isActive
 						? 'bg-tertiary-1 hover:bg-tertiary-1 w-32 text-zinc-800'
 						: 'text-white'}"
 				>

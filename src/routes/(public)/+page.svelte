@@ -1,7 +1,12 @@
 <script lang="ts">
-	import type { Icon as LucideIcon } from 'lucide-svelte';
+	import type { Icon as LucideIcon } from '@lucide/svelte';
 
-	import { FileLock2, GalleryVerticalEnd, Heart, SquareActivity } from 'lucide-svelte';
+	import FileLock2 from '@lucide/svelte/icons/file-lock-2';
+	import GalleryVerticalEnd from '@lucide/svelte/icons/gallery-vertical-end';
+	import Heart from '@lucide/svelte/icons/heart';
+	import SquareActivity from '@lucide/svelte/icons/square-activity';
+
+	
 	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';

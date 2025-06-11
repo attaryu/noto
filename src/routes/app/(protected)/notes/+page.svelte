@@ -4,7 +4,7 @@
 	import type { INote, INotesResponse } from '$lib/types/api/notes';
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
-	import { ArrowRight } from 'lucide-svelte';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
 	import { m } from 'paraglide/messages';
 

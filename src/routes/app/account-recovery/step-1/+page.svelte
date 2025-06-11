@@ -6,8 +6,8 @@
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { createMutation } from '@tanstack/svelte-query';
-	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
-	import Send from 'lucide-svelte/icons/send';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import Send from '@lucide/svelte/icons/send';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { m } from 'paraglide/messages';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';

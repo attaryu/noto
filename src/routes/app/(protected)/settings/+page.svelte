@@ -2,13 +2,13 @@
 	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
 
-	import Info from 'lucide-svelte/icons/info';
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
-	import CircleUserRound from 'lucide-svelte/icons/circle-user-round';
-	import CloudUpload from 'lucide-svelte/icons/cloud-upload';
-	import Globe from 'lucide-svelte/icons/globe';
-	import Key from 'lucide-svelte/icons/key';
-	import Shield from 'lucide-svelte/icons/shield';
+	import Info from '@lucide/svelte/icons/info';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import CircleUserRound from '@lucide/svelte/icons/circle-user-round';
+	import CloudUpload from '@lucide/svelte/icons/cloud-upload';
+	import Globe from '@lucide/svelte/icons/globe';
+	import Key from '@lucide/svelte/icons/key';
+	import Shield from '@lucide/svelte/icons/shield';
 
 	import { m } from 'paraglide/messages';
 	import { getLocale, setLocale } from 'paraglide/runtime';

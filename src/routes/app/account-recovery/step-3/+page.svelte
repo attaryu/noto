@@ -4,7 +4,7 @@
 
 	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
-	import Send from 'lucide-svelte/icons/send';
+	import Send from '@lucide/svelte/icons/send';
 	import { m } from 'paraglide/messages';
 	import { onMount } from 'svelte';
 

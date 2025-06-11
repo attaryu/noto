@@ -32,7 +32,7 @@
 
 	import { Toc } from '@svelte-put/toc';
 	import { m } from 'paraglide/messages';
-	import { TableOfContents } from 'lucide-svelte';
+	import TableOfContents from '@lucide/svelte/icons/table-of-contents';
 
 	import Text from './Text.svelte';
 	import * as DropdownMenu from '$lib/components/shadcn/ui/dropdown-menu';

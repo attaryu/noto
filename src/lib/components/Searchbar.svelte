@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Search } from 'lucide-svelte';
+	import Search from '@lucide/svelte/icons/search';
 	import { m } from 'paraglide/messages';
 
 	import Input from './Input.svelte';

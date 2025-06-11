@@ -8,9 +8,9 @@
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
-	import Ellipsis from 'lucide-svelte/icons/ellipsis';
-	import Pin from 'lucide-svelte/icons/pin';
-	import PinOff from 'lucide-svelte/icons/pin-off';
+	import Ellipsis from '@lucide/svelte/icons/ellipsis';
+	import Pin from '@lucide/svelte/icons/pin';
+	import PinOff from '@lucide/svelte/icons/pin-off';
 	import { m } from 'paraglide/messages';
 	import { get } from 'svelte/store';
 	import 'dayjs/locale/id';

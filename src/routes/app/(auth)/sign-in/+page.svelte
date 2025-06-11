@@ -6,8 +6,8 @@
 	import { goto } from '$app/navigation';
 	import { createMutation, createQuery } from '@tanstack/svelte-query';
 	import _ from 'lodash';
-	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
-	import Mail from 'lucide-svelte/icons/mail';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import Mail from '@lucide/svelte/icons/mail';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 	import { m } from 'paraglide/messages';

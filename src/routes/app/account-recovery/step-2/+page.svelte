@@ -6,7 +6,7 @@
 
 	import { goto } from '$app/navigation';
 	import { createQuery } from '@tanstack/svelte-query';
-	import { KeyRound } from 'lucide-svelte';
+	import KeyRound from '@lucide/svelte/icons/key-round';
 	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';

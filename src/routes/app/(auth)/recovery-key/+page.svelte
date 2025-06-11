@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { Download, MoveRight } from 'lucide-svelte';
+	import Download from '@lucide/svelte/icons/download';
+	import MoveRight from '@lucide/svelte/icons/move-right';
 	import { m } from 'paraglide/messages';
 
 	import Button from '$lib/components/Button.svelte';
