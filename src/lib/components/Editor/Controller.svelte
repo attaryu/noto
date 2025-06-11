@@ -1,26 +1,21 @@
 <script lang="ts">
+	import type { Icon } from '@lucide/svelte';
 	import type { Editor } from '@tiptap/core';
-	import type { Icon } from 'lucide-svelte';
 
+	import AlignCenter from '@lucide/svelte/icons/align-center';
+	import AlignLeft from '@lucide/svelte/icons/align-left';
+	import AlignRight from '@lucide/svelte/icons/align-right';
+	import Bold from '@lucide/svelte/icons/bold';
+	import Heading1 from '@lucide/svelte/icons/heading-1';
+	import Heading2 from '@lucide/svelte/icons/heading-2';
+	import Heading3 from '@lucide/svelte/icons/heading-3';
+	import Italic from '@lucide/svelte/icons/italic';
+	import List from '@lucide/svelte/icons/list';
+	import ListOrdered from '@lucide/svelte/icons/list-ordered';
+	import Redo from '@lucide/svelte/icons/redo';
+	import UnderlineIcon from '@lucide/svelte/icons/underline';
+	import Undo from '@lucide/svelte/icons/undo';
 	import { slide } from 'svelte/transition';
-	import {
-		AlignCenter,
-		AlignJustify,
-		AlignLeft,
-		AlignRight,
-		Bold,
-		Heading1,
-		Heading2,
-		Heading3,
-		Italic,
-		List,
-		ListOrdered,
-		Redo,
-		UnderlineIcon,
-		Undo,
-	} from 'lucide-svelte';
-
-	import Button from '../Button.svelte';
 
 	type Props = {
 		editorInstance: Editor;

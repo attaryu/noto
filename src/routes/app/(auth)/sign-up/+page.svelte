@@ -4,8 +4,8 @@
 
 	import { goto } from '$app/navigation';
 	import { createMutation } from '@tanstack/svelte-query';
-	import { ArrowLeft } from 'lucide-svelte';
-	import Mail from 'lucide-svelte/icons/mail';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import Mail from '@lucide/svelte/icons/mail';
 	import { defaults, superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 	import { m } from 'paraglide/messages';
@@ -147,7 +147,13 @@
 		</Text>
 	</div>
 
-	<Button form={formId} disabled={$signupMutation.isPending} size="lg" type="submit" class="mt-auto w-full">
+	<Button
+		form={formId}
+		disabled={$signupMutation.isPending}
+		size="lg"
+		type="submit"
+		class="mt-auto w-full"
+	>
 		{#if $signupMutation.isPending}
 			{m['common.loading']()}...
 		{:else}

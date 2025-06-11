@@ -12,12 +12,10 @@
 </script>
 
 <!-- 2xl:w-7xl same as navbar container width -->
-<div class=" mx-auto 2xl:w-7xl relative">
+<div class="relative mx-auto 2xl:w-7xl">
 	<Navbar />
 
-	<div class="w-full">
-		{@render children?.()}
-	</div>
+	{@render children?.()}
 
 	<Footer />
 </div>

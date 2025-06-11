@@ -5,7 +5,7 @@
 	import type { IErrorResponseAPI } from '$lib/types/response';
 
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
-	import { ArrowRight } from 'lucide-svelte';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 
 	import Header from '$lib/components/Header.svelte';
 	import LoadMoreInformation from '$lib/components/LoadMoreInformation.svelte';

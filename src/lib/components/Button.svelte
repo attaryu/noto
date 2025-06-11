@@ -21,9 +21,9 @@
 			variants: {
 				variant: {
 					primary:
-						'bg-zinc-800 text-white disabled:text-zinc-500 disabled:bg-zinc-600 hover:bg-zinc-950',
+						'bg-zinc-800 text-white disabled:text-zinc-200 disabled:bg-zinc-600 hover:bg-zinc-950',
 					secondary:
-						'bg-white border border-zinc-800 hover:border-zinc-950 disabled:border-zinc-400 disabled:text-zinc-600',
+						'bg-white border border-zinc-800 hover:border-zinc-950 disabled:border-zinc-600 disabled:text-zinc-600',
 				},
 				size: {
 					icon: 'p-1.5',

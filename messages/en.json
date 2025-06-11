@@ -228,6 +228,81 @@
       }
     }
   },
+  "privacy_policy_page": {
+    "title": "Privacy Policy",
+    "metadata": {
+      "last_updated": "Last updated: {date}",
+      "last_version": "Last app version: {version}"
+    },
+    "description": "Thank you for using this app. Your privacy is very important to me. This page explains how your data is collected, used, and protected while using this app.",
+    "content_1": {
+      "title": "Information Collected",
+      "texts": {
+        "1": "The data collected includes:",
+        "2": {
+          "a": "Notes: The content you store within the app.",
+          "b": "Account Information: Your email address and full name.",
+          "c": "Technical Data: Device and browser information (only if needed to improve user experience).",
+          "d": "Local Backup: Temporary data may be stored in your browser to support future offline features."
+        },
+        "3": "I do not collect personal data such as IP addresses, location data, or any other sensitive information."
+      }
+    },
+    "content_2": {
+      "title": "How Your Data Is Used",
+      "texts": {
+        "1": "The data is used for the following purposes:",
+        "2": {
+          "a": "To securely store and manage your notes.",
+          "b": "To support features like search, sorting, and archiving.",
+          "c": "To help with account recovery in case of lost access."
+        },
+        "3": "I will never sell, rent, or share your data with third parties unless legally required or necessary to protect rights and safety."
+      }
+    },
+    "content_3": {
+      "title": "Data Security",
+      "texts": {
+        "1": "I am committed to protecting your data. Measures include:",
+        "2": {
+          "a": "End-to-end encryption: Notes are encrypted before reaching the server, so only you can access them.",
+          "b": "Industry-standard security protocols for data in transit.",
+          "c": "Separation of encryption keys from note data for added protection."
+        },
+        "3": "While no system is completely secure, I continuously update the app's security as technology evolves."
+      }
+    },
+    "content_4": {
+      "title": "Your Rights",
+      "texts": {
+        "1": "As a user, you have the right to:",
+        "2": {
+          "a": "View and modify your notes and personal data at any time via the app.",
+          "b": "Permanently delete your notes and personal data through the app. For issues, please contact me at the email provided."
+        }
+      }
+    },
+    "content_5": {
+      "title": "External Services",
+      "texts": {
+        "1": "All data is stored using MongoDB Atlas.",
+        "2": "Notes are end-to-end encrypted on the client side. Emails and names are encrypted server-side before being stored. MongoDB Atlas has no access to your data.",
+        "3": "No data is shared with any third party outside of this service. For more, read MongoDB Atlas' official privacy policy."
+      }
+    },
+    "content_6": {
+      "title": "Changes to the Policy",
+      "texts": {
+        "1": "This policy may be updated periodically. Significant changes will be communicated via the app."
+      }
+    },
+    "content_7": {
+      "title": "Contact",
+      "texts": {
+        "1": "For any questions, complaints, or concerns regarding this policy, please contact me at: mattarannaufal@gmail.com."
+      }
+    }
+  },
   "sign_in_page": {
     "greeting": "Welcome back!",
     "description": "I'm glad you're back! It's your time to note everything",

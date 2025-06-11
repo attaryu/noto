@@ -113,7 +113,7 @@
       }
     },
     "user_benefits": {
-      "title": "Apa yang membuatnya menonjol?",
+      "title": "Apa yang membuatnya menarik?",
       "items": {
         "1": {
           "title": "Tulis apa pun yang Anda inginkan",
@@ -225,6 +225,81 @@
       "texts": {
         "1": "Saya berharap aplikasi ini bisa membantu banyak orang meskipun ini hanya bagian dari proyek portofolio saya. Terima kasih jika kamu sudah mencoba atau bahkan menggunakannya setiap hari.",
         "2": "Terima kasih juga kepada semua yang membantu saya melalui pustaka atau aset dalam proyek ini!"
+      }
+    }
+  },
+  "privacy_policy_page": {
+    "title": "Kebijakan Privasi",
+    "metadata": {
+      "last_updated": "Terakhir diperbarui: {date}",
+      "last_version": "Versi aplikasi terakhir: {version}"
+    },
+    "description": "Terima kasih telah menggunakan aplikasi ini. Privasi Anda sangat penting bagi saya. Di halaman ini, saya akan menjelaskan bagaimana data Anda dikumpulkan, digunakan, dan dilindungi saat menggunakan aplikasi ini.",
+    "content_1": {
+      "title": "Informasi yang Dikumpulkan",
+      "texts": {
+        "1": "Informasi yang dikumpulkan meliputi:",
+        "2": {
+          "a": "Catatan: Konten catatan yang Anda simpan dalam aplikasi.",
+          "b": "Informasi Akun: Alamat email dan nama lengkap Anda.",
+          "c": "Data Teknis: Informasi perangkat dan browser (jika diperlukan untuk meningkatkan pengalaman pengguna).",
+          "d": "Cadangan Lokal: Aplikasi menyimpan data sementara di browser Anda untuk mendukung fitur offline di masa mendatang."
+        },
+        "3": "Saya tidak mengumpulkan data pribadi lainnya seperti alamat IP, lokasi geografis, atau data sensitif lainnya."
+      }
+    },
+    "content_2": {
+      "title": "Penggunaan Data",
+      "texts": {
+        "1": "Data yang dikumpulkan digunakan untuk:",
+        "2": {
+          "a": "Menyimpan dan mengelola catatan Anda secara aman.",
+          "b": "Mendukung fitur seperti pencarian, penyortiran, dan pengarsipan catatan.",
+          "c": "Pemulihan akun jika Anda lupa kata sandi atau kehilangan akses."
+        },
+        "3": "Saya tidak akan pernah menjual, menyewakan, atau membagikan data pribadi Anda kepada pihak ketiga, kecuali diwajibkan oleh hukum atau untuk melindungi hak dan keselamatan pengguna."
+      }
+    },
+    "content_3": {
+      "title": "Keamanan Data",
+      "texts": {
+        "1": "Saya berkomitmen untuk melindungi data Anda. Langkah-langkah keamanan yang diterapkan meliputi:",
+        "2": {
+          "a": "Enkripsi ujung ke ujung: Semua catatan dienkripsi sebelum dikirim ke server, sehingga hanya Anda yang dapat membacanya.",
+          "b": "Protokol keamanan standar industri untuk perlindungan data saat dalam perjalanan.",
+          "c": "Pemisahan kunci enkripsi dari data catatan untuk menjaga keamanan maksimum."
+        },
+        "3": "Meskipun begitu, tidak ada sistem yang sepenuhnya aman. Saya akan terus memperbarui dan meningkatkan keamanan sesuai perkembangan teknologi."
+      }
+    },
+    "content_4": {
+      "title": "Hak Anda",
+      "texts": {
+        "1": "Sebagai pengguna, Anda memiliki hak untuk:",
+        "2": {
+          "a": "Melihat dan memodifikasi catatan serta data pribadi Anda melalui aplikasi.",
+          "b": "Menghapus seluruh catatan dan data pribadi secara permanen melalui aplikasi. Jika mengalami kendala, silakan hubungi saya melalui email yang tersedia."
+        }
+      }
+    },
+    "content_5": {
+      "title": "Penggunaan Eksternal",
+      "texts": {
+        "1": "Seluruh data disimpan di layanan MongoDB Atlas.",
+        "2": "Catatan dienkripsi ujung ke ujung di sisi klien. Email dan nama lengkap dienkripsi di sisi server sebelum dikirim. Pihak MongoDB Atlas tidak dapat mengakses data Anda.",
+        "3": "Saya tidak membagikan data ke pihak lain mana pun di luar layanan tersebut. Untuk informasi lebih lanjut, silakan baca kebijakan privasi resmi MongoDB Atlas."
+      }
+    },
+    "content_6": {
+      "title": "Perubahan Kebijakan Privasi",
+      "texts": {
+        "1": "Kebijakan ini dapat diperbarui sewaktu-waktu. Perubahan signifikan akan diberitahukan melalui aplikasi."
+      }
+    },
+    "content_7": {
+      "title": "Kontak",
+      "texts": {
+        "1": "Jika Anda memiliki pertanyaan, keluhan, atau kekhawatiran terkait kebijakan ini, silakan hubungi saya melalui email: mattarannaufal@gmail.com."
       }
     }
   },

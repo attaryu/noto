@@ -1,7 +1,11 @@
 <script lang="ts" generics="IResponse, IPayload">
 	import type { Editor, JSONContent } from '@tiptap/core';
 
-	import { ArrowLeft, Check, Pencil, RotateCcw, X } from 'lucide-svelte';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import Check from '@lucide/svelte/icons/check';
+	import Pencil from '@lucide/svelte/icons/pencil';
+	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+	import X from '@lucide/svelte/icons/x';
 
 	import Header from '../Header.svelte';
 	import Text from '../Text.svelte';
@@ -76,7 +80,7 @@
 </script>
 
 <Header class="flex items-center bg-zinc-800 p-1">
-	<a href="/app/notes" class="bg-white p-3 rounded-full">
+	<a href="/app/notes" class="rounded-full bg-white p-3">
 		<ArrowLeft size={26} />
 	</a>
 

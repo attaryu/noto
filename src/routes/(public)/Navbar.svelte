@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Menu } from 'lucide-svelte';
+	import Menu from '@lucide/svelte/icons/menu';
 	import { page } from '$app/state';
 	import { m } from 'paraglide/messages';
 

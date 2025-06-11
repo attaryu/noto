@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cva } from 'class-variance-authority';
-	import X from 'lucide-svelte/icons/x';
+	import X from '@lucide/svelte/icons/x';
 	import { flip } from 'svelte/animate';
 	import { fly, scale } from 'svelte/transition';
 
