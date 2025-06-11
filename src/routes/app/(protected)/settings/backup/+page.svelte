@@ -177,12 +177,12 @@
 	<title>{m['backup_setting_page.title']()}</title>
 </svelte:head>
 
-<main class="flex flex-col gap-8 px-4 pb-24 pt-24">
+<main class="flex flex-col gap-8 px-4 pt-24 pb-24">
 	<Header class="grid grid-cols-3 grid-rows-1 items-center border border-zinc-900 bg-white p-1">
-		<Button>
+		<Button size="icon">
 			{#snippet as(props)}
 				<a href="/app/settings" {...props}>
-					<ArrowLeft />
+					<ArrowLeft size={32} />
 				</a>
 			{/snippet}
 		</Button>
@@ -198,18 +198,18 @@
 				<ul {...props}>
 					<li>
 						<MenuItem
-							text={m['backup_setting_page.menu.item.export']()}
+							text={m['backup_setting_page.menu.item.import']()}
 							type="button"
-							action={$exportNotesQuery.refetch}
+							action={() => (isBackupTermDialogOpen = true)}
 							disabled={isLoading}
 						/>
 					</li>
 
 					<li>
 						<MenuItem
-							text={m['backup_setting_page.menu.item.import']()}
+							text={m['backup_setting_page.menu.item.export']()}
 							type="button"
-							action={() => (isBackupTermDialogOpen = true)}
+							action={$exportNotesQuery.refetch}
 							disabled={isLoading}
 						/>
 					</li>
@@ -269,7 +269,7 @@
 
 		<Button
 			type="submit"
-			class={`ml-auto mt-4 ${isLoading && 'animate-spin'}`}
+			class={`mt-4 ml-auto ${isLoading && 'animate-spin'}`}
 			disabled={isLoading}
 		>
 			{#if isLoading}
